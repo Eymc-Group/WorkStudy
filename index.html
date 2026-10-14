@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The EYMC Group</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #1b1525;
+            color: white;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #b68cff;
+            font-size: 4rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #d0c4ff;
+            margin-bottom: 50px;
+            font-size: 1.2rem;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #7d56c2;
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 15px rgba(125, 86, 194, 0.5);
+        }
+
+        .btn:hover {
+            background: #946bdf;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 3rem;
+            }
+
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 320px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>The EYMC Group</h1>
+
+        <p class="subtitle">Made by Your Friendly Unblocker</p>
+
+        <div class="button-container">
+            <button class="btn" onclick="window.location.href='Games/index.html'">
+                🎮 Games
+            </button>
+
+            <button class="btn" onclick="window.open('https://forms.gle/RxWSuAg3nNYjMu678', '_blank')">
+                🛡️ Become a Mod
+            </button>
+
+            <button class="btn" onclick="window.location.href='chat.html'">
+                💬 Chat
+            </button>
+            
+            <button class="btn" onclick="window.location.href='Soundboard.html'">
+                🗣 Soundboard
+            </button>
+            
+            <button class="btn" onclick="window.location.href='proxy.html'">
+                🫥 Proxies
+            </button>
+            
+        </div>
+    </div>
+</body>
+</html>
