@@ -1,44 +1,11 @@
-# 🚀 WorkStudy
+# 🌐 Root Branch
 
-A modern student hub built by **The EYMC Group**.
+This branch contains the complete source code for WorkStudy and serves as the root directory for the website.
 
-WorkStudy combines games, tools, proxies, chat, and entertainment into a single easy-to-use platform.
-
----
-
-## ✨ Features
-
-### 🎮 Games
-- Eaglercraft
-- Expandable game library
-- Fullscreen support
-- Offline downloads
-
-### 🫥 Proxies
-- Built-in proxies
-- Custom proxy support
-- Local storage saving
-
-### 💬 Chat
-- Built-in community chat
-
-### 🗣️ Soundboard
-- Search system
-- Favorites
-- Text-to-speech
-- Voice controls
-
-### 💾 Offline Version
-- Download WorkStudy
-- Portable setup
-- Works without internet after installation
-
----
-
-## 📁 Structure
+## 📁 Directory Structure
 
 ```txt
-/
+root/
 ├── index.html
 ├── proxy.html
 ├── Soundboard.html
@@ -53,97 +20,90 @@ WorkStudy combines games, tools, proxies, chat, and entertainment into a single 
     ├── games.js
     │
     └── books/
-        └── mc.html
+        ├── mc.html
+        ├── assets.epk
+        ├── sounds.epk
+        ├── classes.wasm.br
+        ├── mesh-worker.wasm.br
+        ├── server-worker.wasm.br
+        ├── worker-bootstrap.js
+        ├── brotli-loader.js
+        ├── favicon.png
+        └── lang/
 ```
 
----
+## 🚀 Purpose
 
-## ⚡ Why WorkStudy?
+The Root branch contains all website files required for:
 
-✅ Fast
+- Neocities hosting
+- GitHub Pages hosting
+- Offline releases
+- Development and testing
 
-✅ Lightweight
-
-✅ Student Friendly
-
-✅ Offline Support
-
-✅ Open Source
-
-✅ Continuously Updated
-
----
-
-## 🛠️ Built With
-
-- HTML5
-- CSS3
-- JavaScript
-- Neocities
-- Cloudflare
-- GitHub
-
----
-
-## 💾 Offline Installation
-
-### Download
-
-Download the latest release:
+## 🌐 Main Pages
 
 ```txt
-WorkStudy-Offline.zip
+index.html        → Homepage
+proxy.html        → Proxies
+Soundboard.html   → Soundboard
+chat.html         → Chat
+Games/index.html  → Games
 ```
 
-### Installation
+## 💾 Offline Use
 
-1. Download the ZIP file.
-2. Extract the ZIP file.
-3. Open the extracted folder.
-4. Find:
+1. Download `WorkStudy-Offline.zip`
+2. Extract the ZIP
+3. Open:
 
 ```txt
 index.html
 ```
 
-5. Double-click `index.html`.
+4. Enjoy WorkStudy offline.
 
-The website will open in your default browser.
+## ⚠️ Important
 
-### Important
+Do not rename or move files unless every reference is updated.
 
-✅ Keep all files and folders in their original locations.
-
-✅ Do not move `index.html` outside the extracted folder.
-
-✅ The `Games`, scripts, styles, and assets are required for the website to function correctly.
-
-✅ Extract the ZIP before opening the site.
-
-### Troubleshooting
-
-**Games won't load**
-- Make sure all files were extracted correctly.
-- Verify the `Games` folder exists.
-
-**Styles or features missing**
-- Verify `style.css` and `script.js` are present.
-
-**Website not opening**
-- Try opening `index.html` in another browser.
-
----
-
-## 🌐 Website
-
-WorkStudy is available online and offline.
-
-Download the latest offline release from:
+The following files are required for Eaglercraft to function correctly:
 
 ```txt
-Releases → WorkStudy-Offline.zip
+assets.epk
+sounds.epk
+classes.wasm.br
+mesh-worker.wasm.br
+server-worker.wasm.br
+worker-bootstrap.js
+brotli-loader.js
+lang/
 ```
+
+Removing these files may prevent games from loading.
+
+## 🎮 Current Features
+
+- Games
+- Proxies
+- Chat
+- Soundboard
+- Offline Downloads
+- Fullscreen Support
+- Download Support
+
+## 🛠 Technologies
+
+- HTML5
+- CSS3
+- JavaScript
+- GitHub
+- GitHub Pages
+- Neocities
+- Cloudflare
 
 ---
 
-## 
+WorkStudy Root Branch
+
+Learn • Play • Explore
