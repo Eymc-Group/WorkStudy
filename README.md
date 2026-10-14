@@ -20,26 +20,12 @@ root/
     ├── games.js
     │
     └── books/
-        ├── mc.html
-        ├── assets.epk
-        ├── sounds.epk
-        ├── classes.wasm.br
-        ├── mesh-worker.wasm.br
-        ├── server-worker.wasm.br
-        ├── worker-bootstrap.js
-        ├── brotli-loader.js
-        ├── favicon.png
-        └── lang/
+        └── mc.html
 ```
 
 ## 🚀 Purpose
 
-The Root branch contains all website files required for:
-
-- Neocities hosting
-- GitHub Pages hosting
-- Offline releases
-- Development and testing
+This branch contains the files used to run and deploy WorkStudy.
 
 ## 🌐 Main Pages
 
@@ -49,6 +35,7 @@ proxy.html        → Proxies
 Soundboard.html   → Soundboard
 chat.html         → Chat
 Games/index.html  → Games
+Games/books/mc.html → Eaglercraft
 ```
 
 ## 💾 Offline Use
@@ -65,24 +52,11 @@ index.html
 
 ## ⚠️ Important
 
-Do not rename or move files unless every reference is updated.
+- Keep all files in their original folders.
+- Do not rename files unless all references are updated.
+- The Games folder is required for games to function.
 
-The following files are required for Eaglercraft to function correctly:
-
-```txt
-assets.epk
-sounds.epk
-classes.wasm.br
-mesh-worker.wasm.br
-server-worker.wasm.br
-worker-bootstrap.js
-brotli-loader.js
-lang/
-```
-
-Removing these files may prevent games from loading.
-
-## 🎮 Current Features
+## 🎮 Features
 
 - Games
 - Proxies
@@ -106,4 +80,4 @@ Removing these files may prevent games from loading.
 
 WorkStudy Root Branch
 
-Learn • Play • Explore
+### Learn • Play • Explore
