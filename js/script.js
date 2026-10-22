@@ -364,15 +364,9 @@ function clearWebsiteData() {
 
     if (!confirmed) return;
 
-    const theme = localStorage.getItem("workstudy-theme");
-
     localStorage.clear();
 
-    if (theme) {
-        localStorage.setItem("workstudy-theme", theme);
-    }
-
-    alert("✅ Website data cleared.");
+    alert("✅ All local storage cleared.");
 
     location.reload();
 }
