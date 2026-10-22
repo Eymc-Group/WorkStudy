@@ -7,19 +7,13 @@
    ========================================================= */
 
 :root{
-    --bg:radial-gradient(circle at top left,#8b5cf640 0%,transparent 35%), radial-gradient(circle at bottom right,#a855f740 0%,transparent 35%), 
-#1a0d24;
-    --c1:
-#6b21a8;
-    --c2:
-#a855f7;
-    --text:
-#ead5ff;
+    --bg:radial-gradient(circle at top left,#8b5cf640 0%,transparent 35%), radial-gradient(circle at bottom right,#a855f740 0%,transparent 35%), #1a0d24;
+    --c1:#6b21a8;
+    --c2:#a855f7;
+    --text:#ead5ff;
     --glow:0 0 20px rgba(168,85,247,.5), 0 0 40px rgba(168,85,247,.3);
-    --input:
-#2b1f3d;
-    --panel:
-#1c1328;
+    --input:#2b1f3d;
+    --panel:#1c1328;
 }
 
 @font-face{
@@ -323,9 +317,7 @@ body.panelOpen{
 
 /* Danger zone button stays red on every theme */
 #dangerDropdown button{
-    background:linear-gradient(135deg,
-#991b1b,
-#ef4444);
+    background:linear-gradient(135deg,#991b1b,#ef4444);
 }
 
 /* Account */
@@ -401,7 +393,7 @@ body:has(#websitePanel.open){
 #statusPanel{
     position:fixed;
     left:20px;
-    bottom:20px;
+    bottom:80px;
     display:flex;
     flex-direction:column;
     gap:6px;
@@ -428,7 +420,7 @@ body:has(#websitePanel.open){
 .supportContainer{
     position:fixed;
     left:50%;
-    bottom:500px;
+    bottom:20px;
     transform:translateX(-50%);
     z-index:100;
 }
