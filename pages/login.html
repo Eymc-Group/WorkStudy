@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - WorkStudy</title>
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+<style>
+*{
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    margin:0;
+    background:#0f172a;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+.container{
+    width:400px;
+    max-width:90%;
+    background:#111827;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 0 25px rgba(168,85,247,.3);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin-bottom:15px;
+    border:none;
+    border-radius:10px;
+    background:#1f2937;
+    color:white;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#8b5cf6;
+    color:white;
+    cursor:pointer;
+    font-size:16px;
+}
+
+button:hover{
+    background:#7c3aed;
+}
+
+.links{
+    text-align:center;
+    margin-top:15px;
+}
+
+.links a{
+    color:#a855f7;
+    text-decoration:none;
+}
+
+#status{
+    margin-top:15px;
+    text-align:center;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>🔐 Login</h1>
+
+    <input id="username" placeholder="Username">
+
+    <input
+        id="password"
+        type="password"
+        placeholder="Password">
+
+    <div
+        class="cf-turnstile"
+        data-sitekey="0x4AAAAAAFhMfDnfOmB6YAzQ">
+    </div>
+
+    <button onclick="login()">
+        Login
+    </button>
+
+    <div id="status"></div>
+
+    <div class="links">
+        Don't have an account?
+        <a href="signup.html">Sign Up</a>
+
+        <br><br>
+
+        <a href="../index.html">🏠 Home</a>
+    </div>
+
+</div>
+
+<script>
+async function login(){
+
+    const username =
+        document.getElementById("username").value;
+
+    const password =
+        document.getElementById("password").value;
+
+    const status =
+        document.getElementById("status");
+
+    status.textContent = "Logging in...";
+
+    try{
+
+        const response =
+            await fetch(
+                "https://account-auth.354271744.workers.dev/login",
+                {
+                    method:"POST",
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    body:JSON.stringify({
+                        username,
+                        password
+                    })
+                });
+
+        const data =
+            await response.json();
+
+        if(data.success){
+
+            localStorage.setItem(
+                "loggedInUser",
+                username
+            );
+
+            status.textContent =      "Success!";
+
+            setTimeout(()=>{
+                location.href="../index.html";
+            },1000);
+
+        } else {
+
+            status.textContent =
+                data.message;
+
+        }
+
+    }catch(error){
+
+        status.textContent =
+            "Connection failed.";
+
+    }
+}
+</script>
+
+</body>
+</html>
