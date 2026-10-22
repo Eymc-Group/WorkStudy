@@ -320,13 +320,13 @@ function testPWA() {
     if ("serviceWorker" in navigator) {
 
         alert(
-            "Service Workers supported âœ…"
+            "Service Workers supported ✅"
         );
 
     } else {
 
         alert(
-            "Service Workers blocked âŒ"
+            "Service Workers blocked ❌"
         );
 
     }
@@ -340,7 +340,7 @@ function testServiceWorker() {
         .then(() => {
 
             alert(
-                "Service Worker Installed âœ…"
+                "Service Worker Installed ✅"
             );
 
         })
@@ -348,7 +348,7 @@ function testServiceWorker() {
         .catch(error => {
 
             alert(
-                "Service Worker Failed âŒ\n\n" +
+                "Service Worker Failed ❌\n\n" +
                 error
             );
 
