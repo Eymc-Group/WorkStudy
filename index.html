@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkStudy</title>
+    <link rel="icon" href="img/favicon.png">
+
+    <script src="js/color.js"> </script>
+    <script src="js/script.js"> </script>
+    <script src="js/status.js"> </script>
+    <script src="js/legacyconfirm.js"> </script>
+    <link rel="stylesheet" href="css/style.css">
+    
+</head>
+
+<body>
+
+
+    <div class="sidebar">
+
+        <button onclick="location.href='games/index.html'">
+            🎮 Games
+        </button>
+
+        <button onclick="location.href='pages/chat/index.html'">
+            💬 Chat
+        </button>
+        
+        <button onclick="location.href='pages/soundboard.html'">
+            🎵 Soundboard
+        </button>
+        
+        <button onclick="location.href='pages/iframe.html'">
+            🌐 Website Viewer
+        </button>
+        
+    </div>
+
+<button
+    id="legacyBtn"
+    onclick="legacyConfirm()">
+
+    🏛️ Legacy
+
+</button>
+
+    <div class="main">
+
+        <div class="welcome">
+            <h1>Welcome to WorkStudy</h1>
+
+            <p>
+                Game • Search • Explore
+            </p>
+        </div>
+
+    </div>
+
+    <button id="settingsBtn">
+       ⚙️ Settings
+    </button>
+    
+    <div id="customizePanel">
+
+    <div class="customizeHeader">
+
+        <h2>Settings</h2>
+
+        <button class="closeBtn"
+            onclick="closePanel()">
+            ✖
+        </button>
+        
+        </div>
+
+    <div class="dropdownHeader">
+
+    <span>🎨 Themes</span>
+
+    <span
+        class="dropdownArrow"
+        onclick="toggleDropdown('themesDropdown', this)">
+        >
+    </span>
+
+</div>
+
+<div
+    id="themesDropdown"
+    class="dropdownContent">
+  <button onclick="setTheme('blue')">🔵 Blue</button>
+<button onclick="setTheme('green')">🟢 Green</button>
+<button onclick="setTheme('red')">🔴 Red</button>
+<button onclick="setTheme('orange')">🟠 Orange</button>
+<button onclick="setTheme('yellow')">🟡 Yellow</button>
+<button onclick="setTheme('pink')">🌸 Pink</button>
+<button onclick="setTheme('cyan')">💎 Cyan</button>
+<button onclick="setTheme('teal')">🌊 Teal</button>
+<button onclick="setTheme('purple')">🟣 Purple</button>
+<button onclick="setTheme('indigo')">🔮 Indigo</button>
+<button onclick="setTheme('lime')">🍀 Lime</button>
+<button onclick="setTheme('minecraft')">⛏️ Minecraft</button>
+<button onclick="setTheme('discord')">🎮 Discord</button>
+<button onclick="setTheme('void')">⚫ Void</button>
+    </div>
+
+<hr>
+
+<div class="dropdownHeader">
+
+    <span>🧪 Developer Tools</span>
+
+    <span
+        class="dropdownArrow"
+        onclick="toggleDropdown('devDropdown', this)">
+        >
+    </span>
+    
+    </div>
+
+<div
+    id="devDropdown"
+    class="dropdownContent">
+
+    <button onclick="testFetch()">
+        🧲 Test Fetch
+    </button>
+
+    <button onclick="testXHR()">
+        🧪 Test XMLHttpRequest
+    </button>
+
+    <button onclick="testWebSocket()">
+        🔌 Test WebSocket
+    </button>
+
+    <button onclick="testSSE()">
+        📡 Test SSE
+    </button>
+
+    <button onclick="testImage()">
+        🖼️ Test Image
+    </button>
+
+    <button onclick="testScript()">
+        📜 Test Script
+    </button>
+
+    <button onclick="testIframe()">
+        🖼️ Test Iframe
+    </button>
+
+    <button onclick="testCORS()">
+        🚦 Test CORS
+    </button>
+
+    <button onclick="testSameOrigin()">
+        🏠 Test Same-Origin
+    </button>
+
+    <button onclick="testWorker()">
+        ☁️ Test Worker
+    </button>
+
+    <button onclick="testWorkerImage()">
+        🖼️ Test Worker Image
+    </button>
+    
+    <button onclick="testPWA()">
+        🚀 Test PWA
+    </button>
+    
+    <button onclick="testServiceWorker()">
+        🚀 Test Service Worker
+    </button>
+
+</div> <!-- devDropdown -->
+
+<hr>
+
+<div class="dropdownHeader">
+
+    <span>❌ Danger Zone!</span>
+
+    <span
+        class="dropdownArrow"
+        onclick="toggleDropdown('dangerDropdown', this)">
+        >
+    </span>
+    
+    </div>
+
+<div
+    id="dangerDropdown"
+    class="dropdownContent">
+  
+  <button onclick="clearWebsiteData()">
+    🗑️ Clear Website Data
+</button>
+
+</div>
+
+<hr>
+
+<div class="dropdownHeader">
+    <span>👤 Account</span>
+
+    <span
+        class="dropdownArrow"
+        onclick="toggleDropdown('accountDropdown', this)">
+        >
+    </span>
+</div>
+
+<div id="accountDropdown" class="dropdownContent">
+
+    <div id="loggedOutView">
+
+        <button onclick="window.location.href='pages/login.html'">
+            🔑 Login
+        </button>
+
+        <button onclick="window.location.href='pages/signup.html'">
+            📝 Sign Up
+        </button>
+
+    </div>
+
+    <div id="loggedInView" style="display:none;">
+
+        <p id="accountName"></p>
+
+        <button onclick="logout()">
+            🚪 Logout
+        </button>
+
+    </div>
+
+</div>
+
+</div> <!-- customizePanel -->
+
+<div
+    id="statusPanel"
+    onclick="location.href='pages/deviceinfo.html'">
+
+    <div id="time">
+        🕒 Loading...
+    </div>
+
+    <div id="battery">
+        🔋 Loading...
+    </div>
+
+</div>
+
+<div class="supportContainer">
+
+    <a
+        href="https://paypal.me/Tony7873"
+        target="_blank"
+        class="supportBtn">
+
+        💜 Support WorkStudy
+
+    </a>
+
+</div>
+
+</body>
+</html>
