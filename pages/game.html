@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  
+  <title id="gameTitle"></title>
+  <link rel="icon" href="../img/game.png">
+
+    <h1 id="gameTitle"></h1>
+    
+    <script src="../js/color.js"> </script>
+    <link rel="stylesheet"
+        href="../css/style.css">
+
+</head>
+
+<body>
+
+<script>
+
+document.getElementById(
+    "gameTitle"
+).textContent =
+    localStorage.getItem(
+        "gameName"
+    );
+
+const author =
+    localStorage.getItem(
+        "gameAuthor"
+    );
+
+if (author) {
+
+    document.getElementById(
+        "gameAuthor"
+    ).textContent =
+        "by " + author;
+
+}
+else {
+
+    document.getElementById(
+        "gameAuthor"
+    ).style.display =
+        "none";
+
+}
+
+document.getElementById(
+    "websiteFrame"
+).src =
+    localStorage.getItem(
+        "gameUrl"
+    );
+
+</script>
+
+
+<h1 id="gameTitle"></h1>
+
+<p id="gameAuthor"></p>
+
+<iframe id="websiteFrame"></iframe>
+
+    <div class="topbar">
+
+        <button onclick="
+location.href='../games/index.html'
+">
+    Back to Games
+</button>
+
+<button
+    onclick="location.href='../index.html'">
+
+     Home
+
+</button>
+
+    </div>
+
+    <script>
+
+        document
+            .getElementById(
+                "websiteFrame"
+            )
+            .src =
+            localStorage.getItem(
+                "gameUrl"
+            );
+
+    </script>
+    
+    <script>
+      document.getElementById(
+    "gameTitle"
+).textContent =
+    localStorage.getItem(
+        "gameName"
+    );
+    </script>
+
+</body>
+
+</html>
