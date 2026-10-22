@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assignments</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#1b1525;
+    color:white;
+    font-family:Arial, sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.container{
+    text-align:center;
+    width:90%;
+    max-width:1200px;
+}
+
+.home-btn{
+    position:absolute;
+    top:20px;
+    left:20px;
+    background:#7d56c2;
+    color:white;
+    text-decoration:none;
+    padding:12px 20px;
+    border-radius:12px;
+    font-weight:bold;
+    transition:0.3s;
+    box-shadow:0 0 15px rgba(125,86,194,.5);
+}
+
+.home-btn:hover{
+    background:#946bdf;
+}
+
+h1{
+    font-size:4rem;
+    color:#b68cff;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:#d0c4ff;
+    margin-bottom:50px;
+    font-size:1.2rem;
+}
+
+#search{
+    width:100%;
+    max-width:600px;
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    font-size:18px;
+    margin-bottom:20px;
+    outline:none;
+}
+
+#results{
+    max-width:600px;
+    margin:0 auto 30px auto;
+    text-align:left;
+}
+
+.result{
+    background:#7d56c2;
+    padding:15px;
+    border-radius:12px;
+    margin-bottom:10px;
+    cursor:pointer;
+}
+
+.result:hover{
+    background:#946bdf;
+}
+
+.button-container{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    background:#7d56c2;
+    color:white;
+    text-decoration:none;
+    padding:18px 30px;
+    border-radius:12px;
+    font-size:1.2rem;
+    font-weight:bold;
+    transition:0.3s;
+    box-shadow:0 0 15px rgba(125,86,194,.5);
+    border:none;
+    cursor:pointer;
+}
+
+.btn:hover{
+    background:#946bdf;
+    transform:translateY(-3px);
+}
+</style>
+</head>
+
+<body>
+
+<a class="home-btn" href="index.html">🏠 Back to Homepage</a>
+
+<div class="container">
+
+    <h1>Games And Apps</h1>
+    <p class="subtitle">Choose a Workstation to Work at.</p>
+
+    <input
+        type="text"
+        id="search"
+        placeholder="Search Games Here"
+    >
+
+    <div id="results"></div>
+
+    <div class="button-container">
+
+        <button class="btn" onclick="window.location.href='gd.html'">
+            Geometry Dash
+        </button>
+        
+        <button class="btn" onclick="window.location.href='fnae.html'">
+            Five Nights at Epstein
+        </button>
+
+        <button class="btn" onclick="window.location.href='badparenting.html'">
+            Bad Parenting
+        </button>
+        
+        <button class="btn" onclick="window.location.href='hollowknight.html'">
+            Hollow Knight
+        </button>
+
+        <button class="btn" onclick="window.location.href='minecraft.html'">
+            Minecraft
+        </button>
+
+        <button class="btn" onclick="window.location.href='run3.html'">
+            Run 3
+        </button>
+
+        <button class="btn" onclick="window.location.href='slope.html'">
+            Slope
+        </button>
+
+        <button class="btn" onclick="window.location.href='cookieclicker.html'">
+            Cookie Clicker
+        </button>
+
+        <button class="btn" onclick="window.location.href='retrobowl.html'">
+            Retro Bowl
+        </button>
+        
+        <button class="btn" onclick="window.open('https://forms.gle/haqah3cYdNXBmgoz8','_blank')">
+            Request Games
+        </button>
+
+        <button class="btn" onclick="window.location.href='2040.html'">
+            2040
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+const games = [
+{
+    name: "Geometry Dash",
+    link: "gd.html"
+},
+{
+    name: "Bad Parenting",
+    link: "badparenting.html"
+},
+{
+    name: "Hollow Knight",
+    link: "hollowknight.html"
+},
+{
+    name: "2040",
+    link: "2040.html"
+},
+{
+    name: "Minecraft",
+    link: "minecraft.html"
+},
+    {
+    name: "Five Nights at Epstein",
+    link: "fnae.html"
+},
+{
+    name: "Run 3",
+    link: "run3.html"
+},
+{
+    name: "Slope",
+    link: "slope.html"
+},
+{
+    name: "Cookie Clicker",
+    link: "cookieclicker.html"
+},
+{
+    name: "Retro Bowl",
+    link: "retrobowl.html"
+}
+];
+
+const searchBar = document.getElementById("search");
+const results = document.getElementById("results");
+
+searchBar.addEventListener("input", function(){
+
+    results.innerHTML = "";
+
+    const text = searchBar.value.toLowerCase().trim();
+
+    if(text === ""){
+        return;
+    }
+
+    games.forEach(game => {
+
+        if(game.name.toLowerCase().includes(text)){
+
+            const result = document.createElement("div");
+
+            result.className = "result";
+            result.textContent = game.name;
+
+            result.onclick = function(){
+                window.location.href = game.link;
+            };
+
+            results.appendChild(result);
+        }
+
+    });
+
+});
+</script>
+
+</body>
+</html>
