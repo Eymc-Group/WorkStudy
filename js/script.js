@@ -353,5 +353,27 @@ function testServiceWorker() {
             );
 
         });
+function clearWebsiteData() {
+    const confirmed = confirm(
+        "⚠️ This will delete:\n\n" +
+        "• Saved websites\n" +
+        "• Settings\n" +
+        "• Cached preferences\n\n" +
+        "Continue?"
+    );
 
+    if (!confirmed) return;
+
+    const theme = localStorage.getItem("workstudy-theme");
+
+    localStorage.clear();
+
+    if (theme) {
+        localStorage.setItem("workstudy-theme", theme);
+    }
+
+    alert("✅ Website data cleared.");
+
+    location.reload();
+}
 }
