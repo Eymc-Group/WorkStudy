@@ -332,6 +332,7 @@ function testServiceWorker() {
             );
 
         });
+}
 function clearWebsiteData() {
     const confirmed = confirm(
         "⚠️ This will delete:\n\n" +
