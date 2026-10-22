@@ -37,31 +37,18 @@ document.body.classList.remove(
 }
 
 function testXHR() {
-
     const xhr = new XMLHttpRequest();
 
-    xhr.onreadystatechange = function () {
-
-        if (xhr.readyState === 4) {
-
-            if (xhr.status === 200) {
-                alert("XMLHttpRequest works!");
-            } else {
-                alert("XMLHttpRequest failed.");
-            }
-
-        }
-
+    xhr.onload = () => {
+        alert("✅ XHR works!\n\n" + xhr.responseText);
     };
 
-    xhr.open(
-        "GET",
-        "https://example.com",
-        true
-    );
+    xhr.onerror = () => {
+        alert("❌ XHR failed.");
+    };
 
+    xhr.open("GET", "/test.json");
     xhr.send();
-
 }
 function testWebSocket() {
 
@@ -361,5 +348,28 @@ function clearWebsiteData() {
     alert("✅ All local storage cleared.");
 
     location.reload();
+}
+    function updateAccountUI() {
+    const user = localStorage.getItem("workstudy-user");
+
+    const loggedOutView =
+        document.getElementById("loggedOutView");
+
+    const loggedInView =
+        document.getElementById("loggedInView");
+
+    const accountName =
+        document.getElementById("accountName");
+
+    if (user) {
+        loggedOutView.style.display = "none";
+        loggedInView.style.display = "block";
+
+        accountName.textContent =
+            "✅ Logged in as " + user;
+    } else {
+        loggedOutView.style.display = "block";
+        loggedInView.style.display = "none";
+    }
 }
 }
