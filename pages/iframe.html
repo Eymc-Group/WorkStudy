@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Viewer</title>
+
+    <script src="../js/color.js"> </script>
+    <script src="../js/iframe.js"> </script>
+    <link rel="stylesheet" href="../css/style.css">
+    
+</head>
+<body>
+
+    <div class="welcome">
+        <h1>Website Iframe</h1>
+
+        <p>
+            Enter a website URL below to Iframe (html)
+        </p>
+    </div>
+
+    <div class="topbar">
+
+        <input
+            type="text"
+            id="urlInput"
+            placeholder="https://workingstudys.neocities.org">
+
+        <button onclick="loadWebsite()">
+            🌐 Open
+        </button>
+
+        <button onclick="location.href='../index.html'">
+            🏠 Home
+        </button>
+
+    </div>
+
+    <iframe id="websiteFrame"></iframe>
+
+</body>
+</html>
