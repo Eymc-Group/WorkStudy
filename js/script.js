@@ -176,23 +176,15 @@ function testIframe() {
 
 }
 function testFetch() {
-
-    fetch("https://example.com")
-
-        .then(function(response) {
-
-            if (response.ok) {
-
-                alert("Fetch works!");
-
-            } else {
-
-                alert(
-                    "Fetch responded with status " +
-                    response.status
-                );
-
-            }
+    fetch("/test.json")
+        .then(response => response.text())
+        .then(data => {
+            alert("✅ Fetch works!\n\n" + data);
+        })
+        .catch(err => {
+            alert("❌ Fetch failed:\n" + err);
+        });
+}
 
         })
 
