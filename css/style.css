@@ -526,4 +526,61 @@ body:has(#websitePanel.open){
     display:flex;
     justify-content:center;
     margin-top:15px;
-    margin-b
+    margin-bottom:15px;
+}
+
+#status{
+    margin-top:15px;
+    min-height:24px;
+    color:var(--text);
+    text-align:center;
+}
+
+.links{
+    margin-top:20px;
+    text-align:center;
+    color:var(--text);
+}
+
+.links a{
+    color:var(--c2);
+    text-decoration:none;
+}
+
+.links a:hover{
+    text-decoration:underline;
+}
+
+/* Mobile */
+
+@media (max-width: 768px){
+
+    .auth-container{
+        width:95%;
+        padding:20px;
+    }
+
+    .auth-container h1{
+        font-size:28px;
+    }
+
+    .welcome h1{
+        font-size:42px;
+    }
+
+    .welcome p{
+        font-size:22px;
+    }
+
+    .sidebar{
+        justify-content:center;
+    }
+
+    .topbar{
+        flex-direction:column;
+    }
+
+    .topbar button{
+        width:100%;
+    }
+}
