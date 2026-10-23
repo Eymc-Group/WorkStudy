@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soundboard</title>
-    <link rel="icon" href="../img/sound.png">
+    <title>Device Info</title>
+    <link rel="icon" href="../img/website.png">
+    <script src="../js/status.js" defer></script>
     <script src="../js/color.js" defer></script>
     <link rel="stylesheet" href="../css/style.css">
 </head>
@@ -12,10 +13,15 @@
     <button id="homeBtn" type="button" onclick="location.href='../index.html'">🏠 Home</button>
 
     <div class="welcome">
-        <h1>🎵 Soundboard</h1>
-        <p>Browse and play built-in sounds</p>
+        <h1>💻 Device Info</h1>
+        <p>Live device statistics</p>
     </div>
 
-    <iframe id="websiteFrame" src="https://schoolwork04.github.io/soundboard/" title="Soundboard"></iframe>
+    <div class="gamesGrid">
+        <button class="gameCard" id="batteryCard" type="button">🔋 Loading...</button>
+        <button class="gameCard" id="timeCard" type="button">🕒 Loading...</button>
+        <button class="gameCard" id="platformCard" type="button">💻 Loading...</button>
+        <button class="gameCard" id="browserCard" type="button">🌐 Loading...</button>
+    </div>
 </body>
 </html>
