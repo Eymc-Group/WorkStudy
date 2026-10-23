@@ -1,327 +1,168 @@
-# 🚀 WorkStudy
+# WorkStudy Offline Branch
 
-WorkStudy is a modern web platform designed to provide games, tools, utilities, website viewing, community features, and experimentation tools through a single interface.
+This branch allows WorkStudy to run with offline games and an offline soundboard.
 
-Originally created as a personal project, WorkStudy has evolved into a multi-service platform featuring custom themes, user authentication, cloud-based account management, deployment redundancy, and an expanding collection of features.
+## Requirements
 
----
+Download all 3 ZIP files:
 
-# 🌍 Project Overview
+### 1. WorkStudy Offline
 
-WorkStudy combines entertainment, utilities, customization, testing tools, and account functionality into a single website.
+[Download WorkStudy Offline](https://github.com/schoolwork04/WorkStudy/archive/refs/heads/offline.zip)
 
-The goal of WorkStudy is to create a flexible platform where users can:
+### 2. Soundboard
 
-- Play games
-- View websites
-- Use utilities
-- Customize themes
-- Create accounts
-- Explore web technologies
-- Experiment with browser capabilities
+[Download Soundboard](https://github.com/schoolwork04/soundboard/archive/refs/heads/main.zip)
+
+### 3. Games (gfiles)
+
+[Download Games](https://github.com/schoolwork04/gfiles/archive/refs/heads/master.zip)
 
 ---
 
-# ✨ Features
+# WARNING
 
-## 🎮 Games
+⚠️ The games package may be large.
 
-WorkStudy contains a collection of browser games accessible through the Games section.
-
-Features include:
-
-- Game launcher
-- Custom game library
-- Legacy game support
-- Embedded game support
-- External game support
+The gfiles repository contains a large collection of games and may take some time to download and extract depending on your device and internet connection.
 
 ---
 
-## 🌐 Website Viewer
+# Setup
 
-The Website Viewer allows users to open websites inside an iframe viewer.
+## Step 1
 
-Features include:
+Download all three ZIP files.
 
-- URL input
-- Embedded website viewing
-- Website saving system
-- Bookmark functionality
-- Stored website collection
-- Quick access websites
+## Step 2
 
----
+Extract all three ZIP files.
 
-## 💬 Chat
-
-WorkStudy includes a chat area for communication and experimentation.
-
----
-
-## 🎵 Soundboard
-
-The soundboard allows users to quickly play sounds from a collection of audio clips.
-
----
-
-## 🎨 Theme System
-
-WorkStudy includes a dynamic theme engine.
-
-Current themes include:
-
-- Blue
-- Green
-- Red
-- Orange
-- Yellow
-- Pink
-- Cyan
-- Teal
-- Purple
-- Indigo
-- Lime
-- Minecraft
-- Discord
-- Void
-
-Theme preferences are automatically stored locally.
-
----
-
-## ⚙️ Settings Panel
-
-The settings panel provides centralized access to WorkStudy configuration options.
-
-Current categories include:
-
-### 🎨 Themes
-
-Theme selection and customization.
-
-### 🧪 Developer Tools
-
-Testing tools for browser features.
-
-Available tests:
-
-- Fetch
-- XMLHttpRequest
-- WebSocket
-- Server-Sent Events
-- Images
-- Scripts
-- Iframes
-- CORS
-- Same-Origin Requests
-- Cloudflare Worker Connectivity
-- PWA Support
-- Service Workers
-
-### ❌ Danger Zone
-
-System reset options.
-
-Current options:
-
-- Clear Website Data
-
-### 👤 Account
-
-Authentication and account management.
-
----
-
-# 👤 Account System
-
-WorkStudy uses a custom cloud-based authentication system.
-
-Features include:
-
-- User Registration
-- User Login
-- User Logout
-- Persistent Sessions
-- Cloud-Synchronized Accounts
-
-Authentication is powered using:
-
-- Cloudflare Workers
-- Cloudflare KV Storage
-
----
-
-# 🛡️ Security
-
-WorkStudy utilizes:
-
-## Cloudflare Turnstile
-
-Used to reduce automated abuse and bot traffic.
-
-## Cloudflare Workers
-
-Handles authentication requests.
-
-## Cloudflare KV
-
-Stores account information and user data.
-
----
-
-# ☁️ Infrastructure
-
-WorkStudy uses modern cloud infrastructure.
-
-Current services include:
-
-### Cloudflare
-
-- Workers
-- Pages
-- KV
-- Turnstile
-
-### GitHub
-
-Used as the source of truth for the project repository.
-
----
-
-# 🌍 Deployment Mirrors
-
-WorkStudy is deployed across multiple providers for increased reliability.
-
-Current mirrors include:
-
-## 🐙 GitHub Pages
-
-Primary public deployment.
-
-## ☁️ Cloudflare Pages
-
-Cloudflare-hosted deployment.
-
-## 🌐 Netlify
-
-Netlify-hosted deployment.
-
-## ▲ Vercel
-
-Vercel-hosted deployment.
-
-## 🚂 Render
-
-Render-hosted deployment.
-
----
-
-# 🔄 Redundancy
-
-One repository powers multiple deployments.
-
-Workflow:
+After extraction, you should have folders similar to:
 
 ```text
-GitHub Repository
-        ↓
-Automatic Deployments
-        ↓
-Cloudflare Pages
-Netlify
-Vercel
-Render
-GitHub Pages
+offline/
+soundboard-main/
+gfiles-main/
 ```
 
-This ensures the project remains available across multiple hosting platforms.
+## Step 3
 
----
+Keep the extracted folders together in the same parent directory.
 
-# 🧪 Developer Tools
-
-WorkStudy contains several browser diagnostics.
-
-These tools allow testing of:
-
-- Browser APIs
-- Network Access
-- CORS Support
-- Worker Connectivity
-- Service Worker Support
-- Progressive Web App Features
-
-The purpose of these tools is educational experimentation and browser diagnostics.
-
----
-
-# 📁 Project Structure
+Example:
 
 ```text
-WorkStudy
-│
-├── index.html
-│
-├── css
-│   └── style.css
-│
-├── js
-│   ├── script.js
-│   ├── color.js
-│   ├── status.js
-│   └── legacyconfirm.js
-│
-├── pages
-│   ├── login.html
-│   ├── signup.html
-│   ├── iframe.html
-│   ├── soundboard.html
-│   └── deviceinfo.html
-│
-├── games
-│   └── ...
-│
-├── img
-│   └── ...
-│
-└── fonts
-    └── ...
+Projects/
+├── offline/
+├── soundboard-main/
+└── gfiles-main/
+```
+
+Do not rename the extracted folders.
+
+## Step 4
+
+Open:
+
+```text
+offline/index.html
 ```
 
 ---
 
-# 🎯 Project Goals
+# Features
 
-Current goals include:
+✅ Offline Games
 
-- Expanding utilities
-- Improving account management
-- Improving cloud synchronization
-- Increasing reliability
-- Improving responsiveness
-- Adding additional tools and features
-- Enhancing user customization
+✅ Offline Soundboard
 
----
+✅ Offline Themes
 
-# 📜 License
+✅ Offline Settings
 
-This project is intended for educational and personal use.
+✅ Offline Device Info
 
-Authors should always maintain backups of project files and cloud configurations.
+✅ Local Assets
+
+✅ No GitHub Pages Required After Setup
 
 ---
 
-# 💜 Support
+# Troubleshooting
 
-If you enjoy WorkStudy and would like to support development:
+### Soundboard Not Loading
 
-PayPal:
-https://paypal.me/Tony7873
+Verify the following exists:
+
+```text
+soundboard-main/
+└── soundboard-main/
+    └── index.html
+```
+
+### Games Not Loading
+
+Verify the following exists:
+
+```text
+gfiles-main/
+└── gfiles-main/
+    └── games/
+```
+
+### White Screen / Missing Pages
+
+Make sure:
+
+- All ZIP files were extracted.
+- Folder names were not changed.
+- All folders remain in the same parent directory.
 
 ---
 
-# 🚀 WorkStudy
+# Offline Paths Used
 
-**Game • Search • Explore**
+Soundboard:
+
+```text
+../../../soundboard-main/soundboard-main/index.html
+```
+
+Games:
+
+```text
+../../../gfiles-main/gfiles-main/games/<game>/
+```
+
+---
+
+# Credits
+
+## WorkStudy
+
+Created and maintained by schoolwork04.
+
+## Soundboard
+
+Forked from:
+
+https://github.com/genizymath/soundboard
+
+Original credit belongs to GenizyMath.
+
+## Games (gfiles)
+
+Forked from:
+
+https://github.com/HTML5GameArchive/gfiles
+
+Original credit belongs to HTML5GameArchive.
+
+## Offline Branch
+
+Offline integration, setup instructions, and WorkStudy compatibility maintained by schoolwork04.
+
+---
+
+Enjoy WorkStudy Offline! 🎮🎵🚀
