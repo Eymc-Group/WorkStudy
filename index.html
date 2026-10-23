@@ -99,26 +99,7 @@
 
         <hr>
 
-        <div class="dropdownHeader">
-    <span>👤 Account</span>
-    <span class="dropdownArrow" data-dropdown="accountDropdown" aria-expanded="false" role="button" tabindex="0">›</span>
-</div>
-<div id="accountDropdown" class="dropdownContent">
-    <div id="loggedOutView">
-        <button type="button" onclick="window.location.href='pages/login.html'">🔑 Login</button>
-        <button type="button" onclick="window.location.href='pages/signup.html'">📝 Sign Up</button>
-    </div>
-    <div id="loggedInView" style="display:none;">
-        <p id="accountName">Guest</p>
-        <button id="logoutBtn" type="button">🚪 Logout</button>
-        <hr>
-        <h3>💾 Cloud Saves</h3>
-        <button id="saveProgressBtn" type="button">💾 Save Progress</button>
-        <button id="loadProgressBtn" type="button">📥 Load Progress</button>
-        <button id="deleteProgressBtn" type="button" style="background: linear-gradient(135deg, #991b1b, #ef4444);">🗑️ Delete Save</button>
-        <div id="saveStatus" style="margin-top: 10px; text-align: center; color: var(--text); font-size: 14px;"></div>
-    </div>
-</div><div class="dropdownHeader">
+<div class="dropdownHeader">
     <span>👤 Account</span>
     <span class="dropdownArrow" data-dropdown="accountDropdown" aria-expanded="false" role="button" tabindex="0">›</span>
 </div>
@@ -138,7 +119,6 @@
         <div id="saveStatus" style="margin-top: 10px; text-align: center; color: var(--text); font-size: 14px;"></div>
     </div>
 </div>
-    </aside>
 
     <div id="statusPanel" role="button" tabindex="0" onclick="location.href='pages/deviceinfo.html'">
         <div id="time">🕒 Loading...</div>
