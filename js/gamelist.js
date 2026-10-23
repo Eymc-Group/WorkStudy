@@ -1,5 +1,9 @@
 const games = [
-
+    
+    {
+    name: "Connect 3",
+    path: "../../../gfiles-main/gfiles-main/games/connect3/"
+    },
     {
         name: "1v1.LOL",
         path: "https://schoolwork04.github.io/gfiles/games/1v1lol/"
