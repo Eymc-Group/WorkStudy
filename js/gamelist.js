@@ -1,354 +1,158 @@
 const games = [
-
-    {
-        name: "1v1.LOL",
-        path: "https://schoolwork04.github.io/gfiles/games/1v1lol/"
-    },
-
-    {
-        name: "2048",
-        path: "https://schoolwork04.github.io/gfiles/games/2048/"
-    },
-
-    {
-        name: "Baldi's Basics",
-        path: "https://schoolwork04.github.io/gfiles/games/baldisbasics/"
-    },
-
-    {
-        name: "Basketball Legends",
-        path: "https://schoolwork04.github.io/gfiles/games/basketballlegends/"
-    },
-
-    {
-        name: "Basketball Stars",
-        path: "https://schoolwork04.github.io/gfiles/games/basketballstars/"
-    },
-
-    {
-        name: "Basket Bros",
-        path: "https://schoolwork04.github.io/gfiles/games/basketbrosio/"
-    },
-
-    {
-        name: "Basket Random",
-        path: "https://schoolwork04.github.io/gfiles/games/basketrandom/"
-    },
-
-    {
-        name: "BitLife",
-        path: "https://schoolwork04.github.io/gfiles/games/bitlife/"
-    },
-
-    {
-        name: "Chrome Dino",
-        path: "https://schoolwork04.github.io/gfiles/games/chromedino/"
-    },
-
-    {
-        name: "Cluster Rush",
-        path: "https://schoolwork04.github.io/gfiles/games/clusterrush/"
-    },
-
-    {
-        name: "Cookie Clicker",
-        path: "https://schoolwork04.github.io/gfiles/games/cookieclicker/"
-    },
-
-    {
-        name: "Crossy Road",
-        path: "https://schoolwork04.github.io/gfiles/games/crossyroad/"
-    },
-
-    {
-        name: "Cut The Rope",
-        path: "https://schoolwork04.github.io/gfiles/games/cuttherope/"
-    },
-
-    {
-        name: "Death Run 3D",
-        path: "https://schoolwork04.github.io/gfiles/games/deathrun3d/"
-    },
-
-    {
-        name: "Drift Hunters",
-        path: "https://schoolwork04.github.io/gfiles/games/drifthunters/"
-    },
-
-    {
-        name: "Drive Mad",
-        path: "https://schoolwork04.github.io/gfiles/games/drivemad/"
-    },
-
-    {
-        name: "Duck Life",
-        path: "https://schoolwork04.github.io/gfiles/games/ducklife/"
-    },
-
-    {
-        name: "Flappy Bird",
-        path: "https://schoolwork04.github.io/gfiles/games/flappybird/"
-    },
-
-    {
-        name: "Friday Night Funkin'",
-        path: "https://schoolwork04.github.io/gfiles/games/fridaynightfunkin/"
-    },
-
-    {
-        name: "Fruit Ninja",
-        path: "https://schoolwork04.github.io/gfiles/games/fruitninja/"
-    },
-    {
-        name: "Monkey Mart",
-        path: "https://schoolwork04.github.io/gfiles/games/monkeymart/"
-    },
-
-    {
-        name: "Moto X3M",
-        path: "https://schoolwork04.github.io/gfiles/games/motox3m/"
-    },
-
-    {
-        name: "OvO",
-        path: "https://schoolwork04.github.io/gfiles/games/ovo/"
-    },
-
-    {
-        name: "Pac-Man",
-        path: "https://schoolwork04.github.io/gfiles/games/pacman/"
-    },
-
-    {
-        name: "Retro Bowl",
-        path: "https://schoolwork04.github.io/gfiles/games/retrobowl/"
-    },
-
-    {
-        name: "Run 3",
-        path: "https://schoolwork04.github.io/gfiles/games/run3/"
-    },
-
-    {
-        name: "Slope",
-        path: "https://schoolwork04.github.io/gfiles/games/slope/"
-    },
-
-    {
-        name: "Snake",
-        path: "https://schoolwork04.github.io/gfiles/games/snake/"
-    },
-
-    {
-        name: "Stickman Hook",
-        path: "https://schoolwork04.github.io/gfiles/games/stickmanhook/"
-    },
-
-    {
-        name: "Subway Surfers",
-        path: "https://schoolwork04.github.io/gfiles/games/subwaysurfers/"
-    },
-
-    {
-        name: "Tetris",
-        path: "https://schoolwork04.github.io/gfiles/games/tetris/"
-    },
-
-    {
-        name: "Tiny Fishing",
-        path: "https://schoolwork04.github.io/gfiles/games/tinyfishing/"
-    },
-
-    {
-        name: "Tunnel Rush",
-        path: "https://schoolwork04.github.io/gfiles/games/tunnelrush/"
-    },
-
-    {
-        name: "Vex 3",
-        path: "https://schoolwork04.github.io/gfiles/games/vex3/"
-    },
-
-    {
-        name: "Vex 4",
-        path: "https://schoolwork04.github.io/gfiles/games/vex4/"
-    },
-
-    {
-        name: "Vex 5",
-        path: "https://schoolwork04.github.io/gfiles/games/vex5/"
-    },
-
-    {
-        name: "Vex 6",
-        path: "https://schoolwork04.github.io/gfiles/games/vex6/"
-    },
-
-    {
-        name: "Zombs Royale",
-        path: "https://schoolwork04.github.io/gfiles/games/zombsroyale/"
-    },
-    {
-        name: "2040",
-        path: "https://schoolwork04.github.io/2048/"
-    },
-
-    {
-        name: "Five Nights at Epstein's",
-        path: "https://schoolwork04.github.io/Five-Nights-at-Epstein/"
-    },
-
-    {
-        name: "Geometry Dash",
-        path: "https://schoolwork04.github.io/geometrydash/"
-    },
-
-    {
-        name: "Hollow Knight",
-        path: "https://schoolwork04.github.io/hollowknight/"
-    },
-{
-    name: "A Dark Room",
-    path: "https://schoolwork04.github.io/gfiles/games/adarkroom/"
-},
-{
-    name: "ASCII Space",
-    path: "https://schoolwork04.github.io/gfiles/games/asciispace/"
-},
-{
-    name: "Asteroids",
-    path: "https://schoolwork04.github.io/gfiles/games/asteroids/"
-},
-{
-    name: "Astray",
-    path: "https://schoolwork04.github.io/gfiles/games/astray/"
-},
-{
-    name: "Back Country",
-    path: "https://schoolwork04.github.io/gfiles/games/backcountry/"
-},
-{
-    name: "Breakout",
-    path: "https://schoolwork04.github.io/gfiles/games/breakout/"
-},
-{
-    name: "BTD4",
-    path: "https://schoolwork04.github.io/gfiles/games/btd4/"
-},
-{
-    name: "Chess",
-    path: "https://schoolwork04.github.io/gfiles/games/chess/"
-},
-{
-    name: "Clicker Heroes",
-    path: "https://schoolwork04.github.io/gfiles/games/clickerheroes/"
-},
-{
-    name: "Connect 3",
-    path: "https://schoolwork04.github.io/gfiles/games/connect3/"
-},
-{
-    name: "Cubefield",
-    path: "https://schoolwork04.github.io/gfiles/games/cubefield/"
-},
-{
-    name: "DOOM",
-    path: "https://schoolwork04.github.io/gfiles/games/doom/"
-},
-{
-    name: "Eggy Car",
-    path: "https://schoolwork04.github.io/gfiles/games/eggycar/"
-},
-{
-    name: "Fireboy & Watergirl",
-    path: "https://schoolwork04.github.io/gfiles/games/fireboyandwatergirlforesttemple/"
-},
-{
-    name: "Google Snake",
-    path: "https://schoolwork04.github.io/gfiles/games/googlesnake/"
-},
-{
-    name: "Learn To Fly",
-    path: "https://schoolwork04.github.io/gfiles/games/learntofly/"
-},
-{
-    name: "Little Alchemy",
-    path: "https://schoolwork04.github.io/gfiles/games/littlealchemy/"
-},
-{
-    name: "OvO 2",
-    path: "https://schoolwork04.github.io/gfiles/games/ovo2/"
-},
-{
-    name: "Paper.io",
-    path: "https://schoolwork04.github.io/gfiles/games/paperio/"
-},
-{
-    name: "Red Ball 4",
-    path: "https://schoolwork04.github.io/gfiles/games/redball4/"
-},
-{
-    name: "Rooftop Snipers",
-    path: "https://schoolwork04.github.io/gfiles/games/rooftopsnipers/"
-},
-{
-    name: "Slither.io",
-    path: "https://schoolwork04.github.io/gfiles/games/slitherio/"
-},
-{
-    name: "Slope 2",
-    path: "https://schoolwork04.github.io/gfiles/games/slope2/"
-},
-{
-    name: "Soccer Random",
-    path: "https://schoolwork04.github.io/gfiles/games/soccerrandom/"
-},
-{
-    name: "Solitaire",
-    path: "https://schoolwork04.github.io/gfiles/games/solitaire/"
-},
-{
-    name: "Space Invaders",
-    path: "https://schoolwork04.github.io/gfiles/games/spaceinvaders/"
-},
-{
-    name: "Stack",
-    path: "https://schoolwork04.github.io/gfiles/games/stack/"
-},
-{
-    name: "Stack Ball",
-    path: "https://schoolwork04.github.io/gfiles/games/stackball/"
-},
-{
-    name: "Subway Surfers NY",
-    path: "https://schoolwork04.github.io/gfiles/games/subwaysurfersny/"
-},
-{
-    name: "Subway Surfers Singapore",
-    path: "https://schoolwork04.github.io/gfiles/games/subwaysurferssingapore/"
-},
-{
-    name: "Tanuki Sunset",
-    path: "https://schoolwork04.github.io/gfiles/games/tanukisunset/"
-},
-{
-    name: "Time Shooter",
-    path: "https://schoolwork04.github.io/gfiles/games/timeshooter/"
-},
-{
-    name: "Time Shooter 2",
-    path: "https://schoolwork04.github.io/gfiles/games/timeshooter2/"
-},
-{
-    name: "Time Shooter 3",
-    path: "https://schoolwork04.github.io/gfiles/games/timeshooter3/"
-},
-{
-    name: "Tomb of the Mask",
-    path: "https://schoolwork04.github.io/gfiles/games/tombofthemask/"
-},
-{
-    name: "World's Hardest Game 2",
-    path: "https://schoolwork04.github.io/gfiles/games/worldshardestgame2/"
-}
+    { name: "1v1.LOL", path: "https://schoolwork04.github.io/gfiles/games/1v1lol/" },
+    { name: "2040", path: "https://schoolwork04.github.io/2048/" },
+    { name: "2048", path: "https://schoolwork04.github.io/gfiles/games/2048/" },
+    { name: "A Dark Room", path: "https://schoolwork04.github.io/gfiles/games/adarkroom/" },
+    { name: "ASCII Space", path: "https://schoolwork04.github.io/gfiles/games/asciispace/" },
+    { name: "Assessment Examination", path: "https://schoolwork04.github.io/gfiles/games/assessmentexamination/" },
+    { name: "Asteroids", path: "https://schoolwork04.github.io/gfiles/games/asteroids/" },
+    { name: "Astray", path: "https://schoolwork04.github.io/gfiles/games/astray/" },
+    { name: "Back Country", path: "https://schoolwork04.github.io/gfiles/games/backcountry/" },
+    { name: "Baldi's Basics", path: "https://schoolwork04.github.io/gfiles/games/baldisbasics/" },
+    { name: "Basket Bros", path: "https://schoolwork04.github.io/gfiles/games/basketbrosio/" },
+    { name: "Basket Random", path: "https://schoolwork04.github.io/gfiles/games/basketrandom/" },
+    { name: "Basketball Legends", path: "https://schoolwork04.github.io/gfiles/games/basketballlegends/" },
+    { name: "Basketball Stars", path: "https://schoolwork04.github.io/gfiles/games/basketballstars/" },
+    { name: "BitLife", path: "https://schoolwork04.github.io/gfiles/games/bitlife/" },
+    { name: "Black Hole Square", path: "https://schoolwork04.github.io/gfiles/games/blackholesquare/" },
+    { name: "Bounce Back", path: "https://schoolwork04.github.io/gfiles/games/bounceback/" },
+    { name: "Boxing Random", path: "https://schoolwork04.github.io/gfiles/games/boxingrandom/" },
+    { name: "Break Lock", path: "https://schoolwork04.github.io/gfiles/games/breaklock/" },
+    { name: "Breakout", path: "https://schoolwork04.github.io/gfiles/games/breakout/" },
+    { name: "BTD4", path: "https://schoolwork04.github.io/gfiles/games/btd4/" },
+    { name: "Captain Callisto", path: "https://schoolwork04.github.io/gfiles/games/captaincallisto/" },
+    { name: "Chess", path: "https://schoolwork04.github.io/gfiles/games/chess/" },
+    { name: "Chroma Incident", path: "https://schoolwork04.github.io/gfiles/games/chromaincident/" },
+    { name: "Chrome Dino", path: "https://schoolwork04.github.io/gfiles/games/chromedino/" },
+    { name: "Clicker Heroes", path: "https://schoolwork04.github.io/gfiles/games/clickerheroes/" },
+    { name: "Cluster Rush", path: "https://schoolwork04.github.io/gfiles/games/clusterrush/" },
+    { name: "Connect 3", path: "https://schoolwork04.github.io/gfiles/games/connect3/" },
+    { name: "Cookie Clicker", path: "https://schoolwork04.github.io/gfiles/games/cookieclicker/" },
+    { name: "Crossy Road", path: "https://schoolwork04.github.io/gfiles/games/crossyroad/" },
+    { name: "CSGO Clicker", path: "https://schoolwork04.github.io/gfiles/games/csgoclicker/" },
+    { name: "Cubefield", path: "https://schoolwork04.github.io/gfiles/games/cubefield/" },
+    { name: "Cubito Mayhem", path: "https://schoolwork04.github.io/gfiles/games/cubitomayhem/" },
+    { name: "Cut The Rope", path: "https://schoolwork04.github.io/gfiles/games/cuttherope/" },
+    { name: "Cut The Rope Holiday", path: "https://schoolwork04.github.io/gfiles/games/cuttheropeholiday/" },
+    { name: "Cut The Rope Time Travel", path: "https://schoolwork04.github.io/gfiles/games/cuttheropetimetravel/" },
+    { name: "Death Run 3D", path: "https://schoolwork04.github.io/gfiles/games/deathrun3d/" },
+    { name: "Deepest Sword", path: "https://schoolwork04.github.io/gfiles/games/deepestsword/" },
+    { name: "Doodle Jump", path: "https://schoolwork04.github.io/gfiles/games/doodlejump/" },
+    { name: "DOOM", path: "https://schoolwork04.github.io/gfiles/games/doom/" },
+    { name: "Draw The Hill", path: "https://schoolwork04.github.io/gfiles/games/drawthehill/" },
+    { name: "Drift", path: "https://schoolwork04.github.io/gfiles/games/drift/" },
+    { name: "Drift Hunters", path: "https://schoolwork04.github.io/gfiles/games/drifthunters/" },
+    { name: "Drive Mad", path: "https://schoolwork04.github.io/gfiles/games/drivemad/" },
+    { name: "Duck Life", path: "https://schoolwork04.github.io/gfiles/games/ducklife/" },
+    { name: "Duck Life 2", path: "https://schoolwork04.github.io/gfiles/games/ducklife2/" },
+    { name: "Duck Life 3", path: "https://schoolwork04.github.io/gfiles/games/ducklife3/" },
+    { name: "Duck Life 4", path: "https://schoolwork04.github.io/gfiles/games/ducklife4/" },
+    { name: "Duck Life 5", path: "https://schoolwork04.github.io/gfiles/games/ducklife5/" },
+    { name: "Earn To Die", path: "https://schoolwork04.github.io/gfiles/games/earntodie/" },
+    { name: "Edge Not Found", path: "https://schoolwork04.github.io/gfiles/games/edgenotfound/" },
+    { name: "Eggy Car", path: "https://schoolwork04.github.io/gfiles/games/eggycar/" },
+    { name: "Evil Glitch", path: "https://schoolwork04.github.io/gfiles/games/evilglitch/" },
+    { name: "Factory Balls Forever", path: "https://schoolwork04.github.io/gfiles/games/factoryballsforever/" },
+    { name: "Fireboy & Watergirl", path: "https://schoolwork04.github.io/gfiles/games/fireboyandwatergirlforesttemple/" },
+    { name: "Flappy 2048", path: "https://schoolwork04.github.io/gfiles/games/flappy2048/" },
+    { name: "Flappy Bird", path: "https://schoolwork04.github.io/gfiles/games/flappybird/" },
+    { name: "Flappy Plane", path: "https://schoolwork04.github.io/gfiles/games/flappyplane/" },
+    { name: "Flight Simulator", path: "https://schoolwork04.github.io/gfiles/games/flightsimulator/" },
+    { name: "Friday Night Funkin'", path: "https://schoolwork04.github.io/gfiles/games/fridaynightfunkin/" },
+    { name: "Friendly Fire", path: "https://schoolwork04.github.io/gfiles/games/friendlyfire/" },
+    { name: "Fruit Ninja", path: "https://schoolwork04.github.io/gfiles/games/fruitninja/" },
+    { name: "Geometry Dash", path: "https://schoolwork04.github.io/geometrydash/" },
+    { name: "Getaway Shootout", path: "https://schoolwork04.github.io/gfiles/games/getawayshootoutnew/" },
+    { name: "Gladihoppers", path: "https://schoolwork04.github.io/gfiles/games/gladihoppers/" },
+    { name: "Google Snake", path: "https://schoolwork04.github.io/gfiles/games/googlesnake/" },
+    { name: "Gopher Kart", path: "https://schoolwork04.github.io/gfiles/games/gopherkart/" },
+    { name: "GrindCraft", path: "https://schoolwork04.github.io/gfiles/games/grindcraft/" },
+    { name: "HexGL", path: "https://schoolwork04.github.io/gfiles/games/hexgl/" },
+    { name: "Hextris", path: "https://schoolwork04.github.io/gfiles/games/hextris/" },
+    { name: "Highway Traffic", path: "https://schoolwork04.github.io/gfiles/games/highwaytraffic/" },
+    { name: "Hollow Knight", path: "https://schoolwork04.github.io/hollowknight/" },
+    { name: "Konnekt", path: "https://schoolwork04.github.io/gfiles/games/konnekt/" },
+    { name: "Learn To Fly", path: "https://schoolwork04.github.io/gfiles/games/learntofly/" },
+    { name: "Let's Surf", path: "https://schoolwork04.github.io/gfiles/games/letssurf/" },
+    { name: "Little Alchemy", path: "https://schoolwork04.github.io/gfiles/games/littlealchemy/" },
+    { name: "Merge Round Racers", path: "https://schoolwork04.github.io/gfiles/games/mergeroundracers/" },
+    { name: "Monkey Mart", path: "https://schoolwork04.github.io/gfiles/games/monkeymart/" },
+    { name: "Moto Road Rash 3D", path: "https://schoolwork04.github.io/gfiles/games/motoroadrash3d/" },
+    { name: "Moto X3M", path: "https://schoolwork04.github.io/gfiles/games/motox3m/" },
+    { name: "Ninja vs Evil Corp", path: "https://schoolwork04.github.io/gfiles/games/ninjavsevilcorp/" },
+    { name: "Om Nom Bounce", path: "https://schoolwork04.github.io/gfiles/games/omnombounce/" },
+    { name: "OvO", path: "https://schoolwork04.github.io/gfiles/games/ovo/" },
+    { name: "OvO 2", path: "https://schoolwork04.github.io/gfiles/games/ovo2/" },
+    { name: "Pac-Man", path: "https://schoolwork04.github.io/gfiles/games/pacman/" },
+    { name: "Pack A Bunchas", path: "https://schoolwork04.github.io/gfiles/games/packabunchas/" },
+    { name: "Paper.io", path: "https://schoolwork04.github.io/gfiles/games/paperio/" },
+    { name: "Particle Clicker", path: "https://schoolwork04.github.io/gfiles/games/particleclicker/" },
+    { name: "Push Back", path: "https://schoolwork04.github.io/gfiles/games/pushback/" },
+    { name: "Q1K3", path: "https://schoolwork04.github.io/gfiles/games/q1k3/" },
+    { name: "R3", path: "https://schoolwork04.github.io/gfiles/games/r3/" },
+    { name: "Racer", path: "https://schoolwork04.github.io/gfiles/games/racer/" },
+    { name: "Radius Raid", path: "https://schoolwork04.github.io/gfiles/games/radiusraid/" },
+    { name: "Red Ball 4", path: "https://schoolwork04.github.io/gfiles/games/redball4/" },
+    { name: "Retro Bowl", path: "https://schoolwork04.github.io/gfiles/games/retrobowl/" },
+    { name: "Retro Haunt", path: "https://schoolwork04.github.io/gfiles/games/retrohaunt/" },
+    { name: "Riddle School 2", path: "https://schoolwork04.github.io/gfiles/games/riddleschool2/" },
+    { name: "Ritz", path: "https://schoolwork04.github.io/gfiles/games/ritz/" },
+    { name: "Roadblocks", path: "https://schoolwork04.github.io/gfiles/games/roadblocks/" },
+    { name: "Rooftop Snipers", path: "https://schoolwork04.github.io/gfiles/games/rooftopsnipers/" },
+    { name: "Run 3", path: "https://schoolwork04.github.io/gfiles/games/run3/" },
+    { name: "Scrap Metal 3", path: "https://schoolwork04.github.io/gfiles/games/scrapmetal3/" },
+    { name: "Shuttle Deck", path: "https://schoolwork04.github.io/gfiles/games/shuttledeck/" },
+    { name: "Sketchbook 04", path: "https://schoolwork04.github.io/gfiles/games/sketchbook04/" },
+    { name: "Sleeping Beauty", path: "https://schoolwork04.github.io/gfiles/games/sleepingbeauty/" },
+    { name: "Slither.io", path: "https://schoolwork04.github.io/gfiles/games/slitherio/" },
+    { name: "Slope", path: "https://schoolwork04.github.io/gfiles/games/slope/" },
+    { name: "Slope 2", path: "https://schoolwork04.github.io/gfiles/games/slope2/" },
+    { name: "Snake", path: "https://schoolwork04.github.io/gfiles/games/snake/" },
+    { name: "Snow Battle", path: "https://schoolwork04.github.io/gfiles/games/snowbattle/" },
+    { name: "Soccer Random", path: "https://schoolwork04.github.io/gfiles/games/soccerrandom/" },
+    { name: "Solitaire", path: "https://schoolwork04.github.io/gfiles/games/solitaire/" },
+    { name: "Space Company", path: "https://schoolwork04.github.io/gfiles/games/spacecompany/" },
+    { name: "Space Garden", path: "https://schoolwork04.github.io/gfiles/games/spacegarden/" },
+    { name: "Space Huggers", path: "https://schoolwork04.github.io/gfiles/games/spacehuggers/" },
+    { name: "Space Invaders", path: "https://schoolwork04.github.io/gfiles/games/spaceinvaders/" },
+    { name: "Stack", path: "https://schoolwork04.github.io/gfiles/games/stack/" },
+    { name: "Stack Ball", path: "https://schoolwork04.github.io/gfiles/games/stackball/" },
+    { name: "Stickman Boost", path: "https://schoolwork04.github.io/gfiles/games/stickmanboost/" },
+    { name: "Stickman Climb", path: "https://schoolwork04.github.io/gfiles/games/stickmanclimb/" },
+    { name: "Stickman Golf", path: "https://schoolwork04.github.io/gfiles/games/stickmangolf/" },
+    { name: "Stickman Hook", path: "https://schoolwork04.github.io/gfiles/games/stickmanhook/" },
+    { name: "Stickman Survival", path: "https://schoolwork04.github.io/gfiles/games/stickmansurvival/" },
+    { name: "Subway Surfers", path: "https://schoolwork04.github.io/gfiles/games/subwaysurfers/" },
+    { name: "Subway Surfers NY", path: "https://schoolwork04.github.io/gfiles/games/subwaysurfersny/" },
+    { name: "Subway Surfers Singapore", path: "https://schoolwork04.github.io/gfiles/games/subwaysurferssingapore/" },
+    { name: "Tanuki Sunset", path: "https://schoolwork04.github.io/gfiles/games/tanukisunset/" },
+    { name: "Tetris", path: "https://schoolwork04.github.io/gfiles/games/tetris/" },
+    { name: "The Maze of Space Goblins", path: "https://schoolwork04.github.io/gfiles/games/themazeofspacegoblins/" },
+    { name: "Time Shooter", path: "https://schoolwork04.github.io/gfiles/games/timeshooter/" },
+    { name: "Time Shooter 2", path: "https://schoolwork04.github.io/gfiles/games/timeshooter2/" },
+    { name: "Time Shooter 3", path: "https://schoolwork04.github.io/gfiles/games/timeshooter3/" },
+    { name: "Tiny Fishing", path: "https://schoolwork04.github.io/gfiles/games/tinyfishing/" },
+    { name: "Tomb of the Mask", path: "https://schoolwork04.github.io/gfiles/games/tombofthemask/" },
+    { name: "Top Speed Racing 3D", path: "https://schoolwork04.github.io/gfiles/games/topspeedracing3d/" },
+    { name: "Tower Master", path: "https://schoolwork04.github.io/gfiles/games/towermaster/" },
+    { name: "Trimps", path: "https://schoolwork04.github.io/gfiles/games/trimps/" },
+    { name: "Tunnel Rush", path: "https://schoolwork04.github.io/gfiles/games/tunnelrush/" },
+    { name: "Vex 3", path: "https://schoolwork04.github.io/gfiles/games/vex3/" },
+    { name: "Vex 4", path: "https://schoolwork04.github.io/gfiles/games/vex4/" },
+    { name: "Vex 5", path: "https://schoolwork04.github.io/gfiles/games/vex5/" },
+    { name: "Vex 6", path: "https://schoolwork04.github.io/gfiles/games/vex6/" },
+    { name: "We Become What We Behold", path: "https://schoolwork04.github.io/gfiles/games/webecomewhatwebehold/" },
+    { name: "World's Hardest Game 2", path: "https://schoolwork04.github.io/gfiles/games/worldshardestgame2/" },
+    { name: "XX142B2.EXE", path: "https://schoolwork04.github.io/gfiles/games/xx142b2exe/" },
+    { name: "Zombs Royale", path: "https://schoolwork04.github.io/gfiles/games/zombsroyale/" },
+    { name: "2040 (Legacy)", path: "https://schoolwork04.github.io/WorkStudy/games/legacy-games/2040.html" },
+    { name: "Bad Parenting", path: "https://schoolwork04.github.io/WorkStudy/games/legacy-games/badparenting.html" },
+    { name: "Cookie Clicker (Legacy)", path: "https://schoolwork04.github.io/WorkStudy/games/legacy-games/cookieclicker.html" },
+    { name: "Five Nights at Epstein's", path: "https://schoolwork04.github.io/WorkStudy/games/legacy-games/fnae.html" },
+    { name: "Geometry Dash", path: "https://schoolwork04.github.io/WorkStudy/games/legacy-games/gd.html" },
+    { name: "Hollow Knight (Legacy)", path: "https://schoolwork04.github.io/WorkStudy/games/legacy-games/hollowknight.html" },
+    { name: "Eaglercraft 26.2 0.6 dev", path: "https://schoolwork04.github.io/WorkStudy/games/legacy-games/minecraft.html" },
+    { name: "Retro Bowl (Legacy)", path: "https://schoolwork04.github.io/WorkStudy/games/legacy-games/retrobowl.html" },
+    { name: "Run 3 (Legacy)", path: "https://schoolwork04.github.io/WorkStudy/games/legacy-games/run3.html" },
+    { name: "Slope (Legacy)", path: "https://schoolwork04.github.io/WorkStudy/games/legacy-games/slope.html" }
 ];
