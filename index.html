@@ -1,165 +1,121 @@
-(function () {
-    "use strict";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkStudy</title>
+    <link rel="icon" href="img/favicon.png">
 
-    const app = window.WorkStudyApp || {};
+    <script src="js/auth.js" defer></script>
+    <script src="js/color.js" defer></script>
+    <script src="js/script.js" defer></script>
+    <script src="js/status.js" defer></script>
+    <script src="js/legacyconfirm.js" defer></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <button type="button" onclick="location.href='games/index.html'">🎮 Games</button>
+        <button type="button" onclick="location.href='pages/chat/index.html'">💬 Chat</button>
+        <button type="button" onclick="location.href='pages/soundboard.html'">🎵 Soundboard</button>
+        <button type="button" onclick="location.href='pages/iframe.html'">🌐 Website Viewer</button>
+    </div>
 
-    function ensureAppReady() {
-        if (!document.body) {
-            return false;
-        }
+    <button id="legacyBtn" type="button" onclick="legacyConfirm()">🏛️ Legacy</button>
 
-        if (document.readyState === "loading") {
-            return false;
-        }
+    <main class="main">
+        <div class="welcome">
+            <h1>Welcome to WorkStudy</h1>
+            <p>Game • Search • Explore</p>
+        </div>
+    </main>
 
-        return true;
-    }
+    <button id="settingsBtn" type="button">⚙️ Settings</button>
 
-    function updateAccountUI() {
-        if (window.WorkStudyAuth && typeof window.WorkStudyAuth.updateAccountUI === "function") {
-            return window.WorkStudyAuth.updateAccountUI();
-        }
+    <aside id="customizePanel" aria-label="Settings panel">
+        <div class="customizeHeader">
+            <h2>Settings</h2>
+            <button class="closeBtn" type="button" aria-label="Close settings">✖</button>
+        </div>
 
-        const user = localStorage.getItem("workstudy-user");
-        const loggedOutView = document.getElementById("loggedOutView");
-        const loggedInView = document.getElementById("loggedInView");
-        const accountName = document.getElementById("accountName");
+        <div class="dropdownHeader">
+            <span>🎨 Themes</span>
+            <span class="dropdownArrow" data-dropdown="themesDropdown" aria-expanded="false" role="button" tabindex="0">›</span>
+        </div>
+        <div id="themesDropdown" class="dropdownContent">
+            <button type="button" onclick="setTheme('blue')">🔵 Blue</button>
+            <button type="button" onclick="setTheme('green')">🟢 Green</button>
+            <button type="button" onclick="setTheme('red')">🔴 Red</button>
+            <button type="button" onclick="setTheme('orange')">🟠 Orange</button>
+            <button type="button" onclick="setTheme('yellow')">🟡 Yellow</button>
+            <button type="button" onclick="setTheme('pink')">🌸 Pink</button>
+            <button type="button" onclick="setTheme('cyan')">💎 Cyan</button>
+            <button type="button" onclick="setTheme('teal')">🌊 Teal</button>
+            <button type="button" onclick="setTheme('purple')">🟣 Purple</button>
+            <button type="button" onclick="setTheme('indigo')">🔮 Indigo</button>
+            <button type="button" onclick="setTheme('lime')">🍀 Lime</button>
+            <button type="button" onclick="setTheme('minecraft')">⛏️ Minecraft</button>
+            <button type="button" onclick="setTheme('discord')">🎮 Discord</button>
+            <button type="button" onclick="setTheme('void')">⚫ Void</button>
+        </div>
 
-        if (!loggedOutView || !loggedInView) {
-            return false;
-        }
+        <hr>
 
-        const isLoggedIn = Boolean(user);
-        loggedOutView.style.display = isLoggedIn ? "none" : "block";
-        loggedInView.style.display = isLoggedIn ? "block" : "none";
+        <div class="dropdownHeader">
+            <span>🧪 Developer Tools</span>
+            <span class="dropdownArrow" data-dropdown="devDropdown" aria-expanded="false" role="button" tabindex="0">›</span>
+        </div>
+        <div id="devDropdown" class="dropdownContent">
+            <button type="button" onclick="if (window.testFetch) window.testFetch();">🧲 Test Fetch</button>
+            <button type="button" onclick="if (window.testXHR) window.testXHR();">🧪 Test XMLHttpRequest</button>
+            <button type="button" onclick="if (window.testWebSocket) window.testWebSocket();">🔌 Test WebSocket</button>
+            <button type="button" onclick="if (window.testSSE) window.testSSE();">📡 Test SSE</button>
+            <button type="button" onclick="if (window.testImage) window.testImage();">🖼️ Test Image</button>
+            <button type="button" onclick="if (window.testScript) window.testScript();">📜 Test Script</button>
+            <button type="button" onclick="if (window.testIframe) window.testIframe();">🖼️ Test Iframe</button>
+            <button type="button" onclick="if (window.testCORS) window.testCORS();">🚦 Test CORS</button>
+            <button type="button" onclick="if (window.testSameOrigin) window.testSameOrigin();">🏠 Test Same-Origin</button>
+            <button type="button" onclick="if (window.testWorker) window.testWorker();">☁️ Test Worker</button>
+            <button type="button" onclick="if (window.testWorkerImage) window.testWorkerImage();">🖼️ Test Worker Image</button>
+            <button type="button" onclick="if (window.testPWA) window.testPWA();">🚀 Test PWA</button>
+            <button type="button" onclick="if (window.testServiceWorker) window.testServiceWorker();">🚀 Test Service Worker</button>
+        </div>
 
-        if (accountName) {
-            accountName.textContent = isLoggedIn ? user : "";
-        }
+        <hr>
 
-        return isLoggedIn;
-    }
+        <div class="dropdownHeader">
+            <span>❌ Danger Zone</span>
+            <span class="dropdownArrow" data-dropdown="dangerDropdown" aria-expanded="false" role="button" tabindex="0">›</span>
+        </div>
+        <div id="dangerDropdown" class="dropdownContent">
+            <button type="button" onclick="if (window.clearWebsiteData) window.clearWebsiteData(); else localStorage.clear();">🗑️ Clear Website Data</button>
+        </div>
 
-    function openPanel() {
-        const panel = document.getElementById("customizePanel");
+        <hr>
 
-        if (!panel) {
-            return false;
-        }
+        <div class="dropdownHeader">
+            <span>👤 Account</span>
+            <span class="dropdownArrow" data-dropdown="accountDropdown" aria-expanded="false" role="button" tabindex="0">›</span>
+        </div>
+        <div id="accountDropdown" class="dropdownContent">
+            <div id="loggedOutView">
+                <button type="button" onclick="window.location.href='pages/login.html'">🔑 Login</button>
+                <button type="button" onclick="window.location.href='pages/signup.html'">📝 Sign Up</button>
+            </div>
+            <div id="loggedInView" style="display:none;">
+                <p id="accountName">Guest</p>
+                <button type="button" onclick="logout()">🚪 Logout</button>
+            </div>
+        </div>
+    </aside>
 
-        panel.classList.add("open");
-        document.body.classList.add("panelOpen");
-        updateAccountUI();
-        return true;
-    }
+    <div id="statusPanel" role="button" tabindex="0" onclick="location.href='pages/deviceinfo.html'">
+        <div id="time">🕒 Loading...</div>
+        <div id="battery">🔋 Loading...</div>
+    </div>
 
-    function closePanel() {
-        const panel = document.getElementById("customizePanel");
-
-        if (panel) {
-            panel.classList.remove("open");
-        }
-
-        document.body.classList.remove("panelOpen");
-        return true;
-    }
-
-    function toggleDropdown(id, arrow) {
-        const dropdown = document.getElementById(id);
-
-        if (!dropdown) {
-            return false;
-        }
-
-        const isOpen = dropdown.classList.toggle("open");
-
-        if (arrow) {
-            arrow.classList.toggle("rotated", isOpen);
-            arrow.setAttribute("aria-expanded", String(isOpen));
-        }
-
-        return isOpen;
-    }
-
-    function login(username) {
-        const value = typeof username === "string" ? username.trim() : "";
-
-        if (!value) {
-            return false;
-        }
-
-        localStorage.setItem("workstudy-user", value);
-        updateAccountUI();
-        return true;
-    }
-
-    function logout() {
-        localStorage.removeItem("workstudy-user");
-        updateAccountUI();
-        closePanel();
-        return true;
-    }
-
-    function setupSettingsPanel() {
-        const settingsButton = document.getElementById("settingsBtn");
-        const closeButton = document.querySelector(".closeBtn");
-        const dropdownArrows = document.querySelectorAll(".dropdownArrow");
-
-        if (settingsButton) {
-            settingsButton.addEventListener("click", function () {
-                openPanel();
-            });
-        }
-
-        if (closeButton) {
-            closeButton.addEventListener("click", closePanel);
-        }
-
-        dropdownArrows.forEach(function (arrow) {
-            const dropdownId = arrow.getAttribute("data-dropdown");
-            if (!dropdownId) {
-                return;
-            }
-
-            arrow.addEventListener("click", function () {
-                toggleDropdown(dropdownId, arrow);
-            });
-        });
-    }
-
-    function initialize() {
-        if (!ensureAppReady()) {
-            return;
-        }
-
-        setupSettingsPanel();
-        updateAccountUI();
-    }
-
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", initialize);
-    } else {
-        initialize();
-    }
-
-    window.addEventListener("workstudy:authchange", function () {
-        updateAccountUI();
-    });
-
-    window.WorkStudyApp = Object.assign({}, app, {
-        updateAccountUI,
-        openPanel,
-        closePanel,
-        toggleDropdown,
-        login,
-        logout,
-        initialize
-    });
-
-    window.updateAccountUI = updateAccountUI;
-    window.openPanel = openPanel;
-    window.closePanel = closePanel;
-    window.toggleDropdown = toggleDropdown;
-    window.login = login;
-    window.logout = logout;
-})();
+    <div class="supportContainer">
+        <a href="https://paypal.me/Tony7873" target="_blank" rel="noreferrer" class="supportBtn">💜 Support WorkStudy</a>
+    </div>
+</body>
+</html>
