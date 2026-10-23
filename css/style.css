@@ -271,7 +271,8 @@ body.panelOpen {
 }
 
 .dropdownContent.open {
-    max-height: 1000px;
+    max-height: 400px;
+    overflow-y: auto;
     opacity: 1;
     transform: translateY(0);
     margin-top: 10px;
