@@ -109,6 +109,19 @@ async function loginUser() {
                 }
             }
 
+            // Save user data with token for cloud saves
+            try {
+                const userData = {
+                    username: username,
+                    token: data.token || "token_" + username + "_" + Date.now(),
+                    id: data.id || username,
+                    sub: data.sub || username
+                };
+                localStorage.setItem("user", JSON.stringify(userData));
+            } catch (error) {
+                console.error("Could not save user data", error);
+            }
+
             status.textContent =
                 "Success!";
 
