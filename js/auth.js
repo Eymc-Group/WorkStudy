@@ -1,125 +1,80 @@
 (function () {
     "use strict";
 
-    const AUTH_KEYS = Object.freeze({
-        user: "workstudy-user",
-        theme: "workstudy-theme"
-    });
+    function updateTime() {
+        const time = document.getElementById("time");
+        const currentTime = new Date().toLocaleTimeString();
 
-    const AUTH_EVENT_NAME = "workstudy:authchange";
+        if (time) {
+            time.textContent = "🕒 " + currentTime;
+        }
 
-    function safeGetItem(key) {
+        const timeCard = document.getElementById("timeCard");
+        if (timeCard) {
+            timeCard.textContent = "🕒 " + currentTime;
+        }
+    }
+
+    function updateBrowserInfo() {
+        const browserCard = document.getElementById("browserCard");
+        const platformCard = document.getElementById("platformCard");
+
+        let browser = "Unknown";
+        const ua = navigator.userAgent || "";
+
+        if (ua.includes("Edg")) {
+            browser = "Microsoft Edge";
+        } else if (ua.includes("Chrome")) {
+            browser = "Google Chrome";
+        } else if (ua.includes("Firefox")) {
+            browser = "Firefox";
+        } else if (ua.includes("Safari")) {
+            browser = "Safari";
+        }
+
+        if (browserCard) {
+            browserCard.textContent = "🌐 " + browser;
+        }
+
+        if (platformCard) {
+            platformCard.textContent = "💻 " + (navigator.platform || "Unknown");
+        }
+    }
+
+    async function updateBatteryInfo() {
+        if (!("getBattery" in navigator)) {
+            return;
+        }
+
         try {
-            return window.localStorage.getItem(key);
-        } catch (error) {
-            return null;
-        }
-    }
+            const battery = await navigator.getBattery();
 
-    function safeSetItem(key, value) {
-        try {
-            window.localStorage.setItem(key, value);
-            return true;
-        } catch (error) {
-            return false;
-        }
-    }
+            function render() {
+                const percent = Math.round((battery.level || 0) * 100);
+                const batteryText = document.getElementById("battery");
+                const batteryCard = document.getElementById("batteryCard");
 
-    function safeRemoveItem(key) {
-        try {
-            window.localStorage.removeItem(key);
-            return true;
-        } catch (error) {
-            return false;
-        }
-    }
+                if (batteryText) {
+                    batteryText.textContent = "🔋 " + percent + "%";
+                }
 
-    function normalizeUsername(value) {
-        if (typeof value !== "string") {
-            return "";
-        }
-
-        return value.trim();
-    }
-
-    function dispatchAuthChange() {
-        const event = new CustomEvent(AUTH_EVENT_NAME, {
-            detail: {
-                user: getCurrentUser()
+                if (batteryCard) {
+                    batteryCard.textContent = "🔋 " + percent + "%";
+                }
             }
-        });
 
-        window.dispatchEvent(event);
-    }
-
-    function getCurrentUser() {
-        const username = normalizeUsername(safeGetItem(AUTH_KEYS.user));
-        return username || null;
-    }
-
-    function setCurrentUser(username) {
-        const normalized = normalizeUsername(username);
-
-        if (!normalized) {
-            clearCurrentUser();
-            return false;
-        }
-
-        const saved = safeSetItem(AUTH_KEYS.user, normalized);
-
-        if (saved) {
-            dispatchAuthChange();
-            return true;
-        }
-
-        return false;
-    }
-
-    function clearCurrentUser() {
-        const removed = safeRemoveItem(AUTH_KEYS.user);
-
-        if (removed) {
-            dispatchAuthChange();
+            render();
+            battery.addEventListener("levelchange", render);
+        } catch (error) {
+            console.warn("Battery API unavailable:", error);
         }
     }
 
-    function updateAccountUI() {
-        const loggedOutView = document.getElementById("loggedOutView");
-        const loggedInView = document.getElementById("loggedInView");
-        const accountName = document.getElementById("accountName");
+    window.addEventListener("DOMContentLoaded", async function () {
+        updateTime();
+        updateBrowserInfo();
+        await updateBatteryInfo();
 
-        if (!loggedOutView || !loggedInView) {
-            return false;
-        }
-
-        const user = getCurrentUser();
-        const isLoggedIn = Boolean(user);
-
-        loggedOutView.style.display = isLoggedIn ? "none" : "block";
-        loggedInView.style.display = isLoggedIn ? "block" : "none";
-
-        if (accountName) {
-            accountName.textContent = isLoggedIn ? user : "";
-        }
-
-        return isLoggedIn;
-    }
-
-    function subscribeAuthChange(callback) {
-        window.addEventListener(AUTH_EVENT_NAME, callback);
-
-        return function unsubscribe() {
-            window.removeEventListener(AUTH_EVENT_NAME, callback);
-        };
-    }
-
-    window.WorkStudyAuth = Object.freeze({
-        AUTH_KEYS,
-        getCurrentUser,
-        setCurrentUser,
-        clearCurrentUser,
-        updateAccountUI,
-        subscribeAuthChange,
-        dispatchAuthChange
+        setInterval(updateTime, 1000);
     });
 })();

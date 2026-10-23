@@ -1,155 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - WorkStudy</title>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
+(function () {
+    "use strict";
+
+    const websiteBtn = document.getElementById("websiteBtn");
+    const websitePanel = document.getElementById("websitePanel");
+    const websiteList = document.getElementById("websiteList");
+    const addWebsiteBtn = document.getElementById("addWebsiteBtn");
+    const websiteFrame = document.getElementById("websiteFrame");
+
+    if (!websiteBtn || !websitePanel || !websiteList || !addWebsiteBtn || !websiteFrame) {
+        return;
+    }
+
+    websiteBtn.addEventListener("click", function () {
+        websitePanel.classList.toggle("open");
+    });
+
+    function getWebsites() {
+        try {
+            return JSON.parse(localStorage.getItem("savedWebsites")) || [];
+        } catch (error) {
+            return [];
         }
+    }
 
-        body {
-            margin: 0;
-            background: #0f172a;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+    function saveWebsites(websites) {
+        localStorage.setItem("savedWebsites", JSON.stringify(websites));
+    }
 
-        .container {
-            width: 400px;
-            max-width: 90%;
-            background: #111827;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 0 25px rgba(168, 85, 247, .3);
-        }
+    function renderWebsites() {
+        websiteList.innerHTML = "";
 
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+        getWebsites().forEach(function (site, index) {
+            const btn = document.createElement("button");
+            btn.className = "website-item";
+            btn.textContent = site.name;
 
-        input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: none;
-            border-radius: 10px;
-            background: #1f2937;
-            color: white;
-        }
+            btn.addEventListener("click", function () {
+                websiteFrame.src = site.url;
+            });
 
-        button {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            background: #8b5cf6;
-            color: white;
-            cursor: pointer;
-            font-size: 16px;
-        }
+            btn.addEventListener("contextmenu", function (event) {
+                event.preventDefault();
 
-        button:hover {
-            background: #7c3aed;
-        }
-
-        .links {
-            text-align: center;
-            margin-top: 15px;
-        }
-
-        .links a {
-            color: #a855f7;
-            text-decoration: none;
-        }
-
-        #status {
-            margin-top: 15px;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>✨ Create Account</h1>
-
-        <input id="username" placeholder="Username">
-        <input id="password" type="password" placeholder="Password">
-        <input id="confirmPassword" type="password" placeholder="Confirm Password">
-
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAAFhMfDnfOmB6YAzQ"></div>
-
-        <button onclick="signup()">Create Account</button>
-
-        <div id="status"></div>
-
-        <div class="links">
-            Already have an account?
-            <a href="login.html">Login</a>
-            <br><br>
-            <a href="../index.html">🏠 Home</a>
-        </div>
-    </div>
-
-    <script>
-        async function signup() {
-            const username = document.getElementById("username").value.trim();
-            const password = document.getElementById("password").value;
-            const confirmPassword = document.getElementById("confirmPassword").value;
-            const status = document.getElementById("status");
-
-            if (!username) {
-                status.textContent = "Enter a username.";
-                return;
-            }
-
-            if (password.length < 4) {
-                status.textContent = "Password must be at least 4 characters.";
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                status.textContent = "Passwords do not match.";
-                return;
-            }
-
-            status.textContent = "Creating account...";
-
-            try {
-                const response = await fetch("https://account-auth.354271744.workers.dev/register", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        username,
-                        password
-                    })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    status.textContent = "Account created! Redirecting...";
-
-                    setTimeout(function () {
-                        window.location.href = "login.html";
-                    }, 1500);
-                } else {
-                    status.textContent = data.message || "Signup failed.";
+                if (confirm('Delete "' + site.name + '"?')) {
+                    const websites = getWebsites();
+                    websites.splice(index, 1);
+                    saveWebsites(websites);
+                    renderWebsites();
                 }
-            } catch (error) {
-                console.error("Signup request failed", error);
-                status.textContent = "Connection failed.";
-            }
+            });
+
+            websiteList.appendChild(btn);
+        });
+    }
+
+    addWebsiteBtn.addEventListener("click", function () {
+        let url = prompt("Website URL:");
+
+        if (!url) {
+            return;
         }
-    </script>
-</body>
-</html>
+
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            url = "https://" + url;
+        }
+
+        let name = prompt("Website Name:");
+
+        if (!name || name.trim() === "") {
+            name = new URL(url).hostname;
+        }
+
+        const websites = getWebsites();
+        websites.push({ name, url });
+        saveWebsites(websites);
+        renderWebsites();
+    });
+
+    renderWebsites();
+})();

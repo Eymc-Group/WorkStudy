@@ -1,73 +1,21 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
-    <title>Device Info</title>
     <meta charset="UTF-8">
-<script src="../js/status.js"></script>
-<script src="../js/color.js"></script>
-    <link rel="stylesheet"
-        href="../css/style.css">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soundboard</title>
+    <link rel="icon" href="../img/sound.png">
+    <script src="../js/color.js" defer></script>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
-
 <body>
-
-    <button
-        id="homeBtn"
-        onclick="location.href='../index.html'">
-
-        Back
-
-    </button>
+    <button id="homeBtn" type="button" onclick="location.href='../index.html'">🏠 Home</button>
 
     <div class="welcome">
-
-        <h1>💻 Device Info</h1>
-
-        <p>
-            Live device statistics
-        </p>
-
+        <h1>🎵 Soundboard</h1>
+        <p>Browse and play built-in sounds</p>
     </div>
 
-    <div class="gamesGrid">
-
-        <button
-            class="gameCard"
-            id="batteryCard">
-
-            🔋 Loading...
-
-        </button>
-
-        <button
-            class="gameCard"
-            id="timeCard">
-
-            🕒 Loading...
-
-        </button>
-
-        <button
-            class="gameCard"
-            id="platformCard">
-
-            💻 Loading...
-
-        </button>
-
-        <button
-            class="gameCard"
-            id="browserCard">
-
-            🌐 Loading...
-
-        </button>
-
-    </div>
-    
+    <iframe id="websiteFrame" src="https://schoolwork04.github.io/soundboard/" title="Soundboard"></iframe>
 </body>
-
 </html>

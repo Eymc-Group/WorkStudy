@@ -1,185 +1,197 @@
-window.addEventListener(
-    "load",
-    async function () {
+(function () {
+    "use strict";
 
-        function updateTime() {
+    const app = window.WorkStudyApp || {};
 
-            const timeCard =
-                document.getElementById(
-                    "timeCard"
-                );
-
-            const time =
-                document.getElementById(
-                    "time"
-                );
-
-            const currentTime =
-                new Date()
-                .toLocaleTimeString();
-
-            if (timeCard) {
-
-                timeCard.textContent =
-                    "🕒 " +
-                    currentTime;
-
-            }
-
-            if (time) {
-
-                time.textContent =
-                    "🕒 " +
-                    currentTime;
-
-            }
-
+    function getDropdownById(dropdownId) {
+        if (!dropdownId || typeof dropdownId !== "string") {
+            return null;
         }
 
-        updateTime();
-
-        setInterval(
-            updateTime,
-            1000
-        );
-
-        let browser =
-            "Unknown";
-
-        if (
-            navigator.userAgent
-                .includes(
-                    "Edg"
-                )
-        ) {
-
-            browser =
-                "Microsoft Edge";
-
-        }
-        else if (
-            navigator.userAgent
-                .includes(
-                    "Chrome"
-                )
-        ) {
-
-            browser =
-                "Google Chrome";
-
-        }
-        else if (
-            navigator.userAgent
-                .includes(
-                    "Firefox"
-                )
-        ) {
-
-            browser =
-                "Firefox";
-
-        }
-        else if (
-            navigator.userAgent
-                .includes(
-                    "Safari"
-                )
-        ) {
-
-            browser =
-                "Safari";
-
-        }
-
-        const browserCard =
-            document.getElementById(
-                "browserCard"
-            );
-
-        if (
-            browserCard
-        ) {
-
-            browserCard.textContent =
-                "🌐 " +
-                browser;
-
-        }
-
-        const platformCard =
-            document.getElementById(
-                "platformCard"
-            );
-
-        if (
-            platformCard
-        ) {
-
-            platformCard.textContent =
-                "💻 " +
-                navigator.platform;
-
-        }
-
-        if (
-            "getBattery"
-            in navigator
-        ) {
-
-            const battery =
-                await navigator
-                    .getBattery();
-
-            function updateBattery() {
-
-                const percent =
-                    Math.round(
-                        battery.level *
-                        100
-                    );
-
-                const batteryCard =
-                    document.getElementById(
-                        "batteryCard"
-                    );
-
-                const batteryText =
-                    document.getElementById(
-                        "battery"
-                    );
-
-                if (
-                    batteryCard
-                ) {
-
-                    batteryCard.textContent =
-                        "🔋 " +
-                        percent +
-                        "%";
-
-                }
-
-                if (
-                    batteryText
-                ) {
-
-                    batteryText.textContent =
-                        "🔋 " +
-                        percent +
-                        "%";
-
-                }
-
-            }
-
-            updateBattery();
-
-            battery.addEventListener(
-                "levelchange",
-                updateBattery
-            );
-
-        }
-
+        return document.getElementById(dropdownId);
     }
-);
+
+    function openPanel() {
+        const panel = document.getElementById("customizePanel");
+
+        if (!panel) {
+            return false;
+        }
+
+        panel.classList.add("open");
+        document.body.classList.add("panelOpen");
+        return true;
+    }
+
+    function closePanel() {
+        const panel = document.getElementById("customizePanel");
+
+        if (panel) {
+            panel.classList.remove("open");
+        }
+
+        document.body.classList.remove("panelOpen");
+        return true;
+    }
+
+    function toggleDropdown(dropdownId, arrowElement) {
+        const dropdown = getDropdownById(dropdownId);
+
+        if (!dropdown) {
+            return false;
+        }
+
+        const isOpen = dropdown.classList.toggle("open");
+
+        if (arrowElement) {
+            arrowElement.classList.toggle("rotated", isOpen);
+            arrowElement.setAttribute("aria-expanded", String(isOpen));
+        }
+
+        return isOpen;
+    }
+
+    function refreshAccountState() {
+        const loggedOutView = document.getElementById("loggedOutView");
+        const loggedInView = document.getElementById("loggedInView");
+        const accountName = document.getElementById("accountName");
+
+        let user = null;
+
+        if (window.WorkStudyAuth && typeof window.WorkStudyAuth.getCurrentUser === "function") {
+            user = window.WorkStudyAuth.getCurrentUser();
+        } else {
+            try {
+                user = localStorage.getItem("workstudy-user");
+            } catch (error) {
+                user = null;
+            }
+        }
+
+        if (!loggedOutView || !loggedInView) {
+            return Boolean(user);
+        }
+
+        const isLoggedIn = Boolean(user);
+        loggedOutView.style.display = isLoggedIn ? "none" : "block";
+        loggedInView.style.display = isLoggedIn ? "block" : "none";
+
+        if (accountName) {
+            accountName.textContent = isLoggedIn ? user : "Guest";
+        }
+
+        return isLoggedIn;
+    }
+
+    function logout() {
+        if (window.WorkStudyAuth && typeof window.WorkStudyAuth.clearCurrentUser === "function") {
+            window.WorkStudyAuth.clearCurrentUser();
+        } else {
+            try {
+                localStorage.removeItem("workstudy-user");
+            } catch (error) {
+                // ignore storage issues
+            }
+        }
+
+        refreshAccountState();
+        closePanel();
+        return true;
+    }
+
+    function login(username) {
+        const user = typeof username === "string" ? username.trim() : "";
+
+        if (!user) {
+            return false;
+        }
+
+        if (window.WorkStudyAuth && typeof window.WorkStudyAuth.setCurrentUser === "function") {
+            const result = window.WorkStudyAuth.setCurrentUser(user);
+            refreshAccountState();
+            return result;
+        }
+
+        try {
+            localStorage.setItem("workstudy-user", user);
+        } catch (error) {
+            return false;
+        }
+
+        refreshAccountState();
+        return true;
+    }
+
+    function initializeUI() {
+        const settingsButton = document.getElementById("settingsBtn");
+        const closeButton = document.querySelector(".closeBtn");
+        const dropdownArrows = document.querySelectorAll(".dropdownArrow");
+
+        if (settingsButton) {
+            settingsButton.addEventListener("click", function () {
+                if (document.getElementById("customizePanel") && document.getElementById("customizePanel").classList.contains("open")) {
+                    closePanel();
+                } else {
+                    openPanel();
+                }
+                refreshAccountState();
+            });
+        }
+
+        if (closeButton) {
+            closeButton.addEventListener("click", closePanel);
+        }
+
+        dropdownArrows.forEach(function (arrow) {
+            const dropdownId = arrow.getAttribute("data-dropdown");
+            if (!dropdownId) {
+                return;
+            }
+
+            const handleToggle = function () {
+                toggleDropdown(dropdownId, arrow);
+            };
+
+            arrow.addEventListener("click", handleToggle);
+            arrow.addEventListener("keydown", function (event) {
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    handleToggle();
+                }
+            });
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                closePanel();
+            }
+        });
+
+        refreshAccountState();
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        initializeUI();
+    });
+
+    window.addEventListener("workstudy:authchange", function () {
+        refreshAccountState();
+    });
+
+    window.WorkStudyApp = Object.assign({}, app, {
+        openPanel,
+        closePanel,
+        toggleDropdown,
+        refreshAccountState,
+        logout,
+        login,
+        initializeUI
+    });
+
+    window.openPanel = openPanel;
+    window.closePanel = closePanel;
+    window.toggleDropdown = toggleDropdown;
+    window.refreshAccountState = refreshAccountState;
+    window.logout = logout;
+    window.login = login;
+})();
