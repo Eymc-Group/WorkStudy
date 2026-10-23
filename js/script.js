@@ -1,39 +1,23 @@
 window.onload = function () {
-
-    const customizeBtn =
-    document.getElementById("settingsBtn");
-
-    const customizePanel =
-        document.getElementById("customizePanel");
+    const customizeBtn = document.getElementById("settingsBtn");
+    const customizePanel = document.getElementById("customizePanel");
 
     if (customizeBtn && customizePanel) {
-
         customizeBtn.onclick = function () {
-            customizePanel.classList.add(
-    "open"
-);
-
-document.body.classList.add(
-    "panelOpen"
-);
+            customizePanel.classList.add("open");
+            document.body.classList.add("panelOpen");
         };
-
     }
-
 };
 
 function closePanel() {
-    document
-    .getElementById(
-        "customizePanel"
-    )
-    .classList.remove(
-        "open"
-    );
+    const panel = document.getElementById("customizePanel");
 
-document.body.classList.remove(
-    "panelOpen"
-);
+    if (panel) {
+        panel.classList.remove("open");
+    }
+
+    document.body.classList.remove("panelOpen");
 }
 
 function testXHR() {
@@ -50,45 +34,28 @@ function testXHR() {
     xhr.open("GET", "/test.json");
     xhr.send();
 }
-function testWebSocket() {
 
-    const socket =
-        new WebSocket("wss://echo.websocket.events");
+function testWebSocket() {
+    const socket = new WebSocket("wss://echo.websocket.events");
 
     socket.onopen = function () {
-
         alert("WebSocket works!");
-
         socket.send("Hello");
-
     };
 
     socket.onerror = function () {
-
         alert("WebSocket blocked.");
-
     };
 
     socket.onmessage = function (event) {
-
-        alert(
-            "Received: " +
-            event.data
-        );
-
+        alert("Received: " + event.data);
         socket.close();
-
     };
-
 }
+
 function testSSE() {
-
     try {
-
-        const source =
-            new EventSource(
-                "https://example.com/events"
-            );
+        const source = new EventSource("https://example.com/events");
 
         source.onopen = function () {
             alert("SSE works!");
@@ -99,16 +66,12 @@ function testSSE() {
             alert("SSE blocked.");
             source.close();
         };
-
     } catch {
-
         alert("SSE blocked.");
-
     }
-
 }
-function testImage() {
 
+function testImage() {
     const img = new Image();
 
     img.onload = function () {
@@ -119,15 +82,11 @@ function testImage() {
         alert("Image requests blocked.");
     };
 
-    img.src =
-        "https://via.placeholder.com/1?" +
-        Date.now();
-
+    img.src = "https://via.placeholder.com/1?" + Date.now();
 }
-function testScript() {
 
-    const script =
-        document.createElement("script");
+function testScript() {
+    const script = document.createElement("script");
 
     script.onload = function () {
         alert("External scripts work!");
@@ -137,19 +96,15 @@ function testScript() {
         alert("External scripts blocked.");
     };
 
-    script.src =
-        "https://example.com/test.js";
+    script.src = "https://example.com/test.js";
 
     document.body.appendChild(script);
-
 }
+
 function testIframe() {
+    const iframe = document.createElement("iframe");
 
-    const iframe =
-        document.createElement("iframe");
-
-    iframe.src =
-        "https://example.com";
+    iframe.src = "https://example.com";
 
     iframe.onload = function () {
         alert("Iframe works!");
@@ -160,8 +115,8 @@ function testIframe() {
     };
 
     document.body.appendChild(iframe);
-
 }
+
 function testFetch() {
     fetch("/test.json")
         .then(response => response.text())
@@ -173,166 +128,82 @@ function testFetch() {
         });
 }
 
-        })
-
-        .catch(function(error) {
-
-            alert(
-                "Fetch blocked or failed: " +
-                error
-            );
-
-        });
-
-}
 function testCORS() {
-
     fetch("https://example.com", {
         mode: "cors"
     })
-
-    .then(function(response) {
-
-        alert(
-            "CORS allowed!\nStatus: " +
-            response.status
-        );
-
+    .then(function (response) {
+        alert("CORS allowed!\nStatus: " + response.status);
     })
-
-    .catch(function(error) {
-
-        alert(
-            "CORS blocked:\n" +
-            error.message
-        );
-
+    .catch(function (error) {
+        alert("CORS blocked:\n" + error.message);
     });
-
 }
+
 function testSameOrigin() {
-
     fetch(window.location.href)
-
-        .then(function() {
-
+        .then(function () {
             alert("Same-origin fetch works!");
-
         })
-
-        .catch(function(error) {
-
-            alert(
-                "Same-origin failed: " +
-                error
-            );
-
+        .catch(function (error) {
+            alert("Same-origin failed: " + error);
         });
-
 }
+
 function testWorker() {
-
-    fetch(
-        "https://account-auth.354271744.workers.dev/"
-    )
-
-    .then(response => response.json())
-
-    .then(data => {
-
-        alert(
-            JSON.stringify(data)
-        );
-
-    })
-
-    .catch(error => {
-
-        alert(
-            "FAILED\n\n" +
-            error
-        );
-
-    });
-
+    fetch("https://account-auth.354271744.workers.dev/")
+        .then(response => response.json())
+        .then(data => {
+            alert(JSON.stringify(data));
+        })
+        .catch(error => {
+            alert("FAILED\n\n" + error);
+        });
 }
-function testWorkerImage() {
 
+function testWorkerImage() {
     const img = new Image();
 
-    img.onload = function() {
+    img.onload = function () {
         alert("Worker reachable!");
     };
 
-    img.onerror = function() {
+    img.onerror = function () {
         alert("Worker blocked by network/filter.");
     };
 
-    img.src =
-        "https://account-auth.354271744.workers.dev/?t=" +
-        Date.now();
-
+    img.src = "https://account-auth.354271744.workers.dev/?t=" + Date.now();
 }
-function toggleDropdown(
-    id,
-    arrow
-) {
 
-    const dropdown =
-        document.getElementById(id);
+function toggleDropdown(id, arrow) {
+    const dropdown = document.getElementById(id);
 
-    dropdown.classList.toggle(
-        "open"
-    );
+    dropdown.classList.toggle("open");
 
     if (arrow) {
-
-        arrow.classList.toggle(
-            "rotated"
-        );
-
+        arrow.classList.toggle("rotated");
     }
-
 }
+
 function testPWA() {
-
     if ("serviceWorker" in navigator) {
-
-        alert(
-            "Service Workers supported ✅"
-        );
-
+        alert("Service Workers supported ✅");
     } else {
-
-        alert(
-            "Service Workers blocked ❌"
-        );
-
+        alert("Service Workers blocked ❌");
     }
-
 }
-function testServiceWorker() {
 
+function testServiceWorker() {
     navigator.serviceWorker
         .register("js/sw.js")
-
         .then(() => {
-
-            alert(
-                "Service Worker Installed ✅"
-            );
-
+            alert("Service Worker Installed ✅");
         })
-
         .catch(error => {
-
-            alert(
-                "Service Worker Failed ❌\n\n" +
-                error
-            );
-
+            alert("Service Worker Failed ❌\n\n" + error);
         });
 }
+
 function clearWebsiteData() {
     const confirmed = confirm(
         "⚠️ This will delete:\n\n" +
@@ -345,32 +216,23 @@ function clearWebsiteData() {
     if (!confirmed) return;
 
     localStorage.clear();
-
     alert("✅ All local storage cleared.");
-
     location.reload();
 }
-    function updateAccountUI() {
+
+function updateAccountUI() {
     const user = localStorage.getItem("workstudy-user");
 
-    const loggedOutView =
-        document.getElementById("loggedOutView");
-
-    const loggedInView =
-        document.getElementById("loggedInView");
-
-    const accountName =
-        document.getElementById("accountName");
+    const loggedOutView = document.getElementById("loggedOutView");
+    const loggedInView = document.getElementById("loggedInView");
+    const accountName = document.getElementById("accountName");
 
     if (user) {
         loggedOutView.style.display = "none";
         loggedInView.style.display = "block";
-
-        accountName.textContent =
-            "✅ Logged in as " + user;
+        accountName.textContent = "✅ Logged in as " + user;
     } else {
         loggedOutView.style.display = "block";
         loggedInView.style.display = "none";
     }
-}
 }
