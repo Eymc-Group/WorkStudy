@@ -125,6 +125,14 @@
                 toggleDropdown(dropdownId, arrow);
             });
         });
+
+        // Add logout button listener
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function () {
+                logout();
+            });
+        }
     }
 
     function initialize() {
