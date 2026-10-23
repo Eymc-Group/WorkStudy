@@ -156,4 +156,6 @@ const games = [
     { name: "Retro Bowl (Legacy)", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/retrobowl.html" },
     { name: "Run 3 (Legacy)", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/run3.html" },
     { name: "Slope (Legacy)", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/slope.html" },
+    // Games By Bennett
+    { name: "Traffic Racer", path: "https://eymc-group.github.io/WorkStudy/games/bennet/traffic-racer.html
 ];
