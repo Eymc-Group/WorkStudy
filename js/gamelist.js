@@ -206,6 +206,149 @@ const games = [
     {
         name: "Hollow Knight",
         path: "https://schoolwork04.github.io/hollowknight/"
-    }
-
+    },
+{
+    name: "A Dark Room",
+    path: "https://schoolwork04.github.io/gfiles/games/adarkroom/"
+},
+{
+    name: "ASCII Space",
+    path: "https://schoolwork04.github.io/gfiles/games/asciispace/"
+},
+{
+    name: "Asteroids",
+    path: "https://schoolwork04.github.io/gfiles/games/asteroids/"
+},
+{
+    name: "Astray",
+    path: "https://schoolwork04.github.io/gfiles/games/astray/"
+},
+{
+    name: "Back Country",
+    path: "https://schoolwork04.github.io/gfiles/games/backcountry/"
+},
+{
+    name: "Breakout",
+    path: "https://schoolwork04.github.io/gfiles/games/breakout/"
+},
+{
+    name: "BTD4",
+    path: "https://schoolwork04.github.io/gfiles/games/btd4/"
+},
+{
+    name: "Chess",
+    path: "https://schoolwork04.github.io/gfiles/games/chess/"
+},
+{
+    name: "Clicker Heroes",
+    path: "https://schoolwork04.github.io/gfiles/games/clickerheroes/"
+},
+{
+    name: "Connect 3",
+    path: "https://schoolwork04.github.io/gfiles/games/connect3/"
+},
+{
+    name: "Cubefield",
+    path: "https://schoolwork04.github.io/gfiles/games/cubefield/"
+},
+{
+    name: "DOOM",
+    path: "https://schoolwork04.github.io/gfiles/games/doom/"
+},
+{
+    name: "Eggy Car",
+    path: "https://schoolwork04.github.io/gfiles/games/eggycar/"
+},
+{
+    name: "Fireboy & Watergirl",
+    path: "https://schoolwork04.github.io/gfiles/games/fireboyandwatergirlforesttemple/"
+},
+{
+    name: "Google Snake",
+    path: "https://schoolwork04.github.io/gfiles/games/googlesnake/"
+},
+{
+    name: "Learn To Fly",
+    path: "https://schoolwork04.github.io/gfiles/games/learntofly/"
+},
+{
+    name: "Little Alchemy",
+    path: "https://schoolwork04.github.io/gfiles/games/littlealchemy/"
+},
+{
+    name: "OvO 2",
+    path: "https://schoolwork04.github.io/gfiles/games/ovo2/"
+},
+{
+    name: "Paper.io",
+    path: "https://schoolwork04.github.io/gfiles/games/paperio/"
+},
+{
+    name: "Red Ball 4",
+    path: "https://schoolwork04.github.io/gfiles/games/redball4/"
+},
+{
+    name: "Rooftop Snipers",
+    path: "https://schoolwork04.github.io/gfiles/games/rooftopsnipers/"
+},
+{
+    name: "Slither.io",
+    path: "https://schoolwork04.github.io/gfiles/games/slitherio/"
+},
+{
+    name: "Slope 2",
+    path: "https://schoolwork04.github.io/gfiles/games/slope2/"
+},
+{
+    name: "Soccer Random",
+    path: "https://schoolwork04.github.io/gfiles/games/soccerrandom/"
+},
+{
+    name: "Solitaire",
+    path: "https://schoolwork04.github.io/gfiles/games/solitaire/"
+},
+{
+    name: "Space Invaders",
+    path: "https://schoolwork04.github.io/gfiles/games/spaceinvaders/"
+},
+{
+    name: "Stack",
+    path: "https://schoolwork04.github.io/gfiles/games/stack/"
+},
+{
+    name: "Stack Ball",
+    path: "https://schoolwork04.github.io/gfiles/games/stackball/"
+},
+{
+    name: "Subway Surfers NY",
+    path: "https://schoolwork04.github.io/gfiles/games/subwaysurfersny/"
+},
+{
+    name: "Subway Surfers Singapore",
+    path: "https://schoolwork04.github.io/gfiles/games/subwaysurferssingapore/"
+},
+{
+    name: "Tanuki Sunset",
+    path: "https://schoolwork04.github.io/gfiles/games/tanukisunset/"
+},
+{
+    name: "Time Shooter",
+    path: "https://schoolwork04.github.io/gfiles/games/timeshooter/"
+},
+{
+    name: "Time Shooter 2",
+    path: "https://schoolwork04.github.io/gfiles/games/timeshooter2/"
+},
+{
+    name: "Time Shooter 3",
+    path: "https://schoolwork04.github.io/gfiles/games/timeshooter3/"
+},
+{
+    name: "Tomb of the Mask",
+    path: "https://schoolwork04.github.io/gfiles/games/tombofthemask/"
+},
+{
+    name: "World's Hardest Game 2",
+    path: "https://schoolwork04.github.io/gfiles/games/worldshardestgame2/"
+}
 ];
