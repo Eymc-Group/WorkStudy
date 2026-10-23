@@ -20,7 +20,19 @@
             return window.WorkStudyAuth.updateAccountUI();
         }
 
-        const user = localStorage.getItem("workstudy-user");
+        // Check for both login formats
+        const oldUser = localStorage.getItem("workstudy-user");
+        let newUser = null;
+        try {
+            const userData = localStorage.getItem("user");
+            if (userData) {
+                newUser = JSON.parse(userData);
+            }
+        } catch (e) {}
+
+        const user = newUser || oldUser;
+        const username = newUser ? newUser.username : oldUser;
+
         const loggedOutView = document.getElementById("loggedOutView");
         const loggedInView = document.getElementById("loggedInView");
         const accountName = document.getElementById("accountName");
@@ -34,7 +46,7 @@
         loggedInView.style.display = isLoggedIn ? "block" : "none";
 
         if (accountName) {
-            accountName.textContent = isLoggedIn ? user : "";
+            accountName.textContent = isLoggedIn ? username : "Guest";
         }
 
         return isLoggedIn;
