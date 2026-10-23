@@ -1,259 +1,145 @@
-window.onload = function () {
-    const customizeBtn = document.getElementById("settingsBtn");
-    const customizePanel = document.getElementById("customizePanel");
+(function () {
+    "use strict";
 
-    if (customizeBtn && customizePanel) {
-        customizeBtn.onclick = function () {
-            customizePanel.classList.add("open");
-            document.body.classList.add("panelOpen");
-        };
-    }
+    const app = window.WorkStudyApp || {};
 
-    updateAccountUI();
-};
-
-function updateAccountUI() {
-    const user = localStorage.getItem("workstudy-user");
-
-    const loggedOutView = document.getElementById("loggedOutView");
-    const loggedInView = document.getElementById("loggedInView");
-    const accountName = document.getElementById("accountName");
-
-    if (!loggedOutView || !loggedInView) return;
-
-    if (user) {
-        loggedOutView.style.display = "none";
-        loggedInView.style.display = "block";
-
-        if (accountName) {
-            accountName.textContent = user;
+    function getDropdownById(dropdownId) {
+        if (!dropdownId || typeof dropdownId !== "string") {
+            return null;
         }
-    } else {
-        loggedOutView.style.display = "block";
-        loggedInView.style.display = "none";
 
-        if (accountName) {
-            accountName.textContent = "";
+        return document.getElementById(dropdownId);
+    }
+
+    function openPanel() {
+        const panel = document.getElementById("customizePanel");
+
+        if (!panel) {
+            return false;
         }
-    }
-}
 
-function login(username) {
-    localStorage.setItem("workstudy-user", username);
-    updateAccountUI();
-}
-
-function logout() {
-    localStorage.removeItem("workstudy-user");
-    updateAccountUI();
-}
-
-function closePanel() {
-    const panel = document.getElementById("customizePanel");
-
-    if (panel) {
-        panel.classList.remove("open");
+        panel.classList.add("open");
+        document.body.classList.add("panelOpen");
+        return true;
     }
 
-    document.body.classList.remove("panelOpen");
-}
+    function closePanel() {
+        const panel = document.getElementById("customizePanel");
 
-function testXHR() {
-    const xhr = new XMLHttpRequest();
+        if (panel) {
+            panel.classList.remove("open");
+        }
 
-    xhr.onload = () => {
-        alert("✅ XHR works!\n\n" + xhr.responseText);
-    };
-
-    xhr.onerror = () => {
-        alert("❌ XHR failed.");
-    };
-
-    xhr.open("GET", "/test.json");
-    xhr.send();
-}
-
-function testWebSocket() {
-    const socket = new WebSocket("wss://echo.websocket.events");
-
-    socket.onopen = function () {
-        alert("WebSocket works!");
-        socket.send("Hello");
-    };
-
-    socket.onerror = function () {
-        alert("WebSocket blocked.");
-    };
-
-    socket.onmessage = function (event) {
-        alert("Received: " + event.data);
-        socket.close();
-    };
-}
-
-function testSSE() {
-    try {
-        const source = new EventSource("https://example.com/events");
-
-        source.onopen = function () {
-            alert("SSE works!");
-            source.close();
-        };
-
-        source.onerror = function () {
-            alert("SSE blocked.");
-            source.close();
-        };
-    } catch {
-        alert("SSE blocked.");
+        document.body.classList.remove("panelOpen");
+        return true;
     }
-}
 
-function testImage() {
-    const img = new Image();
+    function toggleDropdown(dropdownId, arrowElement) {
+        const dropdown = getDropdownById(dropdownId);
 
-    img.onload = function () {
-        alert("Image requests work!");
-    };
+        if (!dropdown) {
+            return false;
+        }
 
-    img.onerror = function () {
-        alert("Image requests blocked.");
-    };
+        const isOpen = dropdown.classList.toggle("open");
 
-    img.src = "https://via.placeholder.com/1?" + Date.now();
-}
+        if (arrowElement) {
+            arrowElement.classList.toggle("rotated", isOpen);
+            arrowElement.setAttribute("aria-expanded", String(isOpen));
+        }
 
-function testScript() {
-    const script = document.createElement("script");
+        return isOpen;
+    }
 
-    script.onload = function () {
-        alert("External scripts work!");
-    };
+    function refreshAccountState() {
+        if (window.WorkStudyAuth && typeof window.WorkStudyAuth.updateAccountUI === "function") {
+            return window.WorkStudyAuth.updateAccountUI();
+        }
 
-    script.onerror = function () {
-        alert("External scripts blocked.");
-    };
+        return false;
+    }
 
-    script.src = "https://example.com/test.js";
+    function logout() {
+        if (window.WorkStudyAuth && typeof window.WorkStudyAuth.clearCurrentUser === "function") {
+            window.WorkStudyAuth.clearCurrentUser();
+        }
 
-    document.body.appendChild(script);
-}
+        refreshAccountState();
+        closePanel();
+        return true;
+    }
 
-function testIframe() {
-    const iframe = document.createElement("iframe");
+    function login(username) {
+        const user = typeof username === "string" ? username.trim() : "";
 
-    iframe.src = "https://example.com";
+        if (!user) {
+            return false;
+        }
 
-    iframe.onload = function () {
-        alert("Iframe works!");
-    };
+        if (window.WorkStudyAuth && typeof window.WorkStudyAuth.setCurrentUser === "function") {
+            const result = window.WorkStudyAuth.setCurrentUser(user);
+            refreshAccountState();
+            return result;
+        }
 
-    iframe.onerror = function () {
-        alert("Iframe blocked.");
-    };
+        return false;
+    }
 
-    document.body.appendChild(iframe);
-}
+    function initializeUI() {
+        const settingsButton = document.getElementById("settingsBtn");
 
-function testFetch() {
-    fetch("/test.json")
-        .then(response => response.text())
-        .then(data => {
-            alert("✅ Fetch works!\n\n" + data);
-        })
-        .catch(err => {
-            alert("❌ Fetch failed:\n" + err);
+        if (settingsButton) {
+            settingsButton.addEventListener("click", function () {
+                openPanel();
+                refreshAccountState();
+            });
+        }
+
+        const closeButton = document.querySelector(".closeBtn");
+        if (closeButton) {
+            closeButton.addEventListener("click", closePanel);
+        }
+
+        const dropdownArrows = document.querySelectorAll(".dropdownArrow");
+        dropdownArrows.forEach(function (arrow) {
+            const dropdownId = arrow.getAttribute("data-dropdown");
+            if (dropdownId) {
+                arrow.addEventListener("click", function () {
+                    toggleDropdown(dropdownId, arrow);
+                });
+            }
         });
-}
 
-function testCORS() {
-    fetch("https://example.com", {
-        mode: "cors"
-    })
-    .then(function (response) {
-        alert("CORS allowed!\nStatus: " + response.status);
-    })
-    .catch(function (error) {
-        alert("CORS blocked:\n" + error.message);
+        const accountPanel = document.getElementById("accountDropdown");
+        if (accountPanel) {
+            accountPanel.addEventListener("click", function (event) {
+                if (event.target && event.target.closest("button")) {
+                    refreshAccountState();
+                }
+            });
+        }
+
+        refreshAccountState();
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        initializeUI();
     });
-}
 
-function testSameOrigin() {
-    fetch(window.location.href)
-        .then(function () {
-            alert("Same-origin fetch works!");
-        })
-        .catch(function (error) {
-            alert("Same-origin failed: " + error);
-        });
-}
+    window.WorkStudyApp = Object.assign({}, app, {
+        openPanel,
+        closePanel,
+        toggleDropdown,
+        refreshAccountState,
+        logout,
+        login,
+        initializeUI
+    });
 
-function testWorker() {
-    fetch("https://account-auth.354271744.workers.dev/")
-        .then(response => response.json())
-        .then(data => {
-            alert(JSON.stringify(data));
-        })
-        .catch(error => {
-            alert("FAILED\n\n" + error);
-        });
-}
-
-function testWorkerImage() {
-    const img = new Image();
-
-    img.onload = function () {
-        alert("Worker reachable!");
-    };
-
-    img.onerror = function () {
-        alert("Worker blocked by network/filter.");
-    };
-
-    img.src = "https://account-auth.354271744.workers.dev/?t=" + Date.now();
-}
-
-function toggleDropdown(id, arrow) {
-    const dropdown = document.getElementById(id);
-
-    dropdown.classList.toggle("open");
-
-    if (arrow) {
-        arrow.classList.toggle("rotated");
-    }
-}
-
-function testPWA() {
-    if ("serviceWorker" in navigator) {
-        alert("Service Workers supported ✅");
-    } else {
-        alert("Service Workers blocked ❌");
-    }
-}
-
-function testServiceWorker() {
-    navigator.serviceWorker
-        .register("js/sw.js")
-        .then(() => {
-            alert("Service Worker Installed ✅");
-        })
-        .catch(error => {
-            alert("Service Worker Failed ❌\n\n" + error);
-        });
-}
-
-function clearWebsiteData() {
-    const confirmed = confirm(
-        "⚠️ This will delete:\n\n" +
-        "• Saved websites\n" +
-        "• Settings\n" +
-        "• Cached preferences\n\n" +
-        "Continue?"
-    );
-
-    if (!confirmed) return;
-
-    localStorage.clear();
-    alert("✅ All local storage cleared.");
-    location.reload();
-}
+    window.openPanel = openPanel;
+    window.closePanel = closePanel;
+    window.toggleDropdown = toggleDropdown;
+    window.refreshAccountState = refreshAccountState;
+    window.logout = logout;
+    window.login = login;
+})();

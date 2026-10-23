@@ -1,179 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - WorkStudy</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkStudy</title>
+    <link rel="icon" href="img/favicon.png">
 
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-
-<style>
-*{
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
-}
-
-body{
-    margin:0;
-    background:#0f172a;
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-}
-
-.container{
-    width:400px;
-    max-width:90%;
-    background:#111827;
-    padding:30px;
-    border-radius:20px;
-    box-shadow:0 0 25px rgba(168,85,247,.3);
-}
-
-h1{
-    text-align:center;
-    margin-bottom:20px;
-}
-
-input{
-    width:100%;
-    padding:12px;
-    margin-bottom:15px;
-    border:none;
-    border-radius:10px;
-    background:#1f2937;
-    color:white;
-}
-
-button{
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:10px;
-    background:#8b5cf6;
-    color:white;
-    cursor:pointer;
-    font-size:16px;
-}
-
-button:hover{
-    background:#7c3aed;
-}
-
-.links{
-    text-align:center;
-    margin-top:15px;
-}
-
-.links a{
-    color:#a855f7;
-    text-decoration:none;
-}
-
-#status{
-    margin-top:15px;
-    text-align:center;
-}
-</style>
+    <script src="js/auth.js" defer></script>
+    <script src="js/color.js" defer></script>
+    <script src="js/script.js" defer></script>
+    <script src="js/status.js" defer></script>
+    <script src="js/legacyconfirm.js" defer></script>
+    <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-
-<div class="container">
-
-    <h1>🔐 Login</h1>
-
-    <input id="username" placeholder="Username">
-
-    <input
-        id="password"
-        type="password"
-        placeholder="Password">
-
-    <div
-        class="cf-turnstile"
-        data-sitekey="0x4AAAAAAFhMfDnfOmB6YAzQ">
+    <div class="sidebar">
+        <button onclick="location.href='games/index.html'">🎮 Games</button>
+        <button onclick="location.href='pages/chat/index.html'">💬 Chat</button>
+        <button onclick="location.href='pages/soundboard.html'">🎵 Soundboard</button>
+        <button onclick="location.href='pages/iframe.html'">🌐 Website Viewer</button>
     </div>
 
-    <button onclick="login()">
-        Login
-    </button>
+    <button id="legacyBtn" onclick="legacyConfirm()">🏛️ Legacy</button>
 
-    <div id="status"></div>
-
-    <div class="links">
-        Don't have an account?
-        <a href="signup.html">Sign Up</a>
-
-        <br><br>
-
-        <a href="../index.html">🏠 Home</a>
+    <div class="main">
+        <div class="welcome">
+            <h1>Welcome to WorkStudy</h1>
+            <p>Game • Search • Explore</p>
+        </div>
     </div>
 
-</div>
+    <button id="settingsBtn">⚙️ Settings</button>
 
-<script>
-async function login(){
+    <div id="customizePanel">
+        <div class="customizeHeader">
+            <h2>Settings</h2>
+            <button class="closeBtn" onclick="closePanel()">✖</button>
+        </div>
 
-    const username =
-        document.getElementById("username").value;
+        <div class="dropdownHeader">
+            <span>🎨 Themes</span>
+            <span class="dropdownArrow" data-dropdown="themesDropdown" aria-expanded="false" onclick="toggleDropdown('themesDropdown', this)">></span>
+        </div>
 
-    const password =
-        document.getElementById("password").value;
+        <div id="themesDropdown" class="dropdownContent">
+            <button onclick="setTheme('blue')">🔵 Blue</button>
+            <button onclick="setTheme('green')">🟢 Green</button>
+            <button onclick="setTheme('red')">🔴 Red</button>
+            <button onclick="setTheme('orange')">🟠 Orange</button>
+            <button onclick="setTheme('yellow')">🟡 Yellow</button>
+            <button onclick="setTheme('pink')">🌸 Pink</button>
+            <button onclick="setTheme('cyan')">💎 Cyan</button>
+            <button onclick="setTheme('teal')">🌊 Teal</button>
+            <button onclick="setTheme('purple')">🟣 Purple</button>
+            <button onclick="setTheme('indigo')">🔮 Indigo</button>
+            <button onclick="setTheme('lime')">🍀 Lime</button>
+            <button onclick="setTheme('minecraft')">⛏️ Minecraft</button>
+            <button onclick="setTheme('discord')">🎮 Discord</button>
+            <button onclick="setTheme('void')">⚫ Void</button>
+        </div>
 
-    const status =
-        document.getElementById("status");
+        <hr>
 
-    status.textContent = "Logging in...";
+        <div class="dropdownHeader">
+            <span>🧪 Developer Tools</span>
+            <span class="dropdownArrow" data-dropdown="devDropdown" aria-expanded="false" onclick="toggleDropdown('devDropdown', this)">></span>
+        </div>
 
-    try{
+        <div id="devDropdown" class="dropdownContent">
+            <button onclick="testFetch()">🧲 Test Fetch</button>
+            <button onclick="testXHR()">🧪 Test XMLHttpRequest</button>
+            <button onclick="testWebSocket()">🔌 Test WebSocket</button>
+            <button onclick="testSSE()">📡 Test SSE</button>
+            <button onclick="testImage()">🖼️ Test Image</button>
+            <button onclick="testScript()">📜 Test Script</button>
+            <button onclick="testIframe()">🖼️ Test Iframe</button>
+            <button onclick="testCORS()">🚦 Test CORS</button>
+            <button onclick="testSameOrigin()">🏠 Test Same-Origin</button>
+            <button onclick="testWorker()">☁️ Test Worker</button>
+            <button onclick="testWorkerImage()">🖼️ Test Worker Image</button>
+            <button onclick="testPWA()">🚀 Test PWA</button>
+            <button onclick="testServiceWorker()">🚀 Test Service Worker</button>
+        </div>
 
-        const response =
-            await fetch(
-                "https://account-auth.354271744.workers.dev/login",
-                {
-                    method:"POST",
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
-                    body:JSON.stringify({
-                        username,
-                        password
-                    })
-                });
+        <hr>
 
-        const data =
-            await response.json();
+        <div class="dropdownHeader">
+            <span>❌ Danger Zone!</span>
+            <span class="dropdownArrow" data-dropdown="dangerDropdown" aria-expanded="false" onclick="toggleDropdown('dangerDropdown', this)">></span>
+        </div>
 
-        if(data.success){
+        <div id="dangerDropdown" class="dropdownContent">
+            <button onclick="clearWebsiteData()">🗑️ Clear Website Data</button>
+        </div>
 
-            localStorage.setItem(
-                "loggedInUser",
-                username
-            );
+        <hr>
 
-            status.textContent =      "Success!";
+        <div class="dropdownHeader">
+            <span>👤 Account</span>
+            <span class="dropdownArrow" data-dropdown="accountDropdown" aria-expanded="false" onclick="toggleDropdown('accountDropdown', this)">></span>
+        </div>
 
-            setTimeout(()=>{
-                location.href="../index.html";
-            },1000);
+        <div id="accountDropdown" class="dropdownContent">
+            <div id="loggedOutView">
+                <button onclick="window.location.href='pages/login.html'">🔑 Login</button>
+                <button onclick="window.location.href='pages/signup.html'">📝 Sign Up</button>
+            </div>
 
-        } else {
+            <div id="loggedInView" style="display:none;">
+                <p id="accountName"></p>
+                <button onclick="logout()">🚪 Logout</button>
+            </div>
+        </div>
+    </div>
 
-            status.textContent =
-                data.message;
+    <div id="statusPanel" onclick="location.href='pages/deviceinfo.html'">
+        <div id="time">🕒 Loading...</div>
+        <div id="battery">🔋 Loading...</div>
+    </div>
 
-        }
-
-    }catch(error){
-
-        status.textContent =
-            "Connection failed.";
-
-    }
-}
-</script>
-
+    <div class="supportContainer">
+        <a href="https://paypal.me/Tony7873" target="_blank" class="supportBtn">💜 Support WorkStudy</a>
+    </div>
 </body>
 </html>
