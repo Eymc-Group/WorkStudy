@@ -111,9 +111,20 @@ async function loginUser() {
 
             // Save user data with token for cloud saves
             try {
+                // Generate a simple JWT-like token
+                const header = btoa(JSON.stringify({ alg: "HS256", typ: "JWT" }));
+                const payload = btoa(JSON.stringify({ 
+                    sub: username,
+                    username: username,
+                    iat: Math.floor(Date.now() / 1000),
+                    exp: Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60) // 30 days
+                }));
+                const signature = "dummy_signature";
+                const token = header + "." + payload + "." + signature;
+
                 const userData = {
                     username: username,
-                    token: data.token || "token_" + username + "_" + Date.now(),
+                    token: data.token || token,
                     id: data.id || username,
                     sub: data.sub || username
                 };
