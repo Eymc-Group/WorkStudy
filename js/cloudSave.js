@@ -1,6 +1,5 @@
 class CloudSaveManager {
     constructor(apiUrl) {
-        // Your Worker URL
         this.apiUrl = apiUrl || 'https://workstudy-saves.354271744.workers.dev';
         this.saveStatus = document.getElementById('saveStatus');
     }
@@ -92,7 +91,7 @@ class CloudSaveManager {
                 return;
             }
 
-            if (!confirm('🗑️ Delete cloud save? (Cannot undo)')) return;
+            if (!confirm('🗑️ Delete cloud save? Cannot undo!')) return;
 
             this.updateStatus('🗑️ Deleting...', 'loading');
 
@@ -112,6 +111,7 @@ class CloudSaveManager {
     }
 
     updateStatus(message, type) {
+        if (!this.saveStatus) return;
         this.saveStatus.textContent = message;
         this.saveStatus.style.color = 
             type === 'error' ? '#ef4444' : 
@@ -120,7 +120,6 @@ class CloudSaveManager {
     }
 }
 
-// Initialize
 document.addEventListener('DOMContentLoaded', () => {
     const cloudSave = new CloudSaveManager();
 
