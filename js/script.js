@@ -8,7 +8,45 @@ window.onload = function () {
             document.body.classList.add("panelOpen");
         };
     }
+
+    updateAccountUI();
 };
+
+function updateAccountUI() {
+    const user = localStorage.getItem("workstudy-user");
+
+    const loggedOutView = document.getElementById("loggedOutView");
+    const loggedInView = document.getElementById("loggedInView");
+    const accountName = document.getElementById("accountName");
+
+    if (!loggedOutView || !loggedInView) return;
+
+    if (user) {
+        loggedOutView.style.display = "none";
+        loggedInView.style.display = "block";
+
+        if (accountName) {
+            accountName.textContent = user;
+        }
+    } else {
+        loggedOutView.style.display = "block";
+        loggedInView.style.display = "none";
+
+        if (accountName) {
+            accountName.textContent = "";
+        }
+    }
+}
+
+function login(username) {
+    localStorage.setItem("workstudy-user", username);
+    updateAccountUI();
+}
+
+function logout() {
+    localStorage.removeItem("workstudy-user");
+    updateAccountUI();
+}
 
 function closePanel() {
     const panel = document.getElementById("customizePanel");
@@ -218,21 +256,4 @@ function clearWebsiteData() {
     localStorage.clear();
     alert("✅ All local storage cleared.");
     location.reload();
-}
-
-function updateAccountUI() {
-    const user = localStorage.getItem("workstudy-user");
-
-    const loggedOutView = document.getElementById("loggedOutView");
-    const loggedInView = document.getElementById("loggedInView");
-    const accountName = document.getElementById("accountName");
-
-    if (user) {
-        loggedOutView.style.display = "none";
-        loggedInView.style.display = "block";
-        accountName.textContent = "✅ Logged in as " + user;
-    } else {
-        loggedOutView.style.display = "block";
-        loggedInView.style.display = "none";
-    }
 }
