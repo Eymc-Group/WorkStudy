@@ -16,20 +16,43 @@
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+
     <div class="auth-container">
+
         <h1>📝 Sign Up</h1>
 
-        <input id="username" type="text" placeholder="Username">
+        <input
+            id="username"
+            type="text"
+            placeholder="Username"
+        >
 
-        <input id="password" type="password" placeholder="Password">
+        <input
+            id="email"
+            type="email"
+            placeholder="Email Address"
+        >
 
-        <input id="confirmPassword" type="password" placeholder="Confirm Password">
+        <input
+            id="password"
+            type="password"
+            placeholder="Password"
+        >
 
-        <div class="cf-turnstile"
-             data-sitekey="0x4AAAAAAFhMfDnfOmB6YAzQ">
+        <input
+            id="confirmPassword"
+            type="password"
+            placeholder="Confirm Password"
+        >
+
+        <div
+            class="cf-turnstile"
+            data-sitekey="0x4AAAAAAFhMfDnfOmB6YAzQ">
         </div>
 
-        <button type="button" onclick="signupUser()">
+        <button
+            type="button"
+            onclick="signupUser()">
             Create Account
         </button>
 
@@ -43,101 +66,141 @@
 
             <a href="../index.html">🏠 Home</a>
         </div>
+
     </div>
 
     <script>
-async function signupUser() {
+    async function signupUser() {
 
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("confirmPassword").value;
-    const status = document.getElementById("status");
+        const username =
+            document.getElementById("username")
+            .value
+            .trim();
 
-    if (!username) {
-        status.textContent = "Enter a username.";
-        return;
-    }
+        const email =
+            document.getElementById("email")
+            .value
+            .trim();
 
-    if (!password) {
-        status.textContent = "Enter a password.";
-        return;
-    }
+        const password =
+            document.getElementById("password")
+            .value;
 
-    if (password !== confirmPassword) {
-        status.textContent = "Passwords do not match.";
-        return;
-    }
+        const confirmPassword =
+            document.getElementById("confirmPassword")
+            .value;
 
-    const token = turnstile.getResponse();
+        const status =
+            document.getElementById("status");
 
-    if (!token) {
-        status.textContent = "Please complete the Turnstile verification.";
-        return;
-    }
-
-    status.textContent = "Creating account...";
-
-    try {
-
-        const response = await fetch(
-            "https://workstudy-api.354271744.workers.dev/register",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    username,
-                    password,
-                    token
-                })
-            }
-        );
-
-        const data = await response.json();
-
-        if (data.success) {
-
-            const saved =
-                window.WorkStudyAuth &&
-                typeof window.WorkStudyAuth.setCurrentUser === "function"
-                    ? window.WorkStudyAuth.setCurrentUser(username)
-                    : false;
-
-            if (!saved) {
-                try {
-                    localStorage.setItem(
-                        "workstudy-user",
-                        username
-                    );
-                } catch (error) {
-                    console.error(error);
-                }
-            }
-
+        if (!username) {
             status.textContent =
-                "Account created successfully!";
+                "Enter a username.";
+            return;
+        }
 
-            setTimeout(() => {
-                window.location.href =
-                    "../index.html";
-            }, 1000);
+        if (!email) {
+            status.textContent =
+                "Enter an email address.";
+            return;
+        }
 
+        if (!password) {
+            status.textContent =
+                "Enter a password.";
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            status.textContent =
+                "Passwords do not match.";
+            return;
+        }
+
+        const token =
+            turnstile.getResponse();
+
+        if (!token) {
+            status.textContent =
+                "Please complete Turnstile.";
             return;
         }
 
         status.textContent =
-            data.message ||
-            "Unable to create account.";
+            "Creating account...";
 
-    } catch (error) {
+        try {
 
-        console.error(error);
+            const response =
+                await fetch(
+                    "https://workstudy-api.354271744.workers.dev/register",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+            password,
+                            token
+                        })
+                    }
+                );
 
-        status.textContent =
-            "Connection failed.";
+            const data =
+                await response.json();
+
+            if (data.success) {
+
+                const saved =
+                    window.WorkStudyAuth &&
+                    typeof window.WorkStudyAuth.setCurrentUser === "function"
+                        ? window.WorkStudyAuth.setCurrentUser(username)
+                        : false;
+
+                if (!saved) {
+                    try {
+                        localStorage.setItem(
+                            "workstudy-user",
+                            username
+                        );
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
+
+                status.textContent =
+                    "Account created successfully!";
+
+                setTimeout(() => {
+                    window.location.href =
+                        "../index.html";
+                }, 1000);
+
+                return;
+            }
+
+            status.textContent =
+                data.message ||
+                "Registration failed.";
+
+        } catch (error) {
+
+            console.error(error);
+
+            status.textContent =
+                "Connection failed.";
+        }
     }
-}
-</script>
+
+    document.addEventListener(
+        "keydown",
+        function(event) {
+            if (event.key === "Enter") {
+                signupUser();
+            }
+        }
+    );
+    </script>
+
 </body>
 </html>
