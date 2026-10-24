@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Sign Up - WorkStudy</title>
 
@@ -17,50 +21,57 @@
 
     <script src="../js/auth.js" defer></script>
     <script src="../js/color.js" defer></script>
-    <script src="../js/script.js" defer></script>
 </head>
 
 <body>
 
-    <div class="auth-container">
-
+    <form
+        id="signupForm"
+        class="auth-container"
+        novalidate
+    >
         <h1>📝 Sign Up</h1>
 
         <input
             id="username"
+            name="username"
             type="text"
             placeholder="Username"
+            autocomplete="username"
             minlength="3"
             maxlength="32"
-            autocomplete="username"
             required
         >
 
         <input
             id="email"
+            name="email"
             type="email"
             placeholder="Email Address"
             autocomplete="email"
+            maxlength="254"
             required
         >
 
         <input
             id="password"
+            name="password"
             type="password"
             placeholder="Password"
+            autocomplete="new-password"
             minlength="8"
             maxlength="128"
-            autocomplete="new-password"
             required
         >
 
         <input
             id="confirmPassword"
+            name="confirmPassword"
             type="password"
             placeholder="Confirm Password"
+            autocomplete="new-password"
             minlength="8"
             maxlength="128"
-            autocomplete="new-password"
             required
         >
 
@@ -69,11 +80,15 @@
             data-sitekey="0x4AAAAAAFhMfDnfOmB6YAzQ">
         </div>
 
-        <button id="signupBtn" type="button">
+        <button id="signupBtn" type="submit">
             Create Account
         </button>
 
-        <div id="status" role="status" aria-live="polite"></div>
+        <div
+            id="status"
+            role="status"
+            aria-live="polite">
+        </div>
 
         <div class="links">
             Already have an account?
@@ -83,11 +98,13 @@
 
             <a href="../index.html">🏠 Home</a>
         </div>
-
-    </div>
+    </form>
 
     <script>
         "use strict";
+
+        const signupForm =
+            document.getElementById("signupForm");
 
         const usernameInput =
             document.getElementById("username");
@@ -107,7 +124,22 @@
         const statusElement =
             document.getElementById("status");
 
-        async function signupUser() {
+        function setStatus(message) {
+            statusElement.textContent = message;
+        }
+
+        function resetTurnstile() {
+            if (
+                window.turnstile &&
+                typeof window.turnstile.reset === "function"
+            ) {
+                window.turnstile.reset();
+            }
+        }
+
+        async function signupUser(event) {
+            event.preventDefault();
+
             const username =
                 usernameInput.value.trim();
 
@@ -121,8 +153,7 @@
                 confirmPasswordInput.value;
 
             if (!username) {
-                statusElement.textContent =
-                    "Enter a username.";
+                setStatus("Enter a username.");
                 usernameInput.focus();
                 return;
             }
@@ -131,38 +162,32 @@
                 username.length < 3 ||
                 username.length > 32
             ) {
-                statusElement.textContent =
-                    "Username must be between 3 and 32 characters.";
+                setStatus(
+                    "Username must be between 3 and 32 characters."
+                );
+
                 usernameInput.focus();
                 return;
             }
 
-            if (
-                !/^[a-zA-Z0-9_-]+$/.test(username)
-            ) {
-                statusElement.textContent =
-                    "Username may contain only letters, numbers, underscores, and hyphens.";
-                usernameInput.focus();
-                return;
-            }
+            if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+                setStatus(
+                    "Username may contain only letters, numbers, underscores, and hyphens."
+                );
 
-            if (!email) {
-                statusElement.textContent =
-                    "Enter an email address.";
+            atus("Enter an email address.");
                 emailInput.focus();
                 return;
             }
 
             if (!emailInput.validity.valid) {
-                statusElement.textContent =
-                    "Enter a valid email address.";
+                setStatus("Enter a valid email address.");
                 emailInput.focus();
                 return;
             }
 
             if (!password) {
-                statusElement.textContent =
-                    "Enter a password.";
+                setStatus("Enter a password.");
                 passwordInput.focus();
                 return;
             }
@@ -171,15 +196,16 @@
                 password.length < 8 ||
                 password.length > 128
             ) {
-                statusElement.textContent =
-                    "Password must be between 8 and 128 characters.";
+                setStatus(
+                    "Password must be between 8 and 128 characters."
+                );
+
                 passwordInput.focus();
                 return;
             }
 
             if (password !== confirmPassword) {
-                statusElement.textContent =
-                    "Passwords do not match.";
+                setStatus("Passwords do not match.");
                 confirmPasswordInput.focus();
                 return;
             }
@@ -188,21 +214,26 @@
                 !window.turnstile ||
                 typeof window.turnstile.getResponse !== "function"
             ) {
-                statusElement.textContent =
-                    "Turnstile is still loading. Try again.";
+                setStatus(
+                    "Turnstile is still loading. Try again."
+                );
+
                 return;
             }
 
             const turnstileToken =
                 window.turnstile.getResponse();
 
-  tion.";
+            if (!turnstileToken) {
+                setStatus(
+                    "Please complete the Turnstile verification."
+                );
+
                 return;
             }
 
             signupButton.disabled = true;
-            statusElement.textContent =
-                "Creating account...";
+            setStatus("Creating account...");
 
             try {
                 const response = await fetch(
@@ -232,40 +263,33 @@
                 }
 
                 if (!response.ok || !data.success) {
-                    statusElement.textContent =
+                    setStatus(
                         data.message ||
-                        "Unable to create the account.";
+                        "Unable to create the account."
+                    );
 
-                    if (
-                        window.turnstile &&
-                        typeof window.turnstile.reset === "function"
-                    ) {
-                        window.turnstile.reset();
-                    }
-
+                    resetTurnstile();
                     return;
                 }
 
                 const account = {
-                    username:
-                        data.username || username,
-                    email:
-                        data.email || email
+                    username: data.username || username,
+                    email: data.email || email
                 };
 
-                let saved = false;
+                let sessionSaved = false;
 
                 if (
                     window.WorkStudyAuth &&
                     typeof window.WorkStudyAuth.setCurrentUser === "function"
                 ) {
-                    saved =
+                    sessionSaved =
                         window.WorkStudyAuth.setCurrentUser(
                             account
                         );
                 }
 
-                if (!saved) {
+                if (!sessionSaved) {
                     localStorage.setItem(
                         "workstudy-user",
                         JSON.stringify(account)
@@ -282,10 +306,15 @@
                         "workstudy-token",
                         data.token
                     );
+                } else {
+                    localStorage.removeItem(
+                        "workstudy-token"
+                    );
                 }
 
-                statusElement.textContent =
-                    "Account created successfully!";
+                setStatus(
+                    "Account created successfully!"
+                );
 
                 setTimeout(function () {
                     window.location.href =
@@ -298,37 +327,21 @@
                     error
                 );
 
-                statusElement.textContent =
+                setStatus(
                     error.message ||
-                    "Connection failed.";
+                    "Connection failed."
+                );
 
-                if (
-                    window.turnstile &&
-                    typeof window.turnstile.reset === "function"
-                ) {
-                    window.turnstile.reset();
-                }
+                resetTurnstile();
 
             } finally {
                 signupButton.disabled = false;
             }
         }
 
-        signupButton.addEventListener(
-            "click",
+        signupForm.addEventListener(
+            "submit",
             signupUser
-        );
-
-        document.addEventListener(
-            "keydown",
-            function (event) {
-                if (
-                    event.key === "Enter" &&
-                    !signupButton.disabled
-                ) {
-                    signupUser();
-                }
-            }
         );
     </script>
 
