@@ -16,170 +16,372 @@
     }
 
     function updateAccountUI() {
-        if (window.WorkStudyAuth && typeof window.WorkStudyAuth.updateAccountUI === "function") {
-            return window.WorkStudyAuth.updateAccountUI();
+
+        let user = null;
+
+        try {
+
+            if (
+                window.WorkStudyAuth &&
+                typeof window.WorkStudyAuth.getCurrentUser === "function"
+            ) {
+                user =
+                    window.WorkStudyAuth.getCurrentUser();
+            }
+
+        } catch (error) {
+
+            console.error(error);
         }
 
-        // Check for both login formats
-        const oldUser = localStorage.getItem("workstudy-user");
-        let newUser = null;
-        try {
-            const userData = localStorage.getItem("user");
-            if (userData) {
-                newUser = JSON.parse(userData);
-            }
-        } catch (e) {}
+        const loggedOutView =
+            document.getElementById(
+                "loggedOutView"
+            );
 
-        const user = newUser || oldUser;
-        const username = newUser ? newUser.username : oldUser;
+        const loggedInView =
+            document.getElementById(
+                "loggedInView"
+            );
 
-        const loggedOutView = document.getElementById("loggedOutView");
-        const loggedInView = document.getElementById("loggedInView");
-        const accountName = document.getElementById("accountName");
+        const accountName =
+            document.getElementById(
+                "accountName"
+            );
 
-        if (!loggedOutView || !loggedInView) {
+        const accountEmail =
+            document.getElementById(
+                "accountEmail"
+            );
+
+        if (
+            !loggedOutView ||
+            !loggedInView
+        ) {
             return false;
         }
 
-        const isLoggedIn = Boolean(user);
-        loggedOutView.style.display = isLoggedIn ? "none" : "block";
-        loggedInView.style.display = isLoggedIn ? "block" : "none";
+        const isLoggedIn =
+            Boolean(user);
+
+        loggedOutView.style.display =
+            isLoggedIn
+                ? "none"
+                : "block";
+
+        loggedInView.style.display =
+            isLoggedIn
+                ? "block"
+                : "none";
 
         if (accountName) {
-            accountName.textContent = isLoggedIn ? username : "Guest";
+            accountName.textContent =
+                isLoggedIn
+                    ? user.username
+                    : "Guest";
+        }
+
+        if (accountEmail) {
+            accountEmail.textContent =
+                isLoggedIn
+                    ? (user.email || "")
+                    : "";
         }
 
         return isLoggedIn;
     }
 
     function openPanel() {
-        const panel = document.getElementById("customizePanel");
+
+        const panel =
+            document.getElementById(
+                "customizePanel"
+            );
 
         if (!panel) {
             return false;
         }
 
         panel.classList.add("open");
-        document.body.classList.add("panelOpen");
+
+        document.body.classList.add(
+            "panelOpen"
+        );
+
         updateAccountUI();
+
         return true;
     }
 
     function closePanel() {
-        const panel = document.getElementById("customizePanel");
+
+        const panel =
+            document.getElementById(
+                "customizePanel"
+            );
 
         if (panel) {
-            panel.classList.remove("open");
+            panel.classList.remove(
+                "open"
+            );
         }
 
-        document.body.classList.remove("panelOpen");
+        document.body.classList.remove(
+            "panelOpen"
+        );
+
         return true;
     }
 
-    function toggleDropdown(id, arrow) {
-        const dropdown = document.getElementById(id);
+    function toggleDropdown(
+        id,
+        arrow
+    ) {
+
+        const dropdown =
+            document.getElementById(id);
 
         if (!dropdown) {
             return false;
         }
 
-        const isOpen = dropdown.classList.toggle("open");
+        const isOpen =
+            dropdown.classList.toggle(
+                "open"
+            );
 
         if (arrow) {
-            arrow.classList.toggle("rotated", isOpen);
-            arrow.setAttribute("aria-expanded", String(isOpen));
+
+            arrow.classList.toggle(
+                "rotated",
+                isOpen
+            );
+
+            arrow.setAttribute(
+                "aria-expanded",
+                String(isOpen)
+            );
         }
 
         return isOpen;
     }
 
-    function login(username) {
-        const value = typeof username === "string" ? username.trim() : "";
+    function login(userData) {
 
-        if (!value) {
+        if (
+            !window.WorkStudyAuth ||
+            typeof window.WorkStudyAuth.setCurrentUser !== "function"
+        ) {
             return false;
         }
 
-        localStorage.setItem("workstudy-user", value);
+        const success =
+            window.WorkStudyAuth.setCurrentUser(
+                userData
+            );
+
         updateAccountUI();
-        return true;
+
+        return success;
     }
 
     function logout() {
-        localStorage.removeItem("workstudy-user");
+
+        if (
+            window.WorkStudyAuth &&
+            typeof window.WorkStudyAuth.clearCurrentUser === "function"
+        ) {
+
+            window.WorkStudyAuth.clearCurrentUser();
+        }
+
+        localStorage.removeItem(
+            "workstudy-account"
+        );
+
         updateAccountUI();
+
         closePanel();
+
         return true;
     }
 
     function setupSettingsPanel() {
-        const settingsButton = document.getElementById("settingsBtn");
-        const closeButton = document.querySelector(".closeBtn");
-        const dropdownArrows = document.querySelectorAll(".dropdownArrow");
+
+        const settingsButton =
+            document.getElementById(
+                "settingsBtn"
+            );
+
+        const closeButton =
+            document.querySelector(
+                ".closeBtn"
+            );
+
+        const dropdownArrows =
+            document.querySelectorAll(
+                ".dropdownArrow"
+            );
 
         if (settingsButton) {
-            settingsButton.addEventListener("click", function () {
-                openPanel();
-            });
+
+            settingsButton.addEventListener(
+                "click",
+                function () {
+                    openPanel();
+                }
+            );
         }
 
         if (closeButton) {
-            closeButton.addEventListener("click", closePanel);
+
+            closeButton.addEventListener(
+                "click",
+                closePanel
+            );
         }
 
-        dropdownArrows.forEach(function (arrow) {
-            const dropdownId = arrow.getAttribute("data-dropdown");
-            if (!dropdownId) {
-                return;
+        dropdownArrows.forEach(
+            function (arrow) {
+
+                const dropdownId =
+                    arrow.getAttribute(
+                        "data-dropdown"
+                    );
+
+                if (!dropdownId) {
+                    return;
+                }
+
+                arrow.addEventListener(
+                    "click",
+                    function () {
+                        toggleDropdown(
+                            dropdownId,
+                            arrow
+                        );
+                    }
+                );
             }
+        );
 
-            arrow.addEventListener("click", function () {
-                toggleDropdown(dropdownId, arrow);
-            });
-        });
+        const logoutBtn =
+            document.getElementById(
+                "logoutBtn"
+            );
 
-        // Add logout button listener
-        const logoutBtn = document.getElementById('logoutBtn');
         if (logoutBtn) {
-            logoutBtn.addEventListener('click', function () {
-                logout();
-            });
+
+            logoutBtn.addEventListener(
+                "click",
+                logout
+            );
+        }
+
+        const deleteAccountBtn =
+            document.getElementById(
+                "deleteAccountBtn"
+            );
+
+        if (deleteAccountBtn) {
+
+            deleteAccountBtn.addEventListener(
+                "click",
+                async function () {
+
+                    const user =
+                        window.WorkStudyAuth &&
+                        typeof window.WorkStudyAuth.getCurrentUser === "function"
+                            ? window.WorkStudyAuth.getCurrentUser()
+                            : null;
+
+                    if (!user) {
+                        return;
+                    }
+
+                    const confirmed =
+                        confirm(
+                            "Are you sure you want to delete your account? This cannot be undone."
+                        );
+
+                    if (!confirmed) {
+                        return;
+                    }
+
+                    alert(
+                        "Delete account API has not been added yet."
+                    );
+                }
+            );
         }
     }
 
     function initialize() {
-        if (!ensureAppReady()) {
+
+        if (
+            !ensureAppReady()
+        ) {
             return;
         }
 
         setupSettingsPanel();
+
         updateAccountUI();
     }
 
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", initialize);
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            initialize
+        );
+
     } else {
+
         initialize();
     }
 
-    window.addEventListener("workstudy:authchange", function () {
-        updateAccountUI();
-    });
+    window.addEventListener(
+        "workstudy:authchange",
+        function () {
+            updateAccountUI();
+        }
+    );
 
-    window.WorkStudyApp = Object.assign({}, app, {
-        updateAccountUI,
-        openPanel,
-        closePanel,
-        toggleDropdown,
-        login,
-        logout,
-        initialize
-    });
+    window.WorkStudyApp =
+        Object.assign(
+            {},
+            app,
+            {
+                updateAccountUI,
+                openPanel,
+                closePanel,
+                toggleDropdown,
+                login,
+                logout,
+                initialize
+            }
+        );
 
-    window.updateAccountUI = updateAccountUI;
-    window.openPanel = openPanel;
-    window.closePanel = closePanel;
-    window.toggleDropdown = toggleDropdown;
-    window.login = login;
-    window.logout = logout;
+    window.updateAccountUI =
+        updateAccountUI;
+
+    window.openPanel =
+        openPanel;
+
+    window.closePanel =
+        closePanel;
+
+    window.toggleDropdown =
+        toggleDropdown;
+
+    window.login =
+        login;
+
+    window.logout =
+        logout;
+
 })();
