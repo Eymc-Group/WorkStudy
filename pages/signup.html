@@ -70,6 +70,13 @@
     </div>
 
     <script>
+
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            signupUser();
+        }
+    });
+
     async function signupUser() {
 
         const username =
@@ -131,16 +138,16 @@
 
         try {
 
-            const response =
-                await fetch(
-                    "https://workstudy-api.354271744.workers.dev/register",
-                    {
+            const {
                         method: "POST",
                         headers: {
                             "Content-Type":
                                 "application/json"
                         },
-            password,
+                        body: JSON.stringify({
+                            username,
+                            email,
+                            password,
                             token
                         })
                     }
@@ -154,18 +161,43 @@
                 const saved =
                     window.WorkStudyAuth &&
                     typeof window.WorkStudyAuth.setCurrentUser === "function"
-                        ? window.WorkStudyAuth.setCurrentUser(username)
+                        ? window.WorkStudyAuth.setCurrentUser({
+                              username,
+                              email
+                          })
                         : false;
 
                 if (!saved) {
+
                     try {
+
                         localStorage.setItem(
                             "workstudy-user",
-                            username
+                            JSON.stringify({
+                                username,
+                                email
+                            })
                         );
+
                     } catch (error) {
+
                         console.error(error);
                     }
+                }
+
+                try {
+
+                    localStorage.setItem(
+                        "workstudy-account",
+                        JSON.stringify({
+                            username,
+                            email
+                        })
+                    );
+
+                } catch (error) {
+
+                    console.error(error);
                 }
 
                 status.textContent =
@@ -192,14 +224,6 @@
         }
     }
 
-    document.addEventListener(
-        "keydown",
-        function(event) {
-            if (event.key === "Enter") {
-                signupUser();
-            }
-        }
-    );
     </script>
 
 </body>
