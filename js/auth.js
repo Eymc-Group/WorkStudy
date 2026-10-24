@@ -34,38 +34,38 @@
         }
     }
 
-    function normalizeUsername(value) {
-        if (typeof value !== "string") {
-            return "";
-        }
-
-        return value.trim();
-    }
-
-    function dispatchAuthChange() {
-        const event = new CustomEvent(AUTH_EVENT_NAME, {
-            detail: {
-                user: getCurrentUser()
-            }
-        });
-
-        window.dispatchEvent(event);
-    }
-
     function getCurrentUser() {
-        const username = normalizeUsername(safeGetItem(AUTH_KEYS.user));
-        return username || null;
+        try {
+            const stored = safeGetItem(AUTH_KEYS.user);
+
+            if (!stored) {
+                return null;
+            }
+
+            return JSON.parse(stored);
+        } catch (error) {
+            return null;
+        }
     }
 
-    function setCurrentUser(username) {
-        const normalized = normalizeUsername(username);
+    function setCurrentUser(userData) {
 
-        if (!normalized) {
+        if (
+            !userData ||
+            typeof userData.username !== "string" ||
+            !userData.username.trim()
+        ) {
             clearCurrentUser();
             return false;
         }
 
-        const saved = safeSetItem(AUTH_KEYS.user, normalized);
+        const saved = safeSetItem(
+            AUTH_KEYS.user,
+            JSON.stringify({
+                username: userData.username.trim(),
+                email: userData.email || null
+            })
+        );
 
         if (saved) {
             dispatchAuthChange();
@@ -76,50 +76,101 @@
     }
 
     function clearCurrentUser() {
-        const removed = safeRemoveItem(AUTH_KEYS.user);
+        const removed =
+            safeRemoveItem(AUTH_KEYS.user);
 
         if (removed) {
             dispatchAuthChange();
         }
     }
 
-    function updateAccountUI() {
-        const loggedOutView = document.getElementById("loggedOutView");
-        const loggedInView = document.getElementById("loggedInView");
-        const accountName = document.getElementById("accountName");
+    function dispatchAuthChange() {
+        const event = new CustomEvent(
+            AUTH_EVENT_NAME,
+            {
+                detail: {
+                    user: getCurrentUser()
+                }
+            }
+        );
 
-        if (!loggedOutView || !loggedInView) {
+        window.dispatchEvent(event);
+    }
+
+    function updateAccountUI() {
+
+        const loggedOutView =
+            document.getElementById(
+                "loggedOutView"
+            );
+
+        const loggedInView =
+            document.getElementById(
+                "loggedInView"
+            );
+
+        const accountName =
+            document.getElementById(
+                "accountName"
+            );
+
+        if (
+            !loggedOutView ||
+            !loggedInView
+        ) {
             return false;
         }
 
-        const user = getCurrentUser();
-        const isLoggedIn = Boolean(user);
+        const user =
+            getCurrentUser();
 
-        loggedOutView.style.display = isLoggedIn ? "none" : "block";
-        loggedInView.style.display = isLoggedIn ? "block" : "none";
+        const isLoggedIn =
+            Boolean(user);
+
+        loggedOutView.style.display =
+            isLoggedIn
+                ? "none"
+                : "block";
+
+        loggedInView.style.display =
+            isLoggedIn
+                ? "block"
+                : "none";
 
         if (accountName) {
-            accountName.textContent = isLoggedIn ? user : "Guest";
+            accountName.textContent =
+                isLoggedIn
+                    ? user.username
+                    : "Guest";
         }
 
         return isLoggedIn;
     }
 
-    function subscribeAuthChange(callback) {
-        window.addEventListener(AUTH_EVENT_NAME, callback);
+    function subscribeAuthChange(
+        callback
+    ) {
+        window.addEventListener(
+            AUTH_EVENT_NAME,
+            callback
+        );
 
         return function unsubscribe() {
-            window.removeEventListener(AUTH_EVENT_NAME, callback);
+            window.removeEventListener(
+                AUTH_EVENT_NAME,
+                callback
+            );
         };
     }
 
-    window.WorkStudyAuth = Object.freeze({
-        AUTH_KEYS,
-        getCurrentUser,
-        setCurrentUser,
-        clearCurrentUser,
-        updateAccountUI,
-        subscribeAuthChange,
-        dispatchAuthChange
-    });
+    window.WorkStudyAuth =
+        Object.freeze({
+            AUTH_KEYS,
+            getCurrentUser,
+            setCurrentUser,
+            clearCurrentUser,
+            updateAccountUI,
+            subscribeAuthChange,
+            dispatchAuthChange
+        });
 })();
