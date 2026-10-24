@@ -58,6 +58,7 @@
     </div>
 
     <script>
+
     document.addEventListener("keydown", function(event) {
         if (event.key === "Enter") {
             loginUser();
@@ -119,25 +120,37 @@
                 const saved =
                     window.WorkStudyAuth &&
                     typeof window.WorkStudyAuth.setCurrentUser === "function"
-                    ? window.WorkStudyAuth.setCurrentUser(
-                        data.username |       localStorage.setItem(
+                        ? window.WorkStudyAuth.setCurrentUser({
+                              username: data.username,
+                              email: data.email         localStorage.setItem(
                             "workstudy-user",
-                            data.username || username
+                            JSON.stringify({
+                                username: data.username,
+                                email: data.email
+                            })
                         );
+
                     } catch (error) {
-                        console.error(error);
+
+                        console.error(
+                            "Could not persist user session",
+                            error
+                        );
                     }
                 }
 
                 try {
+
                     localStorage.setItem(
-                        "user",
+                        "workstudy-account",
                         JSON.stringify({
                             username: data.username,
                             email: data.email
                         })
                     );
+
                 } catch (error) {
+
                     console.error(
                         "Could not save user data",
                         error
@@ -170,6 +183,7 @@
                 "Connection failed.";
         }
     }
+
     </script>
 
 </body>
