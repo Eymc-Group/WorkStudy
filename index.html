@@ -10,6 +10,7 @@
     <script src="js/color.js" defer></script>
     <script src="js/script.js" defer></script>
     <script src="js/status.js" defer></script>
+    <script src="js/cloudSave.js" defer></script>
     <script src="js/legacyconfirm.js" defer></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -27,6 +28,11 @@
         <div class="welcome">
             <h1>Welcome to WorkStudy</h1>
             <p>Game • Search • Explore</p>
+            <p>For the people that want proof that this is my website</p>
+            <ol>This website is owned by schoolwork04 (me)</ol>
+            <ol>Bennett is one of my friends helping to add websites (to become a supporter make an account and ill email you deatails)</ol>
+            <ol>Credits to Github, Cloudflare, Netlify, Render, Vercel And Neocities for hosting my site</ol>
+            <ol>Credits to Microsoft, Anthropic, And Github for letting me use their AI's to help fix bugs and organize code</ol>
         </div>
     </main>
 
@@ -57,6 +63,20 @@
             <button type="button" onclick="setTheme('minecraft')">⛏️ Minecraft</button>
             <button type="button" onclick="setTheme('discord')">🎮 Discord</button>
             <button type="button" onclick="setTheme('void')">⚫ Void</button>
+            <button type="button" onclick="setTheme('rose')">🌹 Rose</button>
+            <button type="button" onclick="setTheme('amber')">🟫 Amber</button>
+            <button type="button" onclick="setTheme('sky')">☁️ Sky</button>
+            <button type="button" onclick="setTheme('slate')">🩶 Slate</button>
+            <button type="button" onclick="setTheme('emerald')">💚 Emerald</button>
+            <button type="button" onclick="setTheme('violet')">💜 Violet</button>
+            <button type="button" onclick="setTheme('fuchsia')">🌺 Fuchsia</button>
+            <button type="button" onclick="setTheme('stone')">🪨 Stone</button>
+            <button type="button" onclick="setTheme('zinc')">⚙️ Zinc</button>
+            <button type="button" onclick="setTheme('orange_vibrant')">🔥 Vibrant Orange</button>
+            <button type="button" onclick="setTheme('aqua')">💧 Aqua</button>
+            <button type="button" onclick="setTheme('crimson')">❤️ Crimson</button>
+            <button type="button" onclick="setTheme('gradient_sunset')">🌅 Sunset</button>
+            <button type="button" onclick="setTheme('gradient_ocean')">🌊 Ocean</button>
         </div>
 
         <hr>
@@ -93,20 +113,29 @@
 
         <hr>
 
-        <div class="dropdownHeader">
-            <span>👤 Account</span>
-            <span class="dropdownArrow" data-dropdown="accountDropdown" aria-expanded="false" role="button" tabindex="0">›</span>
-        </div>
-        <div id="accountDropdown" class="dropdownContent">
-            <div id="loggedOutView">
-                <button type="button" onclick="window.location.href='pages/login.html'">🔑 Login</button>
-                <button type="button" onclick="window.location.href='pages/signup.html'">📝 Sign Up</button>
-            </div>
-            <div id="loggedInView" style="display:none;">
-                <p id="accountName">Guest</p>
-                <button id="logoutBtn" type="button">🚪 Logout</button>
-            </div>
-        </div>
+<div class="dropdownHeader">
+    <span>👤 Account</span>
+    <span class="dropdownArrow" data-dropdown="accountDropdown" aria-expanded="false" role="button" tabindex="0">›</span>
+</div>
+<div id="accountDropdown" class="dropdownContent">
+    <div id="loggedOutView">
+        <button type="button" onclick="window.location.href='pages/login.html'">🔑 Login</button>
+        <button type="button" onclick="window.location.href='pages/signup.html'">📝 Sign Up</button>
+    </div>
+    <div id="loggedInView" style="display:none;">
+        <p id="accountName">Guest</p>
+<p id="accountEmail"></p>
+<button id="logoutBtn" type="button">🚪 Logout</button>
+<button id="deleteAccountBtn" type="button">❌ Delete Account</button>
+        <hr>
+        <h3>💾 Cloud Saves</h3>
+        <button id="saveProgressBtn" type="button">💾 Save Progress</button>
+        <button id="loadProgressBtn" type="button">📥 Load Progress</button>
+        <button id="deleteProgressBtn" type="button" style="background: linear-gradient(135deg, #991b1b, #ef4444);">🗑️ Delete Save</button>
+        <div id="saveStatus" style="margin-top: 10px; text-align: center; color: var(--text); font-size: 14px;"></div>
+    </div>
+</div>
+
     </aside>
 
     <div id="statusPanel" role="button" tabindex="0" onclick="location.href='pages/deviceinfo.html'">

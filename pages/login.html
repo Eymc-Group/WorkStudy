@@ -1,125 +1,60 @@
-(function () {
-    "use strict";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    const AUTH_KEYS = Object.freeze({
-        user: "workstudy-user",
-        theme: "workstudy-theme"
-    });
+    <title>Login - WorkStudy</title>
 
-    const AUTH_EVENT_NAME = "workstudy:authchange";
+    <link rel="icon" href="../img/favicon.png">
+    <link rel="stylesheet" href="../css/style.css">
 
-    function safeGetItem(key) {
-        try {
-            return window.localStorage.getItem(key);
-        } catch (error) {
-            return null;
-        }
-    }
+    <script src="../js/auth.js" defer></script>
+    <script src="../js/color.js" defer></script>
+    <script src="../js/login.js" defer></script>
+</head>
 
-    function safeSetItem(key, value) {
-        try {
-            window.localStorage.setItem(key, value);
-            return true;
-        } catch (error) {
-            return false;
-        }
-    }
+<body>
+    <div class="auth-container">
+        <h1>🔐 Login</h1>
 
-    function safeRemoveItem(key) {
-        try {
-            window.localStorage.removeItem(key);
-            return true;
-        } catch (error) {
-            return false;
-        }
-    }
+        <input
+            id="login"
+            type="text"
+            placeholder="Username or Email"
+            autocomplete="username"
+            maxlength="254"
+        >
 
-    function normalizeUsername(value) {
-        if (typeof value !== "string") {
-            return "";
-        }
+        <input
+            id="password"
+            type="password"
+            placeholder="Password"
+            autocomplete="current-password"
+            maxlength="128"
+        >
 
-        return value.trim();
-    }
+        <button id="loginBtn" type="button">
+            Login
+        </button>
 
-    function dispatchAuthChange() {
-        const event = new CustomEvent(AUTH_EVENT_NAME, {
-            detail: {
-                user: getCurrentUser()
-            }
-        });
+        <div
+            id="status"
+            role="status"
+            aria-live="polite"
+        ></div>
 
-        window.dispatchEvent(event);
-    }
+        <div class="links">
+            Don't have an account?
+            <a href="signup.html">Sign Up</a>
 
-    function getCurrentUser() {
-        const username = normalizeUsername(safeGetItem(AUTH_KEYS.user));
-        return username || null;
-    }
+            <br><br>
 
-    function setCurrentUser(username) {
-        const normalized = normalizeUsername(username);
-
-        if (!normalized) {
-            clearCurrentUser();
-            return false;
-        }
-
-        const saved = safeSetItem(AUTH_KEYS.user, normalized);
-
-        if (saved) {
-            dispatchAuthChange();
-            return true;
-        }
-
-        return false;
-    }
-
-    function clearCurrentUser() {
-        const removed = safeRemoveItem(AUTH_KEYS.user);
-
-        if (removed) {
-            dispatchAuthChange();
-        }
-    }
-
-    function updateAccountUI() {
-        const loggedOutView = document.getElementById("loggedOutView");
-        const loggedInView = document.getElementById("loggedInView");
-        const accountName = document.getElementById("accountName");
-
-        if (!loggedOutView || !loggedInView) {
-            return false;
-        }
-
-        const user = getCurrentUser();
-        const isLoggedIn = Boolean(user);
-
-        loggedOutView.style.display = isLoggedIn ? "none" : "block";
-        loggedInView.style.display = isLoggedIn ? "block" : "none";
-
-        if (accountName) {
-            accountName.textContent = isLoggedIn ? user : "Guest";
-        }
-
-        return isLoggedIn;
-    }
-
-    function subscribeAuthChange(callback) {
-        window.addEventListener(AUTH_EVENT_NAME, callback);
-
-        return function unsubscribe() {
-            window.removeEventListener(AUTH_EVENT_NAME, callback);
-        };
-    }
-
-    window.WorkStudyAuth = Object.freeze({
-        AUTH_KEYS,
-        getCurrentUser,
-        setCurrentUser,
-        clearCurrentUser,
-        updateAccountUI,
-        subscribeAuthChange,
-        dispatchAuthChange
-    });
-})();
+            <a href="../index.html">🏠 Home</a>
+        </div>
+    </div>
+</body>
+</html>

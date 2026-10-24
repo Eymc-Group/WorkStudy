@@ -91,6 +91,90 @@ const THEMES = {
         c1: "#111111", c2: "#333333", text: "#ffffff", input: "#111111",
         glow: "0 0 20px rgba(255,255,255,.2), 0 0 40px rgba(255,255,255,.1)",
         panel: "#0a0a0a"
+    },
+    rose: {
+        bg: "radial-gradient(circle at top left,#f43f5e40 0%,transparent 35%), radial-gradient(circle at bottom right,#fb718540 0%,transparent 35%), #2b0714",
+        c1: "#e11d48", c2: "#fb7185", text: "#ffe4e6", input: "#e11d48",
+        glow: "0 0 20px rgba(244,63,94,.5), 0 0 40px rgba(244,63,94,.3)",
+        panel: "#3d0d1f"
+    },
+    amber: {
+        bg: "radial-gradient(circle at top left,#fbbf2440 0%,transparent 35%), radial-gradient(circle at bottom right,#fcd34d40 0%,transparent 35%), #332200",
+        c1: "#d97706", c2: "#fcd34d", text: "#fffbeb", input: "#d97706",
+        glow: "0 0 20px rgba(251,191,36,.5), 0 0 40px rgba(251,191,36,.3)",
+        panel: "#451a03"
+    },
+    sky: {
+        bg: "radial-gradient(circle at top left,#0ea5e940 0%,transparent 35%), radial-gradient(circle at bottom right,#38bdf840 0%,transparent 35%), #0c2540",
+        c1: "#0284c7", c2: "#38bdf8", text: "#e0f2fe", input: "#0284c7",
+        glow: "0 0 20px rgba(56,189,248,.5), 0 0 40px rgba(56,189,248,.3)",
+        panel: "#0c3a52"
+    },
+    slate: {
+        bg: "radial-gradient(circle at top left,#64748b40 0%,transparent 35%), radial-gradient(circle at bottom right,#94a3b840 0%,transparent 35%), #0f172a",
+        c1: "#475569", c2: "#94a3b8", text: "#f1f5f9", input: "#475569",
+        glow: "0 0 20px rgba(148,163,184,.5), 0 0 40px rgba(148,163,184,.3)",
+        panel: "#1a1f35"
+    },
+    emerald: {
+        bg: "radial-gradient(circle at top left,#10b98140 0%,transparent 35%), radial-gradient(circle at bottom right,#34d39940 0%,transparent 35%), #031f1e",
+        c1: "#059669", c2: "#34d399", text: "#d1fae5", input: "#059669",
+        glow: "0 0 20px rgba(52,211,153,.5), 0 0 40px rgba(52,211,153,.3)",
+        panel: "#0f4d3f"
+    },
+    violet: {
+        bg: "radial-gradient(circle at top left,#7c3aed40 0%,transparent 35%), radial-gradient(circle at bottom right,#a78bfa40 0%,transparent 35%), #1f0f40",
+        c1: "#6d28d9", c2: "#a78bfa", text: "#ede9fe", input: "#6d28d9",
+        glow: "0 0 20px rgba(167,139,250,.5), 0 0 40px rgba(167,139,250,.3)",
+        panel: "#2a1654"
+    },
+    fuchsia: {
+        bg: "radial-gradient(circle at top left,#d946ef40 0%,transparent 35%), radial-gradient(circle at bottom right,#f0abfc40 0%,transparent 35%), #280d38",
+        c1: "#c2185b", c2: "#f0abfc", text: "#fdf2f8", input: "#c2185b",
+        glow: "0 0 20px rgba(240,171,252,.5), 0 0 40px rgba(240,171,252,.3)",
+        panel: "#3d1c47"
+    },
+    stone: {
+        bg: "radial-gradient(circle at top left,#a8a29e40 0%,transparent 35%), radial-gradient(circle at bottom right,#d6d3d140 0%,transparent 35%), #1c1917",
+        c1: "#78716c", c2: "#d6d3d1", text: "#fafaf9", input: "#78716c",
+        glow: "0 0 20px rgba(214,211,209,.5), 0 0 40px rgba(214,211,209,.3)",
+        panel: "#27251f"
+    },
+    zinc: {
+        bg: "radial-gradient(circle at top left,#71717a40 0%,transparent 35%), radial-gradient(circle at bottom right,#d4d4d840 0%,transparent 35%), #09090b",
+        c1: "#52525b", c2: "#d4d4d8", text: "#fafafa", input: "#52525b",
+        glow: "0 0 20px rgba(212,212,216,.5), 0 0 40px rgba(212,212,216,.3)",
+        panel: "#18181b"
+    },
+    orange_vibrant: {
+        bg: "radial-gradient(circle at top left,#ff6b3540 0%,transparent 35%), radial-gradient(circle at bottom right,#ff8c4240 0%,transparent 35%), #330600",
+        c1: "#ff4500", c2: "#ff8c42", text: "#ffe5cc", input: "#ff4500",
+        glow: "0 0 20px rgba(255,140,66,.5), 0 0 40px rgba(255,140,66,.3)",
+        panel: "#661100"
+    },
+    aqua: {
+        bg: "radial-gradient(circle at top left,#00ced140 0%,transparent 35%), radial-gradient(circle at bottom right,#40e0d040 0%,transparent 35%), #001f1f",
+        c1: "#00a8a8", c2: "#40e0d0", text: "#d0ffff", input: "#00a8a8",
+        glow: "0 0 20px rgba(64,224,208,.5), 0 0 40px rgba(64,224,208,.3)",
+        panel: "#003333"
+    },
+    crimson: {
+        bg: "radial-gradient(circle at top left,#dc143c40 0%,transparent 35%), radial-gradient(circle at bottom right,#ff1744440 0%,transparent 35%), #1a0005",
+        c1: "#c41e3a", c2: "#ff1744", text: "#ffe6e6", input: "#c41e3a",
+        glow: "0 0 20px rgba(255,23,68,.5), 0 0 40px rgba(255,23,68,.3)",
+        panel: "#330011"
+    },
+    gradient_sunset: {
+        bg: "radial-gradient(circle at top left,#ff634740 0%,transparent 35%), radial-gradient(circle at bottom right,#ff9c0040 0%,transparent 35%), #2c1a00",
+        c1: "#ff6b35", c2: "#ffa500", text: "#fff5eb", input: "#ff6b35",
+        glow: "0 0 20px rgba(255,165,0,.5), 0 0 40px rgba(255,165,0,.3)",
+        panel: "#4d2200"
+    },
+    gradient_ocean: {
+        bg: "radial-gradient(circle at top left,#004e8940 0%,transparent 35%), radial-gradient(circle at bottom right,#006ab340 0%,transparent 35%), #000a14",
+        c1: "#003d82", c2: "#00a8e8", text: "#c5e1ff", input: "#003d82",
+        glow: "0 0 20px rgba(0,168,232,.5), 0 0 40px rgba(0,168,232,.3)",
+        panel: "#001a33"
     }
 };
 
