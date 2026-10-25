@@ -1,83 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
+  
+  <title id="gameTitle"></title>
+  <link rel="icon" href="../img/game.png">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <h1 id="gameTitle"></h1>
+    
+    <script src="../js/color.js"> </script>
+    <link rel="stylesheet"
+        href="../css/style.css">
 
-    <title>Game - WorkStudy</title>
-
-    <link
-        rel="icon"
-        href="../img/game.png"
-    >
-
-    <link
-        rel="stylesheet"
-        href="../css/style.css"
-    >
-
-    <script
-        src="../js/color.js"
-        defer>
-    </script>
-
-    <script
-        src="../js/gameFrameSave.js"
-        defer>
-    </script>
 </head>
 
 <body>
-    <h1 id="gameTitle">
-        Loading Game...
-    </h1>
 
-    <p id="gameAuthor"></p>
+<script>
 
-    <iframe
-        id="websiteFrame"
-        title="WorkStudy Game"
-        allow="fullscreen; autoplay"
-    ></iframe>
+document.getElementById(
+    "gameTitle"
+).textContent =
+    localStorage.getItem(
+        "gameName"
+    );
+
+const author =
+    localStorage.getItem(
+        "gameAuthor"
+    );
+
+if (author) {
+
+    document.getElementById(
+        "gameAuthor"
+    ).textContent =
+        "by " + author;
+
+}
+else {
+
+    document.getElementById(
+        "gameAuthor"
+    ).style.display =
+        "none";
+
+}
+
+document.getElementById(
+    "websiteFrame"
+).src =
+    localStorage.getItem(
+        "gameUrl"
+    );
+
+</script>
+
+
+<h1 id="gameTitle"></h1>
+
+<p id="gameAuthor"></p>
+
+<iframe id="websiteFrame"></iframe>
 
     <div class="topbar">
-        <button
-            id="saveGameBtn"
-            type="button"
-        >
-            🎮💾 Save Game Progress
-        </button>
 
-        <button
-            id="restoreGameBtn"
-            type="button"
-        >
-            📥 Restore Game Progress
-        </button>
+        <button onclick="
+location.href='../games/index.html'
+">
+    Back to Games
+</button>
 
-        <button
-            id="backToGamesBtn"
-            type="button"
-        >
-            ← Back to Games
-        </button>
+<button
+    onclick="location.href='../index.html'">
 
-        <button
-            id="homeBtn"
-            type="button"
-        >
-            🏠 Home
-        </button>
+     Home
+
+</button>
+
     </div>
 
-    <p
-        id="gameSaveStatus"
-        role="status"
-        aria-live="polite"
-    ></p>
+    <script>
+
+        document
+            .getElementById(
+                "websiteFrame"
+            )
+            .src =
+            localStorage.getItem(
+                "gameUrl"
+            );
+
+    </script>
+    
+    <script>
+      document.getElementById(
+    "gameTitle"
+).textContent =
+    localStorage.getItem(
+        "gameName"
+    );
+    </script>
+
 </body>
+
 </html>
