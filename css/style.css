@@ -418,23 +418,35 @@ body:has(#websitePanel.open) {
     font-size: 15px;
 }
 
-.supportContainer {
-    position: fixed;
-    left: 50%;
-    bottom: 30%;
-    transform: translateX(-50%);
-    z-index: 100;
+/*------ Support Button ------*/
+
+.supportContainer{
+    position:static;
+    display:flex;
+    justify-content:center;
+    width:100%;
+    margin:40px 0 20px;
+    transform:none;
+    z-index:auto;
 }
 
-.supportBtn {
-    color: var(--c2);
-    text-decoration: none;
-    font-family: "Pusab", sans-serif;
-    transition: .2s;
+.supportBtn{
+    display:inline-block;
+    padding:12px 20px;
+    border:2px solid var(--c2);
+    border-radius:14px;
+    background:var(--panel);
+    color:var(--c2);
+    text-decoration:none;
+    font-family:"Pusab",sans-serif;
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
+    transition:.2s;
 }
 
-.supportBtn:hover {
-    color: var(--text);
+.supportBtn:hover{
+    color:var(--text);
+    transform:translateY(-2px);
+    box-shadow:var(--glow);
 }
 
 /* ---------- Login & Signup pages ---------- */
