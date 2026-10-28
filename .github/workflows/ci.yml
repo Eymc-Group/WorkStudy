@@ -1,4 +1,4 @@
-name: CI
+name: Validate Website
 
 on:
   push:
@@ -7,22 +7,22 @@ on:
   pull_request:
     branches:
       - root
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  test:
+  validate:
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Validate HTML, CSS, links, and images
+        uses: anishathalye/proof-html@v2
         with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run tests
-        run: npm test
+          directory: .
+          disable_external: true
+          enforce_https: true
