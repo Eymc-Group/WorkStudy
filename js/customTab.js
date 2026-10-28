@@ -195,4 +195,15 @@
     } else {
         initializeCustomTab();
     }
+    function resetCustomTab() {
+    localStorage.removeItem(
+        "workstudy-custom-tab-name"
+    );
+
+    localStorage.removeItem(
+        "workstudy-custom-icon"
+    );
+
+    window.location.reload();
+}
 })();
