@@ -663,3 +663,19 @@ body:has(#websitePanel.open) {
 }
 
 }
+.joinBtn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #25D366, #128C7E);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.joinBtn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
