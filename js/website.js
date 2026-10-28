@@ -1,81 +1,186 @@
 (function () {
     "use strict";
 
-    const websiteBtn = document.getElementById("websiteBtn");
-    const websitePanel = document.getElementById("websitePanel");
-    const websiteList = document.getElementById("websiteList");
-    const addWebsiteBtn = document.getElementById("addWebsiteBtn");
-    const websiteFrame = document.getElementById("websiteFrame");
+    const websiteBtn =
+        document.getElementById("websiteBtn");
 
-    if (!websiteBtn || !websitePanel || !websiteList || !addWebsiteBtn || !websiteFrame) {
+    const websitePanel =
+        document.getElementById("websitePanel");
+
+    const websiteList =
+        document.getElementById("websiteList");
+
+    const addWebsiteBtn =
+        document.getElementById("addWebsiteBtn");
+
+    const websiteFrame =
+        document.getElementById("websiteFrame");
+
+    if (
+        !websiteBtn ||
+        !websitePanel ||
+        !websiteList ||
+        !addWebsiteBtn ||
+        !websiteFrame
+    ) {
         return;
     }
 
-    websiteBtn.addEventListener("click", function () {
-        websitePanel.classList.toggle("open");
-    });
+    websiteBtn.addEventListener(
+        "click",
+        function () {
+            websitePanel.classList.toggle("open");
+        }
+    );
 
     function getWebsites() {
         try {
-            return JSON.parse(localStorage.getItem("savedWebsites")) || [];
+            const saved =
+                localStorage.getItem("savedWebsites");
+
+            return saved
+                ? JSON.parse(saved)
+                : [];
         } catch (error) {
+            console.error(
+                "Could not load saved websites:",
+                error
+            );
+
             return [];
         }
     }
 
     function saveWebsites(websites) {
-        localStorage.setItem("savedWebsites", JSON.stringify(websites));
+        localStorage.setItem(
+            "savedWebsites",
+            JSON.stringify(websites)
+        );
     }
 
     function renderWebsites() {
-        websiteList.innerHTML = "";
+        websiteList.replaceChildren();
 
-        getWebsites().forEach(function (site, index) {
-            const btn = document.createElement("button");
-            btn.className = "website-item";
-            btn.textContent = site.name;
+        const websites =
+            getWebsites();
 
-            btn.addEventListener("click", function () {
-                websiteFrame.src = site.url;
-            });
+        websites.forEach(
+            function (site, index) {
+                const button =
+                    document.createElement("button");
 
-            btn.addEventListener("contextmenu", function (event) {
-                event.preventDefault();
+                button.type = "button";
+                button.className = "website-item";
+                button.textContent = site.name;
 
-                if (confirm('Delete "' + site.name + '"?')) {
-                    const websites = getWebsites();
-                    websites.splice(index, 1);
-                    saveWebsites(websites);
-                    renderWebsites();
-                }
-            });
+                button.addEventListener(
+                    "click",
+                    function () {
+                        websiteFrame.src = site.url;
+                    }
+                );
 
-            websiteList.appendChild(btn);
-        });
+                button.addEventListener(
+                    "contextmenu",
+                    function (event) {
+                        event.preventDefault();
+
+                        const confirmed =
+                            window.confirm(
+                                `Delete "${site.name}"?`
+                            );
+
+                        if (!confirmed) {
+                            return;
+                        }
+
+                        const updatedWebsites =
+                            getWebsites();
+
+                        updatedWebsites.splice(
+                            index,
+                            1
+                        );
+
+                        saveWebsites(
+                            updatedWebsites
+                        );
+
+                        renderWebsites();
+                    }
+                );
+
+                websiteList.appendChild(
+                    button
+                );
+            }
+        );
     }
 
-    addWebsiteBtn.addEventListener("click", function () {
-        let url = prompt("Website URL:");
+    addWebsiteBtn.addEventListener(
+        "click",
+        function () {
+            let url =
+                window.prompt("Website URL:");
 
-        if (!url) {
-            return;
+            if (!url) {
+                return;
+            }
+
+            url = url.trim();
+
+            if (
+                !url.startsWith("http://") &&
+                !url.startsWith("https://")
+            ) {
+                url = "https://" + url;
+            }
+
+            let parsedUrl;
+
+            try {
+                parsedUrl = new URL(url);
+
+                if (
+                    parsedUrl.protocol !== "http:" &&
+                    parsedUrl.protocol !== "https:"
+                ) {
+                    throw new Error(
+                        "Unsupported protocol"
+                    );
+                }
+            } catch (error) {
+                window.alert(
+                    "Enter a valid website URL."
+                );
+
+                return;
+            }
+
+            let name =
+                window.prompt("Website Name:");
+
+            if (
+                !name ||
+                !name.trim()
+            ) {
+                name = parsedUrl.hostname;
+            } else {
+                name = name.trim();
+            }
+
+            const websites =
+                getWebsites();
+
+            websites.push({
+                name,
+                url: parsedUrl.href
+            });
+
+            saveWebsites(websites);
+            renderWebsites();
         }
-
-        if (!url.startsWith("http://") && !url.startsWith("https://")) {
-            url = "https://" + url;
-        }
-
-        let name = prompt("Website Name:");
-
-        if (!name || name.trim() === "") {
-            name = new URL(url).hostname;
-        }
-
-        const websites = getWebsites();
-        websites.push({ name, url });
-        saveWebsites(websites);
-        renderWebsites();
-    });
+    );
 
     renderWebsites();
 })();
