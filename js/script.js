@@ -1128,5 +1128,147 @@ window.openWorkStudyEmbed =
 
     window.resetTabAppearance =
         resetTabAppearance;
-})();
+async function clearWebsiteData() {
+    const warningOne =
+        window.confirm(
+            "\n\nDelete all WorkStudy website data stored on this mirror?"
+        );
+
+    if (!warningOne) {
+        return;
+    }
+
+    const warningTwo =
+        window.confirm(
+            "\n\nThis will delete your local login, themes, settings, progress, custom tab settings, IndexedDB databases, caches, cookies, and service workers."
+        );
+
+    if (!warningTwo) {
+        return;
+    }
+
+    const warningThree =
+        window.confirm(
+            "\n\nThis cannot be undone unless your progress was saved to the cloud.\n\nDelete everything?"
+        );
+
+    if (!warningThree) {
+        return;
+    }
+
+    try {
+        localStorage.clear();
+        sessionStorage.clear();
+
+        if (
+            window.indexedDB &&
+            typeof indexedDB.databases === "function"
+        ) {
+            const databases =
+                await indexedDB.databases();
+
+            await Promise.all(
+                databases.map(
+                    function (database) {
+                        if (!database.name) {
+                            return Promise.resolve();
+                        }
+
+                        return new Promise(
+                            function (resolve) {
+                                const request =
+                                    indexedDB.deleteDatabase(
+                                        database.name
+                                    );
+
+                                request.onsuccess =
+                                    resolve;
+
+                                request.onerror =
+                                    resolve;
+
+                                request.onblocked =
+                                    resolve;
+                            }
+                        );
+                    }
+                )
+            );
+        }
+
+        if ("caches" in window) {
+            const cacheNames =
+                await caches.keys();
+
+            await Promise.all(
+                cacheNames.map(
+                    function (cacheName) {
+                        return caches.delete(
+                            cacheName
+                        );
+                    }
+                )
+            );
+        }
+
+        if (
+            "serviceWorker" in navigator
+        ) {
+            const registrations =
+                await navigator.serviceWorker
+                    .getRegistrations();
+
+            await Promise.all(
+                registrations.map(
+                    function (registration) {
+                        return registration.unregister();
+                    }
+                )
+            );
+        }
+
+        document.cookie
+            .split(";")
+            .forEach(
+                function (cookie) {
+                    const cookieName =
+                        cookie
+                            .split("=")[0]
+                            .trim();
+
+                    if (!cookieName) {
+                        return;
+                    }
+
+                    document.cookie =
+                        `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0; path=/`;
+
+                    document.cookie =
+                        `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0; path=${window.location.pathname}`;
+                }
+            );
+
+        window.alert(
+            "All local WorkStudy website data was deleted."
+        );
+
+        window.location.replace(
+            window.location.origin +
+            window.location.pathname
+        );
+
+    } catch (error) {
+        console.error(
+            "Could not delete all website data:",
+            error
+        );
+
+        window.alert(
+            "Some website data could not be deleted."
+        );
+    }
+}
+
+window.clearWebsiteData =
+    clearWebsiteData;
 })();
