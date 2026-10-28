@@ -2,9 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>WorkStudy</title>
-    <link rel="icon" href="img/favicon.png">
+
+    <link
+        rel="icon"
+        href="img/favicon.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
 
     <script src="js/auth.js" defer></script>
     <script src="js/color.js" defer></script>
@@ -14,387 +28,589 @@
     <script src="js/cloudSave.js" defer></script>
     <script src="js/customTab.js" defer></script>
     <script src="js/legacyconfirm.js" defer></script>
-    <link rel="stylesheet" href="css/style.css">
-
-<main class="main">
-    <div class="welcome">
-        <!-- Homepage content -->
-    </div>
-
-    <div class="supportContainer">
-        <a
-            href="https://paypal.me/Tony7873"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="supportBtn"
-        >
-            💜 Support WorkStudy
-        </a>
-    </div>
-</main>
-    
 </head>
-<body>
-    <div class="sidebar">
-        <button type="button" onclick="location.href='games/index.html'">🎮 Games</button>
-        <button type="button" onclick="location.href='pages/chat/index.html'">💬 Chat</button>
-        <button type="button" onclick="location.href='pages/soundboard.html'">🎵 Soundboard</button>
-        <button type="button" onclick="location.href='pages/iframe.html'">🌐 Website Viewer</button>
-        <button type="button" onclick="location.href='pages/proxy.html'">🫥 Proxies</button>
-    </div>
 
-    <button id="legacyBtn" type="button" onclick="legacyConfirm()">🏛️ Legacy</button>
+<body>
+
+    <nav
+        class="sidebar"
+        aria-label="Main navigation"
+    >
+        <button
+            type="button"
+            onclick="location.href='games/index.html'"
+        >
+            🎮 Games
+        </button>
+
+        <button
+            type="button"
+            onclick="location.href='pages/chat/index.html'"
+        >
+            💬 Chat
+        </button>
+
+        <button
+            type="button"
+            onclick="location.href='pages/soundboard.html'"
+        >
+            🎵 Soundboard
+        </button>
+
+        <button
+            type="button"
+            onclick="location.href='pages/iframe.html'"
+        >
+            🌐 Website Viewer
+        </button>
+
+        <button
+            type="button"
+            onclick="location.href='pages/proxy.html'"
+        >
+            🫥 Proxies
+        </button>
+    </nav>
+
+    <button
+        id="legacyBtn"
+        type="button"
+        onclick="legacyConfirm()"
+    >
+        🏛️ Legacy
+    </button>
 
     <main class="main">
         <div class="welcome">
             <h1>Welcome to WorkStudy</h1>
-            <p>Game • Search • Explore</p>
-            <p>For the people that want proof that this is my website</p>
-            <ol>This website is owned by schoolwork04 (me)</ol>
-            <ol>Bennett is one of my friends helping to add websites (to become a supporter make an account and ill email you deatails)</ol>
-            <ol>Credits to Github, Cloudflare, Netlify, Render, Vercel And Neocities for hosting my site</ol>
-            <ol>Credits to Microsoft, Anthropic, And Github for letting me use their AI's to help fix bugs and organize code</ol>
-            
-            <p id="visitCount">👥 Total Visits: Loading...</p>
-            
+
+            <p>
+                Game • Search • Explore
+            </p>
+
+            <p>
+                For anyone who wants proof that this is my website:
+            </p>
+
+            <ol>
+                <li>
+                    This website is owned by schoolwork04.
+                </li>
+
+                <li>
+                    Bennett is helping add websites to WorkStudy.
+                </li>
+
+                <li>
+                    GitHub, Cloudflare, Netlify, Render,
+                    Vercel, and Neocities host WorkStudy mirrors.
+                </li>
+
+                <li>
+                    Microsoft, Anthropic, and GitHub tools
+                    helped with debugging and code organization.
+                </li>
+            </ol>
+
+            <p id="visitCount">
+                👥 Total Visits: Loading...
+            </p>
+        </div>
+
+        <div class="supportContainer">
+            <a
+                href="https://paypal.me/Tony7873"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="supportBtn"
+            >
+                💜 Support WorkStudy
+            </a>
         </div>
     </main>
 
-    <button id="settingsBtn" type="button" aria-controls="customizePanel" aria-expanded="false">⚙️ Settings</button>
+    <button
+        id="settingsBtn"
+        type="button"
+        aria-controls="customizePanel"
+        aria-expanded="false"
+    >
+        ⚙️ Settings
+    </button>
 
-    <aside id="customizePanel" aria-label="Settings panel">
+    <aside
+        id="customizePanel"
+        aria-label="Settings panel"
+    >
         <div class="customizeHeader">
             <h2>Settings</h2>
-            <button id="closeBtn" class="closeBtn" type="button" aria-label="Close settings">✖</button>
+
+            <button
+                id="closeBtn"
+                class="closeBtn"
+                type="button"
+                aria-label="Close settings"
+            >
+                ✖
+            </button>
         </div>
 
+        <!-- Themes -->
         <div class="dropdownHeader">
             <span>🎨 Themes</span>
-            <span class="dropdownArrow" data-dropdown="themesDropdown" aria-expanded="false" role="button" tabindex="0">›</span>
+
+            <span
+                class="dropdownArrow"
+                data-dropdown="themesDropdown"
+                aria-expanded="false"
+                role="button"
+                tabindex="0"
+            >
+                ›
+            </span>
         </div>
-        <div id="themesDropdown" class="dropdownContent">
-            <button type="button" onclick="setTheme('blue')">🔵 Blue</button>
-            <button type="button" onclick="setTheme('green')">🟢 Green</button>
-            <button type="button" onclick="setTheme('red')">🔴 Red</button>
-            <button type="button" onclick="setTheme('orange')">🟠 Orange</button>
-            <button type="button" onclick="setTheme('yellow')">🟡 Yellow</button>
-            <button type="button" onclick="setTheme('pink')">🌸 Pink</button>
-            <button type="button" onclick="setTheme('cyan')">💎 Cyan</button>
-            <button type="button" onclick="setTheme('teal')">🌊 Teal</button>
-            <button type="button" onclick="setTheme('purple')">🟣 Purple</button>
-            <button type="button" onclick="setTheme('indigo')">🔮 Indigo</button>
-            <button type="button" onclick="setTheme('lime')">🍀 Lime</button>
-            <button type="button" onclick="setTheme('minecraft')">⛏️ Minecraft</button>
-            <button type="button" onclick="setTheme('discord')">🎮 Discord</button>
-            <button type="button" onclick="setTheme('void')">⚫ Void</button>
-            <button type="button" onclick="setTheme('rose')">🌹 Rose</button>
-            <button type="button" onclick="setTheme('amber')">🟫 Amber</button>
-            <button type="button" onclick="setTheme('sky')">☁️ Sky</button>
-            <button type="button" onclick="setTheme('slate')">🩶 Slate</button>
-            <button type="button" onclick="setTheme('emerald')">💚 Emerald</button>
-            <button type="button" onclick="setTheme('violet')">💜 Violet</button>
-            <button type="button" onclick="setTheme('fuchsia')">🌺 Fuchsia</button>
-            <button type="button" onclick="setTheme('stone')">🪨 Stone</button>
-            <button type="button" onclick="setTheme('zinc')">⚙️ Zinc</button>
-            <button type="button" onclick="setTheme('orange_vibrant')">🔥 Vibrant Orange</button>
-            <button type="button" onclick="setTheme('aqua')">💧 Aqua</button>
-            <button type="button" onclick="setTheme('crimson')">❤️ Crimson</button>
-            <button type="button" onclick="setTheme('gradient_sunset')">🌅 Sunset</button>
-            <button type="button" onclick="setTheme('gradient_ocean')">🌊 Ocean</button>
+
+        <div
+            id="themesDropdown"
+            class="dropdownContent"
+        >
+            <button type="button" onclick="setTheme('blue')">
+                🔵 Blue
+            </button>
+
+            <button type="button" onclick="setTheme('green')">
+                🟢 Green
+            </button>
+
+            <button type="button" onclick="setTheme('red')">
+                🔴 Red
+            </button>
+
+            <button type="button" onclick="setTheme('orange')">
+                🟠 Orange
+            </button>
+
+            <button type="button" onclick="setTheme('yellow')">
+                🟡 Yellow
+            </button>
+
+            <button type="button" onclick="setTheme('pink')">
+                🌸 Pink
+            </button>
+
+            <button type="button" onclick="setTheme('cyan')">
+                💎 Cyan
+            </button>
+
+            <button type="button" onclick="setTheme('teal')">
+                🌊 Teal
+            </button>
+
+            <button type="button" onclick="setTheme('purple')">
+                🟣 Purple
+            </button>
+
+            <button type="button" onclick="setTheme('indigo')">
+                🔮 Indigo
+            </button>
+
+            <button type="button" onclick="setTheme('lime')">
+                🍀 Lime
+            </button>
+
+            <button type="button" onclick="setTheme('minecraft')">
+                ⛏️ Minecraft
+            </button>
+
+            <button type="button" onclick="setTheme('discord')">
+                🎮 Discord
+            </button>
+
+            <button type="button" onclick="setTheme('void')">
+                ⚫ Void
+            </button>
+
+            <button type="button" onclick="setTheme('rose')">
+                🌹 Rose
+            </button>
+
+            <button type="button" onclick="setTheme('amber')">
+                🟫 Amber
+            </button>
+
+            <button type="button" onclick="setTheme('sky')">
+                ☁️ Sky
+            </button>
+
+            <button type="button" onclick="setTheme('slate')">
+                🩶 Slate
+            </button>
+
+            <button type="button" onclick="setTheme('emerald')">
+                💚 Emerald
+            </button>
+
+            <button type="button" onclick="setTheme('violet')">
+                💜 Violet
+            </button>
+
+            <button type="button" onclick="setTheme('fuchsia')">
+                🌺 Fuchsia
+            </button>
+
+            <button type="button" onclick="setTheme('stone')">
+                🪨 Stone
+            </button>
+
+            <button type="button" onclick="setTheme('zinc')">
+                ⚙️ Zinc
+            </button>
+
+            <button
+                type="button"
+                onclick="setTheme('orange_vibrant')"
+            >
+                🔥 Vibrant Orange
+            </button>
+
+            <button type="button" onclick="setTheme('aqua')">
+                💧 Aqua
+            </button>
+
+            <button type="button" onclick="setTheme('crimson')">
+                ❤️ Crimson
+            </button>
+
+            <button
+                type="button"
+                onclick="setTheme('gradient_sunset')"
+            >
+                🌅 Sunset
+            </button>
+
+            <button
+                type="button"
+                onclick="setTheme('gradient_ocean')"
+            >
+                🌊 Ocean
+            </button>
         </div>
 
         <hr>
 
+        <!-- Developer Tools -->
         <div class="dropdownHeader">
             <span>🧪 Developer Tools</span>
-            <span class="dropdownArrow" data-dropdown="devDropdown" aria-expanded="false" role="button" tabindex="0">›</span>
+
+            <span
+                class="dropdownArrow"
+                data-dropdown="devDropdown"
+                aria-expanded="false"
+                role="button"
+                tabindex="0"
+            >
+                ›
+            </span>
         </div>
-        <div id="devDropdown" class="dropdownContent">
-            <button type="button" onclick="if (window.testFetch) window.testFetch();">🧲 Test Fetch</button>
-            <button type="button" onclick="if (window.testXHR) window.testXHR();">🧪 Test XMLHttpRequest</button>
-            <button type="button" onclick="if (window.testWebSocket) window.testWebSocket();">🔌 Test WebSocket</button>
-            <button type="button" onclick="if (window.testSSE) window.testSSE();">📡 Test SSE</button>
-            <button type="button" onclick="if (window.testImage) window.testImage();">🖼️ Test Image</button>
-            <button type="button" onclick="if (window.testScript) window.testScript();">📜 Test Script</button>
-            <button type="button" onclick="if (window.testIframe) window.testIframe();">🖼️ Test Iframe</button>
-            <button type="button" onclick="if (window.testCORS) window.testCORS();">🚦 Test CORS</button>
-            <button type="button" onclick="if (window.testSameOrigin) window.testSameOrigin();">🏠 Test Same-Origin</button>
-            <button type="button" onclick="if (window.testWorker) window.testWorker();">☁️ Test Worker</button>
-            <button type="button" onclick="if (window.testWorkerImage) window.testWorkerImage();">🖼️ Test Worker Image</button>
-            <button type="button" onclick="if (window.testPWA) window.testPWA();">🚀 Test PWA</button>
-            <button type="button" onclick="if (window.testServiceWorker) window.testServiceWorker();">🚀 Test Service Worker</button>
+
+        <div
+            id="devDropdown"
+            class="dropdownContent"
+        >
+            <button
+                type="button"
+                onclick="if (window.testFetch) window.testFetch();"
+            >
+                🧲 Test Fetch
+            </button>
+
+            <button
+                type="button"
+                onclick="if (window.testXHR) window.testXHR();"
+            >
+                🧪 Test XMLHttpRequest
+            </button>
+
+            <button
+                type="button"
+                onclick="if (windowbutton>
+
+            <button
+                type="button"
+                onclick="if (window.testImage) window.testImage();"
+            >
+                🖼️ Test Image
+            </button>
+
+            <button
+                type="button"
+                onclick="if (window.testScript) window.testScript();"
+            >
+                📜 Test Script
+            </button>
+
+            <button
+                type="button"
+                onclick="if (window.testIframe) window.testIframe();"
+            >
+                🖼️ Test Iframe
+            </button>
+
+            <button
+                type="button"
+                onclick="if (window.testCORS) window.testCORS();"
+            >
+                🚦 Test CORS
+            </button>
+
+            <button
+                type="button"
+                onclick="if (window.testSameOrigin) window.testSameOrigin();"
+            >
+                🏠 Test Same-Origin
+            </button>
+
+            <button
+                type="button"
+                onclick="if (window.testWorker) window.testWorker();"
+            >
+                ☁️ Test Worker
+            </button>
+
+            <button
+                type="button"
+                onclick="if (window.testWorkerImage) window.testWorkerImage();"
+            >
+                🖼️ Test Worker Image
+            </button>
+
+            <button
+                type="button"
+                onclick="if (window.testPWA) window.testPWA();"
+            >
+                🚀 Test PWA
+            </button>
+
+            <button
+                type="button"
+                onclick="if (window.testServiceWorker) window.testServiceWorker();"
+            >
+                🚀 Test Service Worker
+            </button>
         </div>
 
         <hr>
 
+        <!-- Danger Zone -->
         <div class="dropdownHeader">
             <span>❌ Danger Zone</span>
-            <span class="dropdownArrow" data-dropdown="dangerDropdown" aria-expanded="false" role="button" tabindex="0">›</span>
+
+            <span
+                class="dropdownArrow"
+                data-dropdown="dangerDropdown"
+                aria-expanded="false"
+                role="button"
+                tabindex="0"
+            >
+                ›
+            </span>
         </div>
-        <div id="dangerDropdown" class="dropdownContent">
-            <button type="button" onclick="if (window.clearWebsiteData) window.clearWebsiteData(); else localStorage.clear();">🗑️ Clear Website Data</button>
+
+        <div
+            id="dangerDropdown"
+            class="dropdownContent"
+        >
+            <button
+                type="button"
+                onclick="if (window.clearWebsiteData) window.clearWebsiteData();"
+            >
+                🗑️ Clear Website Data
+            </button>
         </div>
 
         <hr>
 
-<div class="dropdownHeader">
-    <span>👤 Account</span>
-    <span class="dropdownArrow" data-dropdown="accountDropdown" aria-expanded="false" role="button" tabindex="0">›</span>
-</div>
-<div id="accountDropdown" class="dropdownContent">
-    <div id="loggedOutView">
-        <button type="button" onclick="window.location.href='pages/login.html'">🔑 Login</button>
-        <button type="button" onclick="window.location.href='pages/signup.html'">📝 Sign Up</button>
-    </div>
-    <div id="loggedInView" style="display:none;">
-        <p id="accountName">Guest</p>
-<p id="accountEmail"></p>
-<button id="logoutBtn" type="button">🚪 Logout</button>
-<button id="deleteAccountBtn" type="button">❌ Delete Account</button>
+        <!-- Account -->
+        <div class="dropdownHeader">
+            <span>👤 Account</span>
+
+            <span
+                class="dropdownArrow"
+                data-dropdown="accountDropdown"
+                aria-expanded="false"
+                role="button"
+                tabindex="0"
+            >
+                ›
+            </span>
+        </div>
+
+        <div
+            id="accountDropdown"
+            class="dropdownContent"
+        >
+            <div id="loggedOutView">
+                <button
+                    type="button"
+                    onclick="window.location.href='pages/login.html'"
+                >
+                    🔑 Login
+                </button>
+
+                <button
+                    type="button"
+                    onclick="window.location.href='pages/signup.html'"
+                >
+                    📝 Sign Up
+                </button>
+            </div>
+
+            <div
+                id="loggedInView"
+                style="display: none;"
+            >
+                <p id="accountName">
+                    Guest
+                </p>
+
+                <p id="accountEmail"></p>
+
+                <button
+                    id="logoutBtn"
+                    type="button"
+                >
+                    🚪 Logout
+                </button>
+
+                <button
+                    id="deleteAccountBtn"
+                    type="button"
+                >
+                    ❌ Delete Account
+                </button>
+
+                <hr>
+
+                <h3>💾 Cloud Saves</h3>
+
+                <button
+                    id="saveProgressBtn"
+                    type="button"
+                >
+                    💾 Save Progress
+                </button>
+
+                <button
+                    id="loadProgressBtn"
+                    type="button"
+                >
+                    📥 Load Progress
+                </button>
+
+                <button
+                    id="deleteProgressBtn"
+                    type="button"
+                    style="background: linear-gradient(135deg, #991b1b, #ef4444);"
+                >
+                    🗑️ Delete Save
+                </button>
+
+                <div
+                    id="saveStatus"
+                    role="status"
+                    aria-live="polite"
+                    style="margin-top: 10px; text-align: center; color: var(--text); font-size: 14px;"
+                ></div>
+            </div>
+        </div>
+
         <hr>
-        <h3>💾 Cloud Saves</h3>
-        <button id="saveProgressBtn" type="button">💾 Save Progress</button>
-        <button id="loadProgressBtn" type="button">📥 Load Progress</button>
-        <button id="deleteProgressBtn" type="button" style="background: linear-gradient(135deg, #991b1b, #ef4444);">🗑️ Delete Save</button>
-        <div id="saveStatus" style="margin-top: 10px; text-align: center; color: var(--text); font-size: 14px;"></div>
-    </div>
-</div>
-        <hr>
-<div class="dropdownHeader">
-    <span>🫥 Cloaking</span>
 
-    <span
-        class="dropdownArrow"
-        data-dropdown="cloakDropdown"
-        aria-expanded="false"
-        role="button"
-        tabindex="0"
-    >
-        ›
-    </span>
-</div>
+        <!-- Tab Appearance -->
+        <div class="dropdownHeader">
+            <span>🗂️ Tab Appearance</span>
 
-<div
-    id="cloakDropdown"
-    class="dropdownContent"
->
-    <button
-        type="button"
-        onclick="openWorkStudyEmbed()"
-    >
-        🗔 Open WorkStudy in New Tab
-    </button>
-    <label for="customIconUrl">
-    Website Icon URL
-</label>
+            <span
+                class="dropdownArrow"
+                data-dropdown="cloakDropdown"
+                aria-expanded="false"
+                role="button"
+                tabindex="0"
+            >
+                ›
+            </span>
+        </div>
 
-<input
-    id="customIconUrl"
-    type="url"
-    placeholder="https://example.com/icon.png"
-    autocomplete="off"
->
+        <div
+            id="cloakDropdown"
+            class="dropdownContent"
+        >
+            <label for="customIconUrl">
+                Website Icon URL
+            </label>
 
-<button
-    id="saveCustomIconBtn"
-    type="button"
->
-    💾 Save Icon
-</button>
+            <input
+                id="customIconUrl"
+                type="url"
+                placeholder="https://example.com/icon.png"
+                autocomplete="off"
+            >
 
-<p
-    id="customIconStatus"
-    role="status"
-    aria-live="polite"
-></p>
+            <button
+                id="saveCustomIconBtn"
+                type="button"
+            >
+                💾 Save Icon
+            </button>
 
-<script>
-(function () {
-    "use strict";
+            <label for="customTabName">
+                Tab Name
+            </label>
 
-    const iconInput =
-        document.getElementById("customIconUrl");
+            <input
+                id="customTabName"
+                type="text"
+                placeholder="WorkStudy"
+                maxlength="60"
+                autocomplete="off"
+            >
 
-    const saveButton =
-        document.getElementById("saveCustomIconBtn");
+            <button
+                id="saveCustomTabNameBtn"
+                type="button"
+            >
+                💾 Save Tab Name
+            </button>
 
-    const status =
-        document.getElementById("customIconStatus");
+            <button
+                id="resetCustomTabBtn"
+                type="button"
+            >
+                ↺ Reset Tab Settings
+            </button>
 
-    function applyIcon(iconUrl) {
-        let icon =
-            document.querySelector('link[rel~="icon"]');
-
-        if (!icon) {
-            icon = document.createElement("link");
-            icon.rel = "icon";
-            document.head.appendChild(icon);
-        }
-
-        icon.href = iconUrl;
-    }
-
-    function saveIcon() {
-        const value = iconInput.value.trim();
-
-        let iconUrl;
-
-        try {
-            iconUrl = new URL(value);
-
-            if (
-                iconUrl.protocol !== "https:" &&
-                iconUrl.protocol !== "http:"
-            ) {
-                throw new Error("Invalid protocol");
-            }
-        } catch {
-            status.textContent =
-                "❌ Enter a valid image URL.";
-
-            return;
-        }
-
-        const testImage = new Image();
-
-        status.textContent =
-            "Checking icon...";
-
-        testImage.onload = function () {
-            applyIcon(iconUrl.href);
-
-            localStorage.setItem(
-                "workstudy-custom-icon",
-                iconUrl.href
-            );
-
-            status.textContent =
-                "✅ Icon saved!";
-        };
-
-        testImage.onerror = function () {
-            status.textContent =
-                "❌ The image could not be loaded.";
-        };
-
-        testImage.src = iconUrl.href;
-    }
-
-    const savedIcon =
-        localStorage.getItem("workstudy-custom-icon");
-
-    if (savedIcon) {
-        iconInput.value = savedIcon;
-        applyIcon(savedIcon);
-    }
-
-    saveButton.addEventListener(
-        "click",
-        saveIcon
-    );
-})();
-</script>
-    <label for="customTabName">
-    Tab Name
-</label>
-
-<input
-    id="customTabName"
-    type="text"
-    placeholder="WorkStudy"
-    maxlength="60"
-    autocomplete="off"
->
-
-<button
-    id="saveCustomTabNameBtn"
-    type="button"
->
-    💾 Save Tab Name
-</button>
-
-<p
-    id="customTabNameStatus"
-    role="status"
-    aria-live="polite"
-></p>
-
-<script>
-(function () {
-    "use strict";
-
-    const input =
-        document.getElementById(
-            "customTabName"
-        );
-
-    const saveButton =
-        document.getElementById(
-            "saveCustomTabNameBtn"
-        );
-
-    const status =
-        document.getElementById(
-            "customTabNameStatus"
-        );
-
-    const storageKey =
-        "workstudy-custom-tab-name";
-
-    function saveTabName() {
-        const tabName =
-            input.value.trim();
-
-        if (!tabName) {
-            status.textContent =
-                "❌ Enter a tab name.";
-
-            return;
-        }
-
-        document.title =
-            tabName;
-
-        localStorage.setItem(
-            storageKey,
-            tabName
-        );
-
-        status.textContent =
-            "✅ Tab name saved!";
-    }
-
-    const savedTabName =
-        localStorage.getItem(
-            storageKey
-        );
-
-    if (savedTabName) {
-        input.value =
-            savedTabName;
-
-        document.title =
-            savedTabName;
-    }
-
-    saveButton.addEventListener(
-        "click",
-        saveTabName
-    );
-})();
-</script>
-    <button
-    id="resetCustomTabBtn"
-    type="button"
->
-    ↺ Reset Cloaking Settings
-</button>
-</div>
+            <p
+                id="customTabStatus"
+                role="status"
+                aria-live="polite"
+            ></p>
+        </div>
     </aside>
 
-    <div id="statusPanel" role="button" tabindex="0" onclick="location.href='pages/deviceinfo.html'">
-        <div id="time">🕒 Loading...</div>
-        <div id="battery">🔋 Loading...</div>
+    <div
+        id="statusPanel"
+        role="button"
+        tabindex="0"
+        onclick="location.href='pages/deviceinfo.html'"
+    >
+        <div id="time">
+            🕒 Loading...
+        </div>
+
+        <div id="battery">
+            🔋 Loading...
+        </div>
     </div>
+
 </body>
 </html>
