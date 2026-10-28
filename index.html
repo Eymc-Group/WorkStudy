@@ -159,9 +159,82 @@
     </div>
 </div>
         <hr>
-        <button type="button" onclick="openWorkStudyEmbed()">
-    🗔 Open WorkStudy in New Tab
-</button>
+
+<div class="dropdownHeader">
+    <span>🗂️ Tab Appearance</span>
+
+    <span
+        class="dropdownArrow"
+        data-dropdown="tabAppearanceDropdown"
+        aria-expanded="false"
+        role="button"
+        tabindex="0"
+    >
+        ›
+    </span>
+</div>
+
+<div
+    id="tabAppearanceDropdown"
+    class="dropdownContent"
+>
+    <label for="tabTitleSelect">
+        Tab title
+    </label>
+
+    <select id="tabTitleSelect">
+        <option value="WorkStudy">
+            WorkStudy
+        </option>
+
+        <option value="WorkStudy Hub">
+            WorkStudy Hub
+        </option>
+
+        <option value="WorkStudy Games">
+            WorkStudy Games
+        </option>
+
+        <option value="WorkStudy - Game • Search • Explore">
+            WorkStudy - Game • Search • Explore
+        </option>
+    </select>
+
+    <label for="tabIconSelect">
+        Tab icon
+    </label>
+
+    <select id="tabIconSelect">
+        <option value="default">
+            WorkStudy icon
+        </option>
+
+        <option value="game">
+            Game icon
+        </option>
+    </select>
+
+    <button
+        id="applyTabAppearanceBtn"
+        type="button"
+    >
+        ✅ Apply Tab Appearance
+    </button>
+
+    <button
+        id="resetTabAppearanceBtn"
+        type="button"
+    >
+        ↺ Reset Tab Appearance
+    </button>
+
+    <div
+        id="tabAppearanceStatus"
+        role="status"
+        aria-live="polite"
+    ></div>
+</div>
+
 
     </aside>
 
