@@ -1,186 +1,202 @@
-(function () {
+(() => {
     "use strict";
 
-    const websiteBtn =
-        document.getElementById("websiteBtn");
-
-    const websitePanel =
-        document.getElementById("websitePanel");
-
-    const websiteList =
-        document.getElementById("websiteList");
-
-    const addWebsiteBtn =
-        document.getElementById("addWebsiteBtn");
-
-    const websiteFrame =
-        document.getElementById("websiteFrame");
-
-    if (
-        !websiteBtn ||
-        !websitePanel ||
-        !websiteList ||
-        !addWebsiteBtn ||
-        !websiteFrame
-    ) {
-        return;
-    }
-
-    websiteBtn.addEventListener(
-        "click",
-        function () {
-            websitePanel.classList.toggle("open");
-        }
-    );
+    const STORAGE_KEY = "savedWebsites";
 
     function getWebsites() {
         try {
-            const saved =
-                localStorage.getItem("savedWebsites");
-
-            return saved
-                ? JSON.parse(saved)
-                : [];
+            const saved = localStorage.getItem(STORAGE_KEY);
+            return saved ? JSON.parse(saved) : [];
         } catch (error) {
-            console.error(
-                "Could not load saved websites:",
-                error
-            );
-
+            console.error("Failed to load websites:", error);
             return [];
         }
     }
 
     function saveWebsites(websites) {
         localStorage.setItem(
-            "savedWebsites",
+            STORAGE_KEY,
             JSON.stringify(websites)
         );
     }
 
     function renderWebsites() {
-        websiteList.replaceChildren();
+        const container =
+            document.getElementById("savedSites");
 
-        const websites =
-            getWebsites();
+        if (!container) return;
 
-        websites.forEach(
-            function (site, index) {
-                const button =
-                    document.createElement("button");
+        container.innerHTML = "";
 
-                button.type = "button";
-                button.className = "website-item";
-                button.textContent = site.name;
+        const websites = getWebsites();
 
-                button.addEventListener(
-                    "click",
-                    function () {
-                        websiteFrame.src = site.url;
+        websites.forEach((site, index) => {
+            const button =
+                document.createElement("button");
+
+            button.className =
+                "website-item";
+
+            button.textContent =
+                site.name;
+
+            button.title =
+                site.url;
+
+            button.addEventListener(
+                "click",
+                () => {
+                    const urlInput =
+                        document.getElementById(
+                            "urlInput"
+                        );
+
+                    const frame =
+                        document.getElementById(
+                            "websiteFrame"
+                        );
+
+                    if (urlInput) {
+                        urlInput.value =
+                            site.url;
                     }
-                );
 
-                button.addEventListener(
-                    "contextmenu",
-                    function (event) {
-                        event.preventDefault();
+                    if (
+                        typeof loadWebsite ===
+                        "function"
+                    ) {
+                        loadWebsite();
+                    } else if (frame) {
+                        frame.src = site.url;
+                    }
+                }
+            );
 
-                        const confirmed =
-                            window.confirm(
-                                `Delete "${site.name}"?`
-                            );
+            button.addEventListener(
+                "contextmenu",
+                event => {
+                    event.preventDefault();
 
-                        if (!confirmed) {
-                            return;
-                        }
-
-                        const updatedWebsites =
+                    if (
+                        confirm(
+                            `Delete "${site.name}"?`
+                        )
+                    ) {
+                        const websites =
                             getWebsites();
 
-                        updatedWebsites.splice(
+                        websites.splice(
                             index,
                             1
                         );
 
                         saveWebsites(
-                            updatedWebsites
+                            websites
                         );
 
                         renderWebsites();
                     }
-                );
+                }
+            );
 
-                websiteList.appendChild(
-                    button
-                );
-            }
-        );
+            container.appendChild(
+                button
+            );
+        });
     }
 
-    addWebsiteBtn.addEventListener(
-        "click",
+    window.saveCurrentWebsite =
         function () {
+            const input =
+                document.getElementById(
+                    "urlInput"
+                );
+
+            if (!input) return;
+
             let url =
-                window.prompt("Website URL:");
+                input.value.trim();
 
             if (!url) {
+                alert(
+                    "Enter a website URL first."
+                );
                 return;
             }
 
-            url = url.trim();
-
             if (
-                !url.startsWith("http://") &&
-                !url.startsWith("https://")
+                !url.startsWith(
+                    "http://"
+                ) &&
+                !url.startsWith(
+                    "https://"
+                )
             ) {
-                url = "https://" + url;
+                url =
+                    "https://" +
+                    url;
             }
 
             let parsedUrl;
 
             try {
-                parsedUrl = new URL(url);
-
-                if (
-                    parsedUrl.protocol !== "http:" &&
-                    parsedUrl.protocol !== "https:"
-                ) {
-                    throw new Error(
-                        "Unsupported protocol"
-                    );
-                }
-            } catch (error) {
-                window.alert(
-                    "Enter a valid website URL."
+                parsedUrl =
+                    new URL(url);
+            } catch {
+                alert(
+                    "Invalid website URL."
                 );
-
                 return;
             }
 
-            let name =
-                window.prompt("Website Name:");
+            let name = prompt(
+                "Website Name:",
+                parsedUrl.hostname
+            );
 
             if (
                 !name ||
                 !name.trim()
             ) {
-                name = parsedUrl.hostname;
-            } else {
-                name = name.trim();
+                name =
+                    parsedUrl.hostname;
             }
 
             const websites =
                 getWebsites();
 
+            const duplicate =
+                websites.some(
+                    site =>
+                        site.url ===
+                        parsedUrl.href
+                );
+
+            if (duplicate) {
+                alert(
+                    "Website already saved."
+                );
+                return;
+            }
+
             websites.push({
-                name,
+                name: name.trim(),
                 url: parsedUrl.href
             });
 
-            saveWebsites(websites);
-            renderWebsites();
-        }
-    );
+            saveWebsites(
+                websites
+            );
 
-    renderWebsites();
+            renderWebsites();
+
+            alert(
+                "Website saved successfully!"
+            );
+        };
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        renderWebsites
+    );
 })();
