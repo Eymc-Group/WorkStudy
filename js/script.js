@@ -655,4 +655,87 @@
 
     window.deleteAccount =
         deleteAccount;
+
+    function openWorkStudyEmbed() {
+    const siteUrl =
+        window.location.href;
+
+    const siteWindow =
+        window.open(
+            "about:blank",
+            "_blank"
+        );
+
+    if (!siteWindow) {
+        window.alert(
+            "The new tab was blocked. Allow popups and try again."
+        );
+
+        return;
+    }
+
+    siteWindow.document.title =
+        "WorkStudy";
+
+    siteWindow.document.documentElement.style.width =
+        "100%";
+
+    siteWindow.document.documentElement.style.height =
+        "100%";
+
+    siteWindow.document.body.style.margin =
+        "0";
+
+    siteWindow.document.body.style.width =
+        "100%";
+
+    siteWindow.document.body.style.height =
+        "100%";
+
+    siteWindow.document.body.style.overflow =
+        "hidden";
+
+    siteWindow.document.body.style.background =
+        "#000";
+
+    const siteFrame =
+        siteWindow.document.createElement(
+            "iframe"
+        );
+
+    siteFrame.src =
+        siteUrl;
+
+    siteFrame.title =
+        "WorkStudy";
+
+    siteFrame.style.display =
+        "block";
+
+    siteFrame.style.width =
+        "100%";
+
+    siteFrame.style.height =
+        "100%";
+
+    siteFrame.style.border =
+        "0";
+
+    siteFrame.setAttribute(
+        "allow",
+        "fullscreen; autoplay"
+    );
+
+    siteFrame.setAttribute(
+        "allowfullscreen",
+        ""
+    );
+
+    siteWindow.document.body.appendChild(
+        siteFrame
+    );
+}
+
+window.openWorkStudyEmbed =
+    openWorkStudyEmbed;
 })();
