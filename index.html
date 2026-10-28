@@ -56,6 +56,58 @@
             <ol>Credits to Microsoft, Anthropic, And Github for letting me use their AI's to help fix bugs and organize code</ol>
             
             <p id="visitCount">👥 Total Visits: Loading...</p>
+
+            <div id="onlineUsers">
+    🟢 Loading...
+</div>
+
+<script>
+let userId =
+    localStorage.getItem("userId");
+
+if (!userId) {
+    userId = crypto.randomUUID();
+
+    localStorage.setItem(
+        "userId",
+        userId
+    );
+}
+
+const WORKER_URL =
+    "https://online-counter.354271744.workers.dev/";
+
+async function updateOnlineCount() {
+    try {
+        const response =
+            await fetch(
+                `${WORKER_URL}?id=${userId}`
+            );
+
+        const data =
+            await response.json();
+
+        document.getElementById(
+            "onlineUsers"
+        ).textContent =
+            `🟢 ${data.online} Online`;
+    } catch (error) {
+        console.error(error);
+
+        document.getElementById(
+            "onlineUsers"
+        ).textContent =
+            "🔴 Offline";
+    }
+}
+
+updateOnlineCount();
+
+setInterval(
+    updateOnlineCount,
+    30000
+);
+</script>
             
         </div>
     </main>
