@@ -261,6 +261,116 @@
     >
         🗔 Open WorkStudy in New Tab
     </button>
+    <label for="customIconUrl">
+    Website Icon URL
+</label>
+
+<input
+    id="customIconUrl"
+    type="url"
+    placeholder="https://example.com/icon.png"
+    autocomplete="off"
+>
+
+<button
+    id="saveCustomIconBtn"
+    type="button"
+>
+    💾 Save Icon
+</button>
+
+<p
+    id="customIconStatus"
+    role="status"
+    aria-live="polite"
+></p>
+
+<script>
+(function () {
+    "use strict";
+
+    const iconInput =
+        document.getElementById("customIconUrl");
+
+    const saveButton =
+        document.getElementById("saveCustomIconBtn");
+
+    const status =
+        document.getElementById("customIconStatus");
+
+    function applyIcon(iconUrl) {
+        let icon =
+            document.querySelector('link[rel~="icon"]');
+
+        if (!icon) {
+            icon = document.createElement("link");
+            icon.rel = "icon";
+            document.head.appendChild(icon);
+        }
+
+        icon.href = iconUrl;
+    }
+
+    function saveIcon() {
+        const value = iconInput.value.trim();
+
+        let iconUrl;
+
+        try {
+            iconUrl = new URL(value);
+
+            if (
+                iconUrl.protocol !== "https:" &&
+                iconUrl.protocol !== "http:"
+            ) {
+                throw new Error("Invalid protocol");
+            }
+        } catch {
+            status.textContent =
+                "❌ Enter a valid image URL.";
+
+            return;
+        }
+
+        const testImage = new Image();
+
+        status.textContent =
+            "Checking icon...";
+
+        testImage.onload = function () {
+            applyIcon(iconUrl.href);
+
+            localStorage.setItem(
+                "workstudy-custom-icon",
+                iconUrl.href
+            );
+
+            status.textContent =
+                "✅ Icon saved!";
+        };
+
+        testImage.onerror = function () {
+            status.textContent =
+                "❌ The image could not be loaded.";
+        };
+
+        testImage.src = iconUrl.href;
+    }
+
+    const savedIcon =
+        localStorage.getItem("workstudy-custom-icon");
+
+    if (savedIcon) {
+        iconInput.value = savedIcon;
+        applyIcon(savedIcon);
+    }
+
+    saveButton.addEventListener(
+        "click",
+        saveIcon
+    );
+})();
+</script>
 </div>
     </aside>
 
