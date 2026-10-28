@@ -371,6 +371,95 @@
     );
 })();
 </script>
+    <label for="customTabName">
+    Tab Name
+</label>
+
+<input
+    id="customTabName"
+    type="text"
+    placeholder="WorkStudy"
+    maxlength="60"
+    autocomplete="off"
+>
+
+<button
+    id="saveCustomTabNameBtn"
+    type="button"
+>
+    💾 Save Tab Name
+</button>
+
+<p
+    id="customTabNameStatus"
+    role="status"
+    aria-live="polite"
+></p>
+
+<script>
+(function () {
+    "use strict";
+
+    const input =
+        document.getElementById(
+            "customTabName"
+        );
+
+    const saveButton =
+        document.getElementById(
+            "saveCustomTabNameBtn"
+        );
+
+    const status =
+        document.getElementById(
+            "customTabNameStatus"
+        );
+
+    const storageKey =
+        "workstudy-custom-tab-name";
+
+    function saveTabName() {
+        const tabName =
+            input.value.trim();
+
+        if (!tabName) {
+            status.textContent =
+                "❌ Enter a tab name.";
+
+            return;
+        }
+
+        document.title =
+            tabName;
+
+        localStorage.setItem(
+            storageKey,
+            tabName
+        );
+
+        status.textContent =
+            "✅ Tab name saved!";
+    }
+
+    const savedTabName =
+        localStorage.getItem(
+            storageKey
+        );
+
+    if (savedTabName) {
+        input.value =
+            savedTabName;
+
+        document.title =
+            savedTabName;
+    }
+
+    saveButton.addEventListener(
+        "click",
+        saveTabName
+    );
+})();
+</script>
 </div>
     </aside>
 
