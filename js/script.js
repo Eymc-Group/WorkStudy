@@ -738,4 +738,395 @@
 
 window.openWorkStudyEmbed =
     openWorkStudyEmbed;
+    (function () {
+    "use strict";
+
+    const TAB_TITLE_KEY =
+        "workstudy-tab-title";
+
+    const TAB_ICON_KEY =
+        "workstudy-tab-icon";
+
+    const TITLE_OPTIONS = new Set([
+        "WorkStudy",
+        "WorkStudy Hub",
+        "WorkStudy Games",
+        "WorkStudy - Game • Search • Explore"
+    ]);
+
+    const ICON_FILES = {
+        default: "favicon.png",
+        game: "game.png"
+    };
+
+    function getImageUrl(filename) {
+        const currentScript =
+            document.currentScript;
+
+        if (
+            currentScript &&
+            currentScript.src
+        ) {
+            return new URL(
+                "../img/" + filename,
+                currentScript.src
+            ).href;
+        }
+
+        const scriptElement =
+            Array.from(
+                document.scripts
+            ).find(function (script) {
+                return (
+                    script.src &&
+                    script.src.includes(
+                        "/js/script.js"
+                    )
+                );
+            });
+
+        if (scriptElement) {
+            return new URL(
+                "../img/" + filename,
+                scriptElement.src
+            ).href;
+        }
+
+        return new URL(
+            "img/" + filename,
+            window.location.href
+        ).href;
+    }
+
+    function getIconUrl(iconName) {
+        const filename =
+            ICON_FILES[iconName] ||
+            ICON_FILES.default;
+
+        return getImageUrl(filename);
+    }
+
+    function updateFavicon(iconName) {
+        const iconUrl =
+            getIconUrl(iconName);
+
+        let favicon =
+            document.querySelector(
+                'link[rel~="icon"]'
+            );
+
+        if (!favicon) {
+            favicon =
+                document.createElement(
+                    "link"
+                );
+
+            favicon.rel =
+                "icon";
+
+            document.head.appendChild(
+                favicon
+            );
+        }
+
+        favicon.href =
+            iconUrl;
+    }
+
+    function setTabStatus(
+        message,
+        type
+    ) {
+        const status =
+            document.getElementById(
+                "tabAppearanceStatus"
+            );
+
+        if (!status) {
+            return;
+        }
+
+        status.textContent =
+            message;
+
+        if (type === "success") {
+            status.style.color =
+                "#22c55e";
+        } else if (type === "error") {
+            status.style.color =
+                "#ef4444";
+        } else {
+            status.style.color =
+                "var(--text)";
+        }
+    }
+
+    function applySavedTabAppearance() {
+        try {
+            const savedTitle =
+                localStorage.getItem(
+                    TAB_TITLE_KEY
+                );
+
+            const savedIcon =
+                localStorage.getItem(
+                    TAB_ICON_KEY
+                );
+
+            if (
+                savedTitle &&
+                TITLE_OPTIONS.has(
+                    savedTitle
+                )
+            ) {
+                document.title =
+                    savedTitle;
+            }
+
+            if (
+                savedIcon &&
+                ICON_FILES[savedIcon]
+            ) {
+                updateFavicon(
+                    savedIcon
+                );
+            }
+        } catch (error) {
+            console.error(
+                "Could not load tab appearance:",
+                error
+            );
+        }
+    }
+
+    function applyTabAppearance() {
+        const titleSelect =
+            document.getElementById(
+                "tabTitleSelect"
+            );
+
+        const iconSelect =
+            document.getElementById(
+                "tabIconSelect"
+            );
+
+        if (
+            !titleSelect ||
+            !iconSelect
+        ) {
+            return;
+        }
+
+        const selectedTitle =
+            titleSelect.value;
+
+        const selectedIcon =
+            iconSelect.value;
+
+        if (
+            !TITLE_OPTIONS.has(
+                selectedTitle
+            )
+        ) {
+            setTabStatus(
+                "❌ Invalid tab title.",
+                "error"
+            );
+
+            return;
+        }
+
+        if (
+            !ICON_FILES[selectedIcon]
+        ) {
+            setTabStatus(
+                "❌ Invalid tab icon.",
+                "error"
+            );
+
+            return;
+        }
+
+        try {
+            document.title =
+                selectedTitle;
+
+            updateFavicon(
+                selectedIcon
+            );
+
+            localStorage.setItem(
+                TAB_TITLE_KEY,
+                selectedTitle
+            );
+
+            localStorage.setItem(
+                TAB_ICON_KEY,
+                selectedIcon
+            );
+
+            setTabStatus(
+                "✅ Tab appearance saved.",
+                "success"
+            );
+        } catch (error) {
+            console.error(
+                "Could not save tab appearance:",
+                error
+            );
+
+            setTabStatus(
+                "❌ Could not save tab appearance.",
+                "error"
+            );
+        }
+    }
+
+    function resetTabAppearance() {
+        try {
+            localStorage.removeItem(
+                TAB_TITLE_KEY
+            );
+
+            localStorage.removeItem(
+                TAB_ICON_KEY
+            );
+
+            document.title =
+                "WorkStudy";
+
+            updateFavicon(
+                "default"
+            );
+
+            const titleSelect =
+                document.getElementById(
+                    "tabTitleSelect"
+                );
+
+            const iconSelect =
+                document.getElementById(
+                    "tabIconSelect"
+                );
+
+            if (titleSelect) {
+                titleSelect.value =
+                    "WorkStudy";
+            }
+
+            if (iconSelect) {
+                iconSelect.value =
+                    "default";
+            }
+
+            setTabStatus(
+                "✅ Tab appearance reset.",
+                "success"
+            );
+        } catch (error) {
+            console.error(
+                "Could not reset tab appearance:",
+                error
+            );
+
+            setTabStatus(
+                "❌ Could not reset tab appearance.",
+                "error"
+            );
+        }
+    }
+
+    function initializeTabAppearance() {
+        applySavedTabAppearance();
+
+        const titleSelect =
+            document.getElementById(
+                "tabTitleSelect"
+            );
+
+        const iconSelect =
+            document.getElementById(
+                "tabIconSelect"
+            );
+
+        const applyButton =
+            document.getElementById(
+                "applyTabAppearanceBtn"
+            );
+
+        const resetButton =
+            document.getElementById(
+                "resetTabAppearanceBtn"
+            );
+
+        try {
+            const savedTitle =
+                localStorage.getItem(
+                    TAB_TITLE_KEY
+                );
+
+            const savedIcon =
+                localStorage.getItem(
+                    TAB_ICON_KEY
+                );
+
+            if (
+                titleSelect &&
+                savedTitle &&
+                TITLE_OPTIONS.has(
+                    savedTitle
+                )
+            ) {
+                titleSelect.value =
+                    savedTitle;
+            }
+
+            if (
+                iconSelect &&
+                savedIcon &&
+                ICON_FILES[savedIcon]
+            ) {
+                iconSelect.value =
+                    savedIcon;
+            }
+        } catch (error) {
+            console.error(
+                "Could not prepare tab controls:",
+                error
+            );
+        }
+
+        if (applyButton) {
+            applyButton.addEventListener(
+                "click",
+                applyTabAppearance
+            );
+        }
+
+        if (resetButton) {
+            resetButton.addEventListener(
+                "click",
+                resetTabAppearance
+            );
+        }
+    }
+
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+        document.addEventListener(
+            "DOMContentLoaded",
+            initializeTabAppearance
+        );
+    } else {
+        initializeTabAppearance();
+    }
+
+    window.applyTabAppearance =
+        applyTabAppearance;
+
+    window.resetTabAppearance =
+        resetTabAppearance;
+})();
 })();
