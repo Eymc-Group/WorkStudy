@@ -1,107 +1,195 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  
-  <title id="gameTitle"></title>
-  <link rel="icon" href="../img/game.png">
+    <meta charset="UTF-8">
 
-    <h1 id="gameTitle"></h1>
-    
-    <script src="../js/color.js"> </script>
-    <link rel="stylesheet"
-        href="../css/style.css">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
+    <title>Game - WorkStudy</title>
+
+    <link
+        rel="icon"
+        href="../img/game.png"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <script
+        src="../js/color.js"
+        defer
+    ></script>
 </head>
 
 <body>
 
-<script>
+    <h1 id="gameTitle">
+        Loading Game...
+    </h1>
 
-document.getElementById(
-    "gameTitle"
-).textContent =
-    localStorage.getItem(
-        "gameName"
-    );
+    <p id="gameAuthor"></p>
 
-const author =
-    localStorage.getItem(
-        "gameAuthor"
-    );
-
-if (author) {
-
-    document.getElementById(
-        "gameAuthor"
-    ).textContent =
-        "by " + author;
-
-}
-else {
-
-    document.getElementById(
-        "gameAuthor"
-    ).style.display =
-        "none";
-
-}
-
-document.getElementById(
-    "websiteFrame"
-).src =
-    localStorage.getItem(
-        "gameUrl"
-    );
-
-</script>
-
-
-<h1 id="gameTitle"></h1>
-
-<p id="gameAuthor"></p>
-
-<iframe id="websiteFrame"></iframe>
+    <iframe
+        id="websiteFrame"
+        title="WorkStudy Game"
+        allow="fullscreen; autoplay"
+        allowfullscreen
+    ></iframe>
 
     <div class="topbar">
 
-        <button onclick="
-location.href='../games/index.html'
-">
-    Back to Games
-</button>
+        <button
+            id="fullscreenBtn"
+            type="button"
+        >
+            ⛶ Fullscreen
+        </button>
 
-<button
-    onclick="location.href='../index.html'">
+        <button
+            id="backBtn"
+            type="button"
+        >
+            ← Back to Games
+        </button>
 
-     Home
-
-</button>
+        <button
+            id="homeBtn"
+            type="button"
+        >
+            🏠 Home
+        </button>
 
     </div>
 
-    <script>
+    <div
+        id="gameStatus"
+        role="status"
+        aria-live="polite"
+    ></div>
 
-        document
-            .getElementById(
-                "websiteFrame"
-            )
-            .src =
-            localStorage.getItem(
-                "gameUrl"
-            );
-
-    </script>
-    
     <script>
-      document.getElementById(
-    "gameTitle"
-).textContent =
-    localStorage.getItem(
-        "gameName"
-    );
+        "use strict";
+
+        const gameTitle =
+            document.getElementById("gameTitle");
+
+        const gameAuthor =
+            document.getElementById("gameAuthor");
+
+        const websiteFrame =
+            document.getElementById("websiteFrame");
+
+        const fullscreenButton =
+            document.getElementById("fullscreenBtn");
+
+        const backButton =
+            document.getElementById("backBtn");
+
+        const homeButton =
+            document.getElementById("homeBtn");
+
+        const gameStatus =
+            document.getElementById("gameStatus");
+
+        const savedGameName =
+            localStorage.getItem("gameName");
+
+        const savedGameAuthor =
+            localStorage.getItem("gameAuthor");
+
+        const savedGameUrl =
+            localStorage.getItem("gameUrl");
+
+        function setStatus(message) {
+            gameStatus.textContent = message;
+        }
+
+        function loadGame() {
+            if (savedGameName) {
+                gameTitle.textContent =
+                    savedGameName;
+
+                document.title =
+                    savedGameName +
+                    " - WorkStudy";
+            } else {
+                gameTitle.textContent =
+                    "WorkStudy Game";
+            }
+
+            if (savedGameAuthor) {
+                gameAuthor.textContent =
+                    "by " + savedGameAuthor;
+            } else {
+                gameAuthor.hidden = true;
+            }
+
+            if (savedGameUrl) {
+                websiteFrame.src =
+                    savedGameUrl;
+            } else {
+                setStatus(
+                    "No game URL was found."
+                );
+
+                fullscreenButton.disabledent.fullscreenElement) {
+                    await websiteFrame.requestFullscreen();
+                } else {
+                    await document.exitFullscreen();
+                }
+            } catch (error) {
+                console.error(
+                    "Fullscreen failed:",
+                    error
+                );
+
+                setStatus(
+                    "Fullscreen could not be opened."
+                );
+            }
+        }
+
+        fullscreenButton.addEventListener(
+            "click",
+            toggleFullscreen
+        );
+
+        document.addEventListener(
+            "fullscreenchange",
+            function () {
+                if (document.fullscreenElement) {
+                    fullscreenButton.textContent =
+                        "✕ Exit Fullscreen";
+                } else {
+                    fullscreenButton.textContent =
+                        "⛶ Fullscreen";
+                }
+            }
+        );
+
+        backButton.addEventListener(
+            "click",
+            function () {
+                window.location.href =
+                    "../games/index.html";
+            }
+        );
+
+        homeButton.addEventListener(
+            "click",
+            function () {
+                window.location.href =
+                    "../index.html";
+            }
+        );
+
+        loadGame();
     </script>
 
 </body>
-
 </html>
