@@ -165,7 +165,7 @@
             );
 
         if (nameInput && savedName) {
-            nameInput.value = savedName;
+            nameInput.value = savedName;     
         }
 
         if (iconInput && savedIcon) {
@@ -185,6 +185,17 @@
                 saveCustomIcon
             );
         }
+        const resetButton =
+    document.getElementById(
+        "resetCustomTabBtn"
+    );
+
+if (resetButton) {
+    resetButton.addEventListener(
+        "click",
+        resetCustomTab
+    );
+}
     }
 
     if (document.readyState === "loading") {
