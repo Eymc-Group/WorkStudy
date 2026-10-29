@@ -168,6 +168,6 @@ const games = [
      { name: "Make a SuperBoat", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Make-a-SuperBoat.html"},
      { name: "Sprunki", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Sprunki.html"},
     { name: "Steal A Brainrot", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Steal-A-Brainrot.html"},
-    { name: "Steal A Brainrot Online", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Steal-A-Brainrot-Online.html"},
+    { name: "Steal A Brainrot Online", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Steal-Brainrot-Online.html"},
     { name: "Stone Grass Mowing Simulator", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Stone-Grass-Mowing-Simulator.html"},
 ];
