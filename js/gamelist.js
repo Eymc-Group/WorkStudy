@@ -159,4 +159,8 @@ const games = [
     
     // Games By Bennett
      { name: "Traffic Racer", path: "https://eymc-group.github.io/WorkStudy/games/bennett/traffic-racer.html"},
+     { name: "Bottle Jump 3D", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bottle-Jump-3D.html"},
+     { name: "Bridge race", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bridge-Race.html"},
+     { name: "CaseOh's Basics in Eating and Fast Food", path: "https://eymc-group.github.io/WorkStudy/games/bennett/CaseOh's-Basics-in-Eating-and-Fast-Food.html"},
+     { name: "Bowmasters", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bowmasters.html"},
 ];
