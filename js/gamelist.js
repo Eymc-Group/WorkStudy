@@ -163,4 +163,8 @@ const games = [
      { name: "Bridge race", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bridge-Race.html"},
      { name: "CaseOh's Basics in Eating and Fast Food", path: "https://eymc-group.github.io/WorkStudy/games/bennett/CaseOh's-Basics-in-Eating-and-Fast-Food.html"},
      { name: "Bowmasters", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bowmasters.html"},
+     { name: "Layers Roll", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Layers-Roll.html"},
+     { name: "Madalin Stunt Cars 2", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Madalin-Stunt-Cars-2.html"},
+     { name: "Make a SuperBoat", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Make-a-SuperBoat.html"},
+     { name: "Makeover Run", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Makeover-Run.html"},
 ];
