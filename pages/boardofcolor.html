@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Coloring Board</title>
+    <link rel="icon" href="../img/game.png">
+
+    <script src="../js/color.js"></script>
+    <script src="../js/customTab.js" defer></script>
+
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<h1>🎨 Coloring Board</h1>
+<p>Draw and create with the WorkStudy coloring board.</p>
+
+<iframe
+    id="websiteFrame"
+    src="https://eymc-group.github.io/WorkStudy/pages/coloringboard.html"
+    allow="fullscreen"
+    allowfullscreen>
+</iframe>
+
+<div class="topbar">
+
+    <button onclick="location.href='../games/index.html'">
+        ← Back to Games
+    </button>
+
+    <button onclick="location.href='../index.html'">
+        🏠 Home
+    </button>
+
+    <button type="button" onclick="toggleGameFullscreen()">
+        ⛶ Fullscreen
+    </button>
+
+    <button type="button" onclick="reloadBoard()">
+        🔄 Reload Board
+    </button>
+
+    <button type="button" onclick="openBoardEmbed()">
+        🗔 Open In New Tab
+    </button>
+
+</div>
+
+<script>
+async function toggleGameFullscreen() {
+    const frame = document.getElementById("websiteFrame");
+
+    try {
+        if (document.fullscreenElement) {
+            await document.exitFullscreen();
+        } else {
+            await frame.requestFullscreen();
+        }
+    } catch (error) {
+        console.error("Fullscreen failed:", error);
+    }
+}
+
+function reloadBoard() {
+    const frame = document.getElementById("websiteFrame");
+    frame.src = frame.src;
+}
+
+function openBoardEmbed() {
+
+    const boardUrl =
+        "https://eymc-group.github.io/WorkStudy/pages/coloringboard.html";
+
+    const boardWindow =
+        window.open(
+            "about:blank",
+            "_blank"
+        );
+
+    if (!boardWindow) {
+        alert(
+            "The new tab was blocked. Allow popups and try again."
+        );
+        return;
+    }
+
+    boardWindow.document.title =
+        "WorkStudy Coloring Board";
+
+    boardWindow.document.body.style.margin =
+        "0";
+
+    boardWindow.document.body.style.width =
+        "100vw";
+
+    boardWindow.document.body.style.height =
+        "100vh";
+
+    boardWindow.document.body.style.overflow =
+        "hidden";
+
+    boardWindow.document.body.style.background =
+        "#000";
+
+    const boardFrame =
+        boardWindow.document.createElement(
+            "iframe"
+        );
+
+    boardFrame.src = boardUrl;
+    boardFrame.style.width = "100%";
+    boardFrame.style.height = "100%";
+    boardFrame.style.border = "0";
+
+    boardFrame.setAttribute(
+        "allow",
+        "fullscreen"
+    );
+
+    boardFrame.setAttribute(
+        "allowfullscreen",
+        ""
+    );
+
+    boardWindow.document.body.appendChild(
+        boardFrame
+    );
+}
+</script>
+
+</body>
+</html>
