@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>WorkStudy Ultimate Coloring Board</title>
+
+<script src="../js/color.js"></script>
+<link rel="stylesheet" href="../css/style.css">
+
+<style>
+
+html,
+body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Pusab",sans-serif;
+    touch-action:none;
+}
+
+#app{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+}
+
+#toolbar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    padding:12px;
+    background:var(--panel);
+    border-bottom:2px solid var(--c2);
+    z-index:100;
+}
+
+.toolBtn{
+    border:none;
+    border-radius:12px;
+    padding:10px 15px;
+    cursor:pointer;
+    color:white;
+    background:linear-gradient(
+        135deg,
+        var(--c1),
+        var(--c2)
+    );
+    transition:.2s;
+}
+
+.toolBtn:hover{
+    box-shadow:var(--glow);
+    transform:translateY(-2px);
+}
+
+input[type="color"]{
+    width:50px;
+    height:42px;
+    border:none;
+    border-radius:10px;
+}
+
+input[type="range"]{
+    width:120px;
+}
+
+#workspace{
+    flex:1;
+    display:flex;
+    overflow:hidden;
+}
+
+#leftPanel{
+    width:280px;
+    background:var(--panel);
+    border-right:2px solid var(--c2);
+    padding:12px;
+    overflow-y:auto;
+}
+
+#canvasContainer{
+    flex:1;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    position:relative;
+}
+
+#canvasContainer:fullscreen{
+    background:#000;
+}
+
+#canvasContainer:fullscreen canvas{
+    max-width:100vw;
+    max-height:100vh;
+}
+
+#drawingCanvas{
+    background:white;
+    border-radius:12px;
+    box-shadow:0 0 20px rgba(0,0,0,.35);
+    touch-action:none;
+}
+
+.section{
+    margin-bottom:18px;
+}
+
+.section h3{
+    margin-bottom:10px;
+}
+
+.palette{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:6px;
+}
+
+.swatch{
+    width:40px;
+    height:40px;
+    border-radius:8px;
+    border:2px solid white;
+    cursor:pointer;
+}
+
+#statusBar{
+    padding:8px;
+    background:var(--panel);
+    border-top:2px solid var(--c2);
+}
+
+.stickerGrid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:6px;
+}
+
+.stickerBtn{
+    font-size:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="app">
+
+<div id="toolbar">
+
+<button class="toolBtn" onclick="setTool('brush')">
+🖌 Brush
+</button>
+
+<button class="toolBtn" onclick="setTool('eraser')">
+🧽 Eraser
+</button>
+
+<button class="toolBtn" onclick="setTool('rainbow')">
+🌈 Rainbow
+</button>
+
+<button class="toolBtn" onclick="setTool('neon')">
+✨ Neon
+</button>
+
+<button class="toolBtn" onclick="setTool('spray')">
+🎯 Spray
+</button>
+
+<button class="toolBtn" onclick="setTool('fill')">
+🪣 Fill
+</button>
+
+<button class="toolBtn" onclick="setTool('eyedropper')">
+💧 Eye Dropper
+</button>
+
+<button class="toolBtn" onclick="undo()">
+↶ Undo
+</button>
+
+<button class="toolBtn" onclick="redo()">
+↷ Redo
+</button>
+
+<button class="toolBtn" onclick="clearCanvas()">
+🗑 Clear
+</button>
+
+<button class="toolBtn" onclick="savePNG()">
+💾 PNG
+</button>
+
+<button class="toolBtn" onclick="saveJPG()">
+📷 JPG
+</button>
+
+<button class="toolBtn" onclick="fullscreenCanvas()">
+⛶ Fullscreen
+</button>
+
+<button class="toolBtn" onclick="toggleMirror()">
+🪞 Mirror
+</button>
+
+<button class="toolBtn" onclick="toggleGrid()">
+# Grid
+</button>
+
+<button class="toolBtn" onclick="loadAutosave()">
+📂 Recover
+</button>
+
+<input
+type="color"
+id="colorPicker"
+value="#ff0000">
+
+<label>
+Size
+<input
+type="range"
+id="brushSize"
+min="1"
+max="100"
+value="10">
+</label>
+
+<label>
+Opacity
+<input
+type="range"
+id="opacity"
+min="0"
+max="100"
+value="100">
+</label>
+
+<input
+type="file"
+id="imageUpload"
+accept="image/*">
+
+</div>
+
+<div id="workspace">
+
+<div id="leftPanel">
+
+<div class="section">
+
+<h3>Colors</h3>
+
+<div class="palette">
+
+<div class="swatch"
+style="background:#ff0000"
+onclick="selectColor('#ff0000')"></div>
+
+<div class="swatch"
+style="background:#00ff00"
+onclick="selectColor('#00ff00')"></div>
+
+<div class="swatch"
+style="background:#0000ff"
+onclick="selectColor('#0000ff')"></div>
+
+<div class="swatch"
+style="background:#ffff00"
+onclick="selectColor('#ffff00')"></div>
+
+<div class="swatch"
+style="background:#ff00ff"
+onclick="selectColor('#ff00ff')"></div>
+
+<div class="swatch"
+style="background:#00ffff"
+onclick="selectColor('#00ffff')"></div>
+
+<div class="swatch"
+style="background:#000000"
+onclick="selectColor('#000000')"></div>
+
+<div class="swatch"
+style="background:#ffffff"
+onclick="selectColor('#ffffff')"></div>
+
+<div class="swatch"
+style="background:#ff8800"
+onclick="selectColor('#ff8800')"></div>
+
+<div class="swatch"
+style="background:#8844ff"
+onclick="selectColor('#8844ff')"></div>
+
+<div class="swatch"
+style="background:#44ff88"
+onclick="selectColor('#44ff88')"></div>
+
+<div class="swatch"
+style="background:#888888"
+onclick="selectColor('#888888')"></div>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<h3>Stickers</h3>
+
+<div class="stickerGrid">
+
+<button class="toolBtn stickerBtn"
+onclick="placeSticker('⭐')">
+⭐
+</button>
+
+<button class="toolBtn stickerBtn"
+onclick="placeSticker('🔥')">
+🔥
+</button>
+
+<button class="toolBtn stickerBtn"
+onclick="placeSticker('❤️')">
+❤️
+</button>
+
+<button class="toolBtn stickerBtn"
+onclick="placeSticker('😀')">
+😀
+</button>
+
+<button class="toolBtn stickerBtn"
+onclick="placeSticker('🚀')">
+🚀
+</button>
+
+<button class="toolBtn stickerBtn"
+onclick="placeSticker('🎮')">
+🎮
+</button>
+
+<button class="toolBtn stickerBtn"
+onclick="placeSticker('🎨')">
+🎨
+</button>
+
+<button class="toolBtn stickerBtn"
+onclick="placeSticker('💎')">
+💎
+</button>
+
+<button class="toolBtn stickerBtn"
+onclick="placeSticker('⚡')">
+⚡
+</button>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<h3>Features</h3>
+
+<p>
+✅ Brush<br>
+✅ Eraser<br>
+✅ Rainbow Brush<br>
+✅ Neon Brush<br>
+✅ Spray Paint<br>
+✅ Fill Bucket<br>
+✅ Undo / Redo<br>
+✅ PNG Export<br>
+✅ JPG Export<br>
+✅ Upload Images<br>
+✅ Autosave<br>
+✅ Recover Autosave<br>
+✅ Mirror Drawing<br>
+✅ Eyedropper<br>
+✅ Stickers<br>
+✅ Zoom<br>
+✅ Fullscreen<br>
+✅ Mobile Support
+</p>
+
+</div>
+
+</div>
+
+<div id="canvasContainer">
+
+<canvas
+id="drawingCanvas"
+width="1400"
+height="900">
+</canvas>
+
+</div>
+
+</div>
+
+<div id="statusBar">
+Ready
+</div>
+
+</div>
+
+<script>
+
+const canvas =
+document.getElementById(
+'drawingCanvas'
+);
+
+const ctx =
+canvas.getContext(
+'2d'
+);
+
+let drawing=false;
+let color='#ff0000';
+
+let tool='brush';
+
+let undoStack=[];
+let redoStack=[];
+
+let scale=1;
+
+let mirrorMode=false;
+let gridEnabled=false;
+let currentSticker=null;
+
+ctx.fillStyle='white';
+
+ctx.fillRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+function saveState(){
+
+undoStack.push(
+canvas.toDataURL()
+);
+
+if(
+undoStack.length>40
+){
+undoStack.shift();
+}
+
+}
+
+saveState();
+
+function setTool(t){
+tool=t;
+}
+
+function selectColor(c){
+
+color=c;
+
+document.getElementById(
+'colorPicker'
+).value=c;
+
+}
+
+document
+.getElementById(
+'colorPicker'
+)
+.addEventListener(
+'input',
+e=>{
+color=e.target.value;
+}
+);
+
+function getColor(){
+
+if(
+tool==='rainbow'
+){
+
+return `hsl(${
+Math.random()*360
+},100%,50%)`;
+
+}
+
+return color;
+
+}
+
+function startDraw(e){
+
+drawing=true;
+
+redoStack=[];
+
+ctx.beginPath();
+
+ctx.moveTo(
+e.offsetX,
+e.offsetY
+);
+
+saveState();
+
+}
+
+function draw(e){
+
+if(!drawing)
+return;
+
+const x=e.offsetX;
+const y=e.offsetY;
+
+ctx.lineCap='round';
+ctx.lineJoin='round';
+
+ctx.globalAlpha=
+document.getElementById(
+'opacity'
+).value/100;
+
+ctx.lineWidth=
+document.getElementById(
+'brushSize'
+).value;
+
+if(tool==='eraser'){
+
+ctx.shadowBlur=0;
+
+ctx.strokeStyle='#ffffff';
+
+}
+else if(tool==='neon'){
+
+ctx.shadowBlur=25;
+
+ctx.shadowColor=color;
+
+ctx.strokeStyle=color;
+
+}
+else{
+
+ctx.shadowBlur=0;
+
+ctx.strokeStyle=
+getColor();
+
+}
+
+ctx.lineTo(x,y);
+
+ctx.stroke();
+
+if(
+tool==='spray'
+){
+
+for(
+let i=0;
+i<25;
+i++
+){
+
+ctx.fillStyle=color;
+
+ctx.fillRect(
+x+(Math.random()*20-10),
+y+(Math.random()*20-10),
+2,
+2
+);
+
+}
+
+}
+
+if(
+mirrorMode
+){
+
+const mx=
+canvas.width-x;
+
+ctx.beginPath();
+
+ctx.moveTo(
+mx,
+y
+);
+
+ctx.lineTo(
+mx+1,
+y+1
+);
+
+ctx.stroke();
+
+}
+
+ctx.beginPath();
+
+ctx.moveTo(
+x,
+y
+);
+
+}
+
+function stopDraw(){
+
+if(
+drawing
+){
+
+saveState();
+
+}
+
+drawing=false;
+
+ctx.beginPath();
+
+}
+
+function undo(){
+
+if(
+undoStack.length<2
+)
+return;
+
+redoStack.push(
+undoStack.pop()
+);
+
+const img=
+new Image();
+
+img.onload=()=>{
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+ctx.drawImage(
+img,
+0,
+0
+);
+
+};
+
+img.src=
+undoStack[
+undoStack.length-1
+];
+
+}
+
+function redo(){
+
+if(
+!redoStack.length
+)
+return;
+
+const state=
+redoStack.pop();
+
+undoStack.push(
+state
+);
+
+const img=
+new Image();
+
+img.onload=()=>{
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+ctx.drawImage(
+img,
+0,
+0
+);
+
+};
+
+img.src=state;
+
+}
+
+function clearCanvas(){
+
+if(
+!confirm(
+'Clear canvas?'
+)
+)
+return;
+
+ctx.fillStyle='white';
+
+ctx.fillRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+saveState();
+
+}
+
+function savePNG(){
+
+const a=
+document.createElement(
+'a'
+);
+
+a.href=
+canvas.toDataURL(
+'image/png'
+);
+
+a.download=
+'workstudy-art.png';
+
+a.click();
+
+}
+
+function saveJPG(){
+
+const a=
+document.createElement(
+'a'
+);
+
+a.href=
+canvas.toDataURL(
+'image/jpeg',
+0.95
+);
+
+a.download=
+'workstudy-art.jpg';
+
+a.click();
+
+}
+
+async function fullscreenCanvas(){
+
+const element=
+document.getElementById(
+'canvasContainer'
+);
+
+try{
+
+if(
+document.fullscreenElement
+){
+await document.exitFullscreen();
+}else{
+await element.requestFullscreen();
+}
+
+}catch(err){}
+
+}
+
+document
+.getElementById(
+'imageUpload'
+)
+.addEventListener(
+'change',
+e=>{
+
+const file=
+e.target.files[0];
+
+if(
+!file
+) return;
+
+const reader=
+new FileReader();
+
+reader.onload=
+function(evt){
+
+const img=
+new Image();
+
+img.onload=
+function(){
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+ctx.drawImage(
+img,
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+saveState();
+
+};
+
+img.src=
+evt.target.result;
+
+};
+
+reader.readAsDataURL(
+file
+);
+
+}
+);
+
+setInterval(()=>{
+
+try{
+
+localStorage.setItem(
+'workstudy-coloring-save',
+canvas.toDataURL()
+);
+
+}catch(err){}
+
+},5000);
+
+function loadAutosave(){
+
+const saved=
+localStorage.getItem(
+'workstudy-coloring-save'
+);
+
+if(
+!saved
+)
+return;
+
+const img=
+new Image();
+
+img.onload=()=>{
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+ctx.drawImage(
+img,
+0,
+0
+);
+
+};
+
+img.src=saved;
+
+}
+
+canvas.addEventListener(
+'wheel',
+e=>{
+
+e.preventDefault();
+
+if(
+e.deltaY<0
+){
+scale+=0.1;
+}else{
+scale-=0.1;
+}
+
+scale=Math.max(
+0.25,
+Math.min(
+5,
+scale
+)
+);
+
+canvas.style.transform=
+`scale(${scale})`;
+
+}
+);
+
+document.addEventListener(
+'keydown',
+e=>{
+
+if(
+e.ctrlKey &&
+e.key==='z'
+){
+
+e.preventDefault();
+
+undo();
+
+}
+
+if(
+e.ctrlKey &&
+e.key==='y'
+){
+
+e.preventDefault();
+
+redo();
+
+}
+
+if(
+e.key==='b'
+){
+
+tool='brush';
+
+}
+
+if(
+e.key==='e'
+){
+
+tool='eraser';
+
+}
+
+if(
+e.key==='f'
+){
+
+fullscreenCanvas();
+
+}
+
+}
+);
+canvas.addEventListener(
+'mousedown',
+startDraw
+);
+
+canvas.addEventListener(
+'mousemove',
+draw
+);
+
+window.addEventListener(
+'mouseup',
+stopDraw
+);
+
+canvas.addEventListener(
+'touchstart',
+e=>{
+
+e.preventDefault();
+
+const rect=
+canvas.getBoundingClientRect();
+
+const touch=
+e.touches[0];
+
+startDraw({
+offsetX:
+touch.clientX-
+rect.left,
+
+offsetY:
+touch.clientY-
+rect.top
+});
+
+}
+);
+
+canvas.addEventListener(
+'touchmove',
+e=>{
+
+e.preventDefault();
+
+const rect=
+canvas.getBoundingClientRect();
+
+const touch=
+e.touches[0];
+
+draw({
+offsetX:
+touch.clientX-
+rect.left,
+
+offsetY:
+touch.clientY-
+rect.top
+});
+
+}
+);
+
+canvas.addEventListener(
+'touchend',
+stopDraw
+);
+
+function toggleMirror(){
+
+mirrorMode=
+!mirrorMode;
+
+}
+
+function toggleGrid(){
+
+gridEnabled=
+!gridEnabled;
+
+if(!gridEnabled)
+return;
+
+ctx.save();
+
+ctx.strokeStyle=
+'#dddddd';
+
+ctx.lineWidth=1;
+
+for(
+let x=0;
+x<canvas.width;
+x+=25
+){
+
+ctx.beginPath();
+
+ctx.moveTo(
+x,
+0
+);
+
+ctx.lineTo(
+x,
+canvas.height
+);
+
+ctx.stroke();
+
+}
+
+for(
+let y=0;
+y<canvas.height;
+y+=25
+){
+
+ctx.beginPath();
+
+ctx.moveTo(
+0,
+y
+);
+
+ctx.lineTo(
+canvas.width,
+y
+);
+
+ctx.stroke();
+
+}
+
+ctx.restore();
+
+}
+
+function placeSticker(sticker){
+
+currentSticker=
+sticker;
+
+}
+
+canvas.addEventListener(
+'dblclick',
+e=>{
+
+if(
+!currentSticker
+)
+return;
+
+ctx.font=
+'50px Arial';
+
+ctx.fillText(
+currentSticker,
+e.offsetX,
+e.offsetY
+);
+
+saveState();
+
+}
+);
+
+canvas.addEventListener(
+'click',
+e=>{
+
+if(
+tool==='fill'
+){
+
+ctx.fillStyle=
+color;
+
+ctx.fillRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+saveState();
+
+}
+
+}
+);
+
+canvas.addEventListener(
+'click',
+e=>{
+
+if(
+tool!=='eyedropper'
+)
+return;
+
+const pixel=
+ctx.getImageData(
+e.offsetX,
+e.offsetY,
+1,
+1
+).data;
+
+color=
+`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`;
+
+}
+);
+
+window.addEventListener(
+'load',
+()=>{
+
+const saved=
+localStorage.getItem(
+'workstudy-coloring-save'
+);
+
+if(
+!saved
+)
+return;
+
+const img=
+new Image();
+
+img.onload=
+()=>{
+
+ctx.drawImage(
+img,
+0,
+0
+);
+
+};
+
+img.src=
+saved;
+
+}
+);
+
+const status=
+document.getElementById(
+'statusBar'
+);
+
+setInterval(
+()=>{
+
+status.textContent=
+`Tool: ${tool.toUpperCase()} | Zoom: ${Math.round(scale*100)}% | Undo: ${undoStack.length} | Mirror: ${mirrorMode ? 'ON' : 'OFF'}`;
+
+},
+250
+);
+
+</script>
+
+</body>
+</html>
