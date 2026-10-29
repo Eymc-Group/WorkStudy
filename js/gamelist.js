@@ -159,6 +159,4 @@ const games = [
     
     // Games By Bennett
      { name: "Traffic Racer", path: "https://eymc-group.github.io/WorkStudy/games/bennett/traffic-racer.html"},
-    { name: "Baseball Bros", path: "https://eymc-group.github.io/WorkStudy/games/bennett/baseballbros.html"},
-     { name: "Christmas", path: "https://eymc-group.github.io/WorkStudy/games/bennett/christmas.html"},
 ];
