@@ -158,7 +158,7 @@ const games = [
     { name: "Slope (Legacy)", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/slope.html" },
     
     // Games By Bennett
-     { name: "Traffic Racer", path: "https://eymc-group.github.io/WorkStudy/games/bennett/traffic-racer.html"},
+     { name: "Traffic Racer", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Traffic-Racer.html"},
      { name: "Bottle Jump 3D", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bottle-Jump-3D.html"},
      { name: "Bridge race", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bridge-Race.html"},
      { name: "CaseOh's Basics in Eating and Fast Food", path: "https://eymc-group.github.io/WorkStudy/games/bennett/CaseOh's-Basics-in-Eating-and-Fast-Food.html"},
