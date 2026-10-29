@@ -166,5 +166,8 @@ const games = [
      { name: "Layers Roll", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Layers-Roll.html"},
      { name: "Madalin Stunt Cars 2", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Madalin-Stunt-Cars-2.html"},
      { name: "Make a SuperBoat", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Make-a-SuperBoat.html"},
-     { name: "Makeover Run", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Makeover-Run.html"},
+     { name: "Sprunki", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Sprunki.html"},
+    { name: "Steal A Brainrot", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Steal-A-Brainrot.html"},
+    { name: "Steal A Brainrot Online", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Steal-A-Brainrot-Online.html"},
+    { name: "Stone Grass Mowing Simulator", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Stone-Grass-Mowing-Simulator.html"},
 ];
