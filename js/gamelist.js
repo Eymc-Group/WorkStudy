@@ -149,7 +149,7 @@ const games = [
     { name: "Cookie Clicker (Legacy)", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/cookieclicker.html" },
     { name: "Five Nights at Epstein's", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/fnae.html" },
     { name: "Geometry Dash", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/gd.html" },
-    { name: "Hollow Knight (Legacy)", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/hollowknight.html" },
+    { name: "Hollow Knight", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/hollowknight.html" },
     { name: "Minecraft", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/minecraft.html" },
     { name: "Retro Bowl (Legacy)", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/retrobowl.html" },
     { name: "Run 3 (Legacy)", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/run3.html" },
