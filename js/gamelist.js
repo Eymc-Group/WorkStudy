@@ -156,7 +156,7 @@ const games = [
     { name: "Slope (Legacy)", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/slope.html" },
     
     // Games By Bennett
-    { name: "BLOODMONEY!", path: "https://eymc-group.github.io/WorkStudy/games/bennett/BLOODMONEY!.html" },
+    { name: "BLOODMONEY! (inappropriate 16+)", path: "https://eymc-group.github.io/WorkStudy/games/bennett/BLOODMONEY!.html" },
     { name: "Bendy and the Ink Machine", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bendy-and-the-Ink-Machine.html" },
     { name: "Bottle Jump 3D", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bottle-Jump-3D.html" },
     { name: "Bowmasters", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bowmasters.html" },
