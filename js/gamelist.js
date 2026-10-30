@@ -182,4 +182,6 @@ const games = [
     { name: "Bendy and the Ink Machine", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bendy-and-the-Ink-Machine.html"},
     { name: "Drift Boss", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Drift-Boss.html"},
     { name: "Drift Hunters", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Drift-Hunters.html"},
+    { name: "Flappy Bird", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Flappy-Bird.html"},
+    
 ];
