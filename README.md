@@ -126,13 +126,13 @@ Make sure:
 Soundboard:
 
 ```text
-../../../soundboard-main/soundboard-main/index.html
+../../soundboard-main/soundboard-main/index.html
 ```
 
 Games:
 
 ```text
-../../../gfiles-main/gfiles-main/games/<game>/
+../../gfiles-main/gfiles-main/games/<game>/
 ```
 
 ---
