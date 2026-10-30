@@ -173,7 +173,7 @@ const games = [
      { name: "Toy Rider", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Toy-Rider.html"},
      { name: "Twerk Race 3D", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Twerk-Race-3D.html"},
      { name: "WebFishing", path: "https://eymc-group.github.io/WorkStudy/games/bennett/WebFishing.html"},
-      { name: "Cool Cars Run 3D", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Coll-Cars-Run-3D.html"},
+      { name: "Cool Cars Run 3D", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Cool-Cars-Run-3D.html"},
       { name: "Count Masters Stickman Games", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Count-Masters-Stickman-Games.html"},
       { name: "Crazy Cars ", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Crazy-Cars.html"},
       { name: "Crossy Road", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Crossy-Road.html"},
