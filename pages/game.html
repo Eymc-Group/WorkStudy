@@ -9,6 +9,7 @@
     <h1 id="gameTitle"></h1>
     
     <script src="../js/color.js"> </script>
+  <script src="../js/customTab.js" defer></script>
     <link rel="stylesheet"
         href="../css/style.css">
 
@@ -61,21 +62,33 @@ document.getElementById(
 
 <p id="gameAuthor"></p>
 
-<iframe id="websiteFrame"></iframe>
+<iframe
+    id="websiteFrame"
+    allow="fullscreen"
+    allowfullscreen>
+</iframe>
 
     <div class="topbar">
 
         <button onclick="
 location.href='../games/index.html'
 ">
-    Back to Games
+   ← Back to Games
 </button>
 
 <button
     onclick="location.href='../index.html'">
 
-     Home
+   🏠 Home
 
+</button>
+
+        <button type="button" onclick="toggleGameFullscreen()">
+    ⛶ Fullscreen
+</button>
+
+      <button type="button" onclick="openGameEmbed()">
+    🗔 Open Game in New Tab
 </button>
 
     </div>
@@ -101,7 +114,120 @@ location.href='../games/index.html'
         "gameName"
     );
     </script>
+<script>
+async function toggleGameFullscreen() {
+    const frame = document.getElementById("websiteFrame");
 
+    try {
+        if (document.fullscreenElement) {
+            await document.exitFullscreen();
+        } else {
+            await frame.requestFullscreen();
+        }
+    } catch (error) {
+        console.error("Fullscreen failed:", error);
+    }
+}
+</script>
+  <script>
+function openGameEmbed() {
+    const gameUrl =
+        localStorage.getItem("gameUrl");
+
+    if (!gameUrl) {
+        alert("No game link was found.");
+        return;
+    }
+
+    let validUrl;
+
+    try {
+        validUrl = new URL(
+            gameUrl,
+            window.location.href
+        );
+
+        if (
+            validUrl.protocol !== "https:" &&
+            validUrl.protocol !== "http:"
+        ) {
+            throw new Error("Unsupported URL");
+        }
+    } catch (error) {
+        alert("The saved game link is invalid.");
+        return;
+    }
+
+    const gameWindow =
+        window.open(
+            "about:blank",
+            "_blank"
+        );
+
+    if (!gameWindow) {
+        alert(
+            "The new tab was blocked. Allow popups and try again."
+        );
+        return;
+    }
+
+    gameWindow.document.title =
+        localStorage.getItem("gameName") ||
+        "WorkStudy Game";
+
+    gameWindow.document.body.style.margin =
+        "0";
+
+    gameWindow.document.body.style.width =
+        "100vw";
+
+    gameWindow.document.body.style.height =
+        "100vh";
+
+    gameWindow.document.body.style.overflow =
+        "hidden";
+
+    gameWindow.document.body.style.background =
+        "#000";
+
+    const gameFrame =
+        gameWindow.document.createElement(
+            "iframe"
+        );
+
+    gameFrame.src =
+        validUrl.href;
+
+    gameFrame.title =
+        "WorkStudy Game";
+
+    gameFrame.style.display =
+        "block";
+
+    gameFrame.style.width =
+        "100%";
+
+    gameFrame.style.height =
+        "100%";
+
+    gameFrame.style.border =
+        "0";
+
+    gameFrame.setAttribute(
+        "allow",
+        "fullscreen; autoplay"
+    );
+
+    gameFrame.setAttribute(
+        "allowfullscreen",
+        ""
+    );
+
+    gameWindow.document.body.appendChild(
+        gameFrame
+    );
+}
+</script>
 </body>
 
 </html>
