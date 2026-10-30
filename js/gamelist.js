@@ -178,4 +178,8 @@ const games = [
      { name: "Crazy Cars ", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Crazy-Cars.html"},
      { name: "Crossy Road", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Crossy-Road.html"},
      { name: "Crush Cars 3D", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Crush-Cars-3D.html"},
+    { name: "BLOODMONEY!", path: "https://eymc-group.github.io/WorkStudy/games/bennett/BLOODMONEY!.html"},
+    { name: "Bendy and the Ink Machine", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bendy-and-the-Ink-Machine.html"},
+    { name: "Drift Boss", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Drift-Boss.html"},
+    { name: "Drift Hunters", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Drift-Hunters.html"},
 ];
