@@ -4,24 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Website Iframe</title>
+
     <link rel="icon" href="../img/website.png">
+
     <script src="../js/color.js" defer></script>
     <script src="../js/iframe.js" defer></script>
     <script src="../js/website.js" defer></script>
+    <script src="../js/customTab.js" defer></script>
+
     <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        #savedSites {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px;
+            justify-content: center;
+        }
+
+        .website-item {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .website-item:hover {
+            opacity: 0.9;
+        }
+
+        #websiteFrame {
+            width: 100%;
+            height: calc(100vh - 220px);
+            border: none;
+        }
+    </style>
 </head>
 <body>
+
     <div class="welcome">
         <h1>Website Iframe</h1>
         <p>Enter a website URL below to view it inside an iframe.</p>
     </div>
 
     <div class="topbar">
-        <input type="text" id="urlInput" placeholder="https://example.com">
-        <button type="button" onclick="loadWebsite()">🌐 Open</button>
-        <button type="button" onclick="location.href='../index.html'">🏠 Home</button>
+        <input
+            type="text"
+            id="urlInput"
+            placeholder="https://example.com">
+
+        <button type="button" onclick="loadWebsite()">
+            🌐 Open
+        </button>
+
+        <button type="button" onclick="saveCurrentWebsite()">
+            ⭐ Save
+        </button>
+
+        <button type="button" onclick="location.href='../index.html'">
+            🏠 Home
+        </button>
     </div>
 
-    <iframe id="websiteFrame" title="Website preview"></iframe>
+    <div id="savedSites"></div>
+
+    <iframe
+        id="websiteFrame"
+        title="Website Preview">
+    </iframe>
+
 </body>
 </html>

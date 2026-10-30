@@ -1,75 +1,80 @@
 # 🚀 WorkStudy
 
-WorkStudy is a modern web platform designed to provide games, tools, utilities, website viewing, community features, and experimentation tools through a single interface.
+WorkStudy is a customizable web hub featuring games, search tools, a soundboard, website viewing, themes, user accounts, cloud saves, device information, and multiple hosting mirrors.
 
-Originally created as a personal project, WorkStudy has evolved into a multi-service platform featuring custom themes, user authentication, cloud-based account management, deployment redundancy, and an expanding collection of features.
+## Features
 
----
+- 🎮 Large collection of browser games
+- 💬 Chat page
+- 🎵 Soundboard
+- 🌐 Website viewer
+- 🎨 Custom themes
+- 👤 User accounts
+- 🔐 Username or email login
+- 🛡️ Cloudflare Turnstile protection
+- 🔒 Secure password hashing
+- 💾 Authenticated cloud saves
+- 📥 Progress restoration
+- 🗑️ Save and account deletion
+- 📱 Mobile-friendly layout
+- 💻 Device and battery information
+- 🏛️ Legacy WorkStudy access
+- 📦 Downloadable offline version
+- 🪞 Multiple hosting mirrors
 
-# 🌍 Project Overview
+## Main Website
 
-WorkStudy combines entertainment, utilities, customization, testing tools, and account functionality into a single website.
+[Open WorkStudy on GitHub Pages](https://eymc-group.github.io/WorkStudy/)
 
-The goal of WorkStudy is to create a flexible platform where users can:
+## Mirrors
 
-- Play games
-- View websites
-- Use utilities
-- Customize themes
-- Create accounts
-- Explore web technologies
-- Experiment with browser capabilities
+If one mirror is unavailable, try another.
 
----
+- [GitHub Pages](https://eymc-group.github.io/WorkStudy/)
+- [Cloudflare Pages](https://workstudy-ahc.pages.dev/)
+- [Netlify](https://workingstudys.netlify.app/)
+- [Render](https://workstudy-u2mi.onrender.com/)
+- [Vercel](https://work-study-kappa.vercel.app/)
+- [Neocities](https://workingstudy.neocities.org/)
 
-# ✨ Features
+### Mirror Information
 
-## 🎮 Games
+🚀 **Recommended:** Vercel generally receives new WorkStudy deployments quickly.
 
-WorkStudy contains a collection of browser games accessible through the Games section.
+✅ GitHub Pages, Vercel, Render, and Neocities may be accessible on networks where other hosting providers are unavailable.
 
-Features include:
+🔒 Cloudflare Pages and Netlify may be blocked by some school filtering systems even when the mirrors are online and functioning.
 
-- Game launcher
-- Custom game library
-- Legacy game support
-- Embedded game support
-- External game support
+## Account System
 
----
+WorkStudy accounts support:
 
-## 🌐 Website Viewer
+- Unique usernames
+- Unique email addresses
+- Username or email login
+- Case-insensitive username protection
+- Hashed passwords
+- Signed authentication tokens
+- Cloudflare Turnstile verification
+- Secure account deletion
+- Automatic migration of older account records
 
-The Website Viewer allows users to open websites inside an iframe viewer.
+Passwords are not stored in local storage and should never be displayed or shared.
 
-Features include:
+## Cloud Saves
 
-- URL input
-- Embedded website viewing
-- Website saving system
-- Bookmark functionality
-- Stored website collection
-- Quick access websites
+Logged-in users can:
 
----
+- Save local WorkStudy progress to the cloud
+- Load saved progress on another mirror or device
+- Delete cloud-save data
+- Keep account credentials separate from saved preferences
 
-## 💬 Chat
+The cloud-save system excludes authentication information, passwords, and account tokens from uploaded save data.
 
-WorkStudy includes a chat area for communication and experimentation.
+## Themes
 
----
-
-## 🎵 Soundboard
-
-The soundboard allows users to quickly play sounds from a collection of audio clips.
-
----
-
-## 🎨 Theme System
-
-WorkStudy includes a dynamic theme engine.
-
-Current themes include:
+WorkStudy includes many themes, including:
 
 - Blue
 - Green
@@ -85,244 +90,244 @@ Current themes include:
 - Minecraft
 - Discord
 - Void
+- Rose
+- Amber
+- Sky
+- Slate
+- Emerald
+- Violet
+- Fuchsia
+- Stone
+- Zinc
+- Vibrant Orange
+- Aqua
+- Crimson
+- Sunset
+- Ocean
 
-Theme preferences are automatically stored locally.
+Theme preferences are saved locally.
 
----
+## Project Structure
 
-## ⚙️ Settings Panel
-
-The settings panel provides centralized access to WorkStudy configuration options.
-
-Current categories include:
-
-### 🎨 Themes
-
-Theme selection and customization.
-
-### 🧪 Developer Tools
-
-Testing tools for browser features.
-
-Available tests:
-
-- Fetch
-- XMLHttpRequest
-- WebSocket
-- Server-Sent Events
-- Images
-- Scripts
-- Iframes
-- CORS
-- Same-Origin Requests
-- Cloudflare Worker Connectivity
-- PWA Support
-- Service Workers
-
-### ❌ Danger Zone
-
-System reset options.
-
-Current options:
-
-- Clear Website Data
-
-### 👤 Account
-
-Authentication and account management.
-
----
-
-# 👤 Account System
-
-WorkStudy uses a custom cloud-based authentication system.
-
-Features include:
-
-- User Registration
-- User Login
-- User Logout
-- Persistent Sessions
-- Cloud-Synchronized Accounts
-
-Authentication is powered using:
-
-- Cloudflare Workers
-- Cloudflare KV Storage
-
----
-
-# 🛡️ Security
-
-WorkStudy utilizes:
-
-## Cloudflare Turnstile
-
-Used to reduce automated abuse and bot traffic.
+```text
+WorkStudy/
+├── css/
+│   └── style.css
+├── fonts/
+├── games/
+│   └── index.html
+├── img/
+├── js/
+│   ├── auth.js
+│   ├── cloudSave.js
+│   ├── color.js
+│   ├── legacyconfirm.js
+│   ├── login.js
+│   ├── script.js
+│   └── status.js
+├── pages/
+│   ├── chat/
+│   ├── deviceinfo.html
+│   ├── iframe.html
+│   ├── login.html
+│   ├── signup.html
+│   └── soundboard.html
+├── index.html
+└── README.md
+```
 
 ## Cloudflare Workers
 
-Handles authentication requests.
+WorkStudy uses two separate Cloudflare Workers.
 
-## Cloudflare KV
+### WorkStudy API
 
-Stores account information and user data.
-
----
-
-# ☁️ Infrastructure
-
-WorkStudy uses modern cloud infrastructure.
-
-Current services include:
-
-### Cloudflare
-
-- Workers
-- Pages
-- KV
-- Turnstile
-
-### GitHub
-
-Used as the source of truth for the project repository.
-
----
-
-# 🌍 Deployment Mirrors
-
-WorkStudy is deployed across multiple providers for increased reliability.
-
-Current mirrors include:
-
-## 🐙 GitHub Pages
-
-Primary public deployment.
-
-## ☁️ Cloudflare Pages
-
-Cloudflare-hosted deployment.
-
-## 🌐 Netlify
-
-Netlify-hosted deployment.
-
-## ▲ Vercel
-
-Vercel-hosted deployment.
-
-## 🚂 Render
-
-Render-hosted deployment.
-
----
-
-# 🔄 Redundancy
-
-One repository powers multiple deployments.
-
-Workflow:
+The account API handles:
 
 ```text
-GitHub Repository
-        ↓
-Automatic Deployments
-        ↓
-Cloudflare Pages
-Netlify
-Vercel
-Render
-GitHub Pages
+POST   /register
+POST   /login
+GET    /me
+DELETE /delete-account
 ```
 
-This ensures the project remains available across multiple hosting platforms.
-
----
-
-# 🧪 Developer Tools
-
-WorkStudy contains several browser diagnostics.
-
-These tools allow testing of:
-
-- Browser APIs
-- Network Access
-- CORS Support
-- Worker Connectivity
-- Service Worker Support
-- Progressive Web App Features
-
-The purpose of these tools is educational experimentation and browser diagnostics.
-
----
-
-# 📁 Project Structure
+Required configuration:
 
 ```text
-WorkStudy
-│
-├── index.html
-│
-├── css
-│   └── style.css
-│
-├── js
-│   ├── script.js
-│   ├── color.js
-│   ├── status.js
-│   └── legacyconfirm.js
-│
-├── pages
-│   ├── login.html
-│   ├── signup.html
-│   ├── iframe.html
-│   ├── soundboard.html
-│   └── deviceinfo.html
-│
-├── games
-│   └── ...
-│
-├── img
-│   └── ...
-│
-└── fonts
-    └── ...
+KV binding:
+USERS
+
+Secrets:
+AUTH_SECRET
+TURNSTILE_SECRET
 ```
 
+### WorkStudy Saves
+
+The cloud-save API handles:
+
+```text
+POST   /api/save-progress
+GET    /api/load-progress
+DELETE /api/delete-save
+```
+
+Required configuration:
+
+```text
+KV binding:
+SAVES
+
+Secret:
+AUTH_SECRET
+```
+
+The `AUTH_SECRET` value must be identical on both Workers.
+
+> [!IMPORTANT]
+> Never commit `AUTH_SECRET`, `TURNSTILE_SECRET`, API keys, passwords, or other private credentials to the repository.
+
+## Offline Version
+
+The offline branch allows WorkStudy, the soundboard, and games to run from downloaded files.
+
+### Downloads
+
+1. [Download WorkStudy Offline](https://github.com/schoolwork04/WorkStudy/archive/refs/heads/offline.zip)
+2. [Download the Soundboard](https://github.com/schoolwork04/soundboard/archive/refs/heads/main.zip)
+3. [Download the Games Collection](https://github.com/schoolwork04/gfiles/archive/refs/heads/master.zip)
+
+> [!WARNING]
+> The games package may be large and may take additional time to download and extract.
+
+### Offline Setup
+
+1. Download all three ZIP files.
+2. Extract each ZIP file completely.
+3. Keep the extracted folders together in the same parent folder.
+4. Do not rename the extracted folders.
+5. Open the WorkStudy offline `index.html` file.
+
+Example:
+
+```text
+Downloads/
+├── WorkStudy-offline/
+├── soundboard-main/
+└── gfiles-master/
+```
+
+The offline branch may not support server-based features such as accounts, Turnstile, or cloud saves without an internet connection.
+
+## Local Development
+
+WorkStudy is primarily built with:
+
+```text
+HTML
+CSS
+JavaScript
+Cloudflare Workers
+Cloudflare Workers KV
+```
+
+To test the static pages, open `index.html` through a local web server or deploy the repository to a static hosting provider.
+
+When changing authentication or cloud-save code, update related files together:
+
+```text
+pages/login.html
+pages/signup.html
+js/auth.js
+js/login.js
+js/script.js
+js/cloudSave.js
+workstudy-api Worker
+workstudy-saves Worker
+```
+
+## Backup Checklist
+
+Before making major account-system changes:
+
+1. Commit the current working version.
+2. Download a ZIP backup of the repository.
+3. Save backup copies of both Worker scripts.
+4. Verify that Worker secrets and KV bindings are configured.
+5. Never include secret values in backups stored publicly.
+6. Test login, signup, saving, loading, logout, and account deletion.
+
+Suggested commit message:
+
+```text
+Fix authentication, cloud saves, and account deletion
+```
+
+## Credits
+
+### WorkStudy
+
+Created and maintained by `schoolwork04`.
+
+Development assistance and code organization were supported by tools from Microsoft, Anthropic, and GitHub.
+
+### Soundboard
+
+Forked from:
+
+[genizymath/soundboard](https://github.com/genizymath/soundboard)
+
+Original project credit belongs to GenizyMath.
+
+### Games Collection
+
+Forked from:
+
+[HTML5GameArchive/gfiles](https://github.com/HTML5GameArchive/gfiles)
+
+Original project credit belongs to HTML5GameArchive and the respective game creators.
+
+### Hosting
+
+Thanks to the following services for hosting WorkStudy mirrors:
+
+- GitHub Pages
+- Cloudflare Pages
+- Netlify
+- Render
+- Vercel
+- Neocities
+
+## Disclaimer
+
+WorkStudy is an independent personal project.
+
+Third-party games, soundboard content, names, logos, and other assets belong to their respective owners. WorkStudy does not claim ownership of third-party content.
+
+Users should follow applicable school, workplace, network, and device policies.
+
+## License
+
+Check the licenses of the original soundboard and games repositories before redistributing their content.
+
+Code written specifically for WorkStudy may be licensed separately by the repository owner.
+
 ---
 
-# 🎯 Project Goals
+## WorkStudy Development Status
 
-Current goals include:
+```text
+Website              ✅
+Multiple mirrors      ✅
+Offline branch        ✅
+Account registration  ✅
+Username/email login  ✅
+Turnstile             ✅
+Password hashing      ✅
+Authentication token  ✅
+Cloud saves           ✅
+Account deletion      ✅
+Missing comma         Still dangerous 💀
+```
 
-- Expanding utilities
-- Improving account management
-- Improving cloud synchronization
-- Increasing reliability
-- Improving responsiveness
-- Adding additional tools and features
-- Enhancing user customization
-
----
-
-# 📜 License
-
-This project is intended for educational and personal use.
-
-Authors should always maintain backups of project files and cloud configurations.
-
----
-
-# 💜 Support
-
-If you enjoy WorkStudy and would like to support development:
-
-PayPal:
-https://paypal.me/Tony7873
-
----
-
-# 🚀 WorkStudy
-
-**Game • Search • Explore**
-By Anthony, And Bennett
+**WorkStudy: powerful enough to run on multiple hosts, fragile enough to fear one missing comma.**
