@@ -2,16 +2,16 @@
 <html>
 
 <head>
+  
+  <title id="gameTitle"></title>
+  <link rel="icon" href="../img/game.png">
 
-<title id="gameTitle"></title>
-<link rel="icon" href="../img/game.png">
-
-<h1 id="gameTitle"></h1>
-
-<script src="../js/color.js"> </script>
-<script src="../js/customTab.js" defer></script>
-<link rel="stylesheet"
-href="../css/style.css">
+    <h1 id="gameTitle"></h1>
+    
+    <script src="../js/color.js"> </script>
+  <script src="../js/customTab.js" defer></script>
+    <link rel="stylesheet"
+        href="../css/style.css">
 
 </head>
 
@@ -20,40 +20,40 @@ href="../css/style.css">
 <script>
 
 document.getElementById(
-"gameTitle"
+    "gameTitle"
 ).textContent =
-localStorage.getItem(
-"gameName"
-);
+    localStorage.getItem(
+        "gameName"
+    );
 
 const author =
-localStorage.getItem(
-"gameAuthor"
-);
+    localStorage.getItem(
+        "gameAuthor"
+    );
 
 if (author) {
 
-document.getElementById(
-"gameAuthor"
-).textContent =
-"by " + author;
+    document.getElementById(
+        "gameAuthor"
+    ).textContent =
+        "by " + author;
 
 }
 else {
 
-document.getElementById(
-"gameAuthor"
-).style.display =
-"none";
+    document.getElementById(
+        "gameAuthor"
+    ).style.display =
+        "none";
 
 }
 
 document.getElementById(
-"websiteFrame"
+    "websiteFrame"
 ).src =
-localStorage.getItem(
-"gameUrl"
-);
+    localStorage.getItem(
+        "gameUrl"
+    );
 
 </script>
 
@@ -63,154 +63,169 @@ localStorage.getItem(
 <p id="gameAuthor"></p>
 
 <iframe
-id="websiteFrame"
-allow="fullscreen"
-allowfullscreen>
+    id="websiteFrame"
+    allow="fullscreen"
+    allowfullscreen>
 </iframe>
 
-<div class="topbar">
-<button id="backToGamesBtn" type="button">← Back to Games</button>
-<button id="homeBtn" type="button">🏠 Home</button>
-<button type="button" onclick="toggleGameFullscreen()">⛶ Fullscreen</button>
-<button type="button" onclick="openGameEmbed()">🗔 Open In New Tab</button>
-</div>
+    <div class="topbar">
 
-<div id="gameSaveStatus"></div>
+        <button onclick="
+location.href='../games/index.html'
+">
+   ← Back to Games
+</button>
 
+<button
+    onclick="location.href='../index.html'">
 
-<script>
+   🏠 Home
 
-document
-.getElementById(
-"websiteFrame"
-)
-.src =
-localStorage.getItem(
-"gameUrl"
-);
+</button>
 
-</script>
+        <button type="button" onclick="toggleGameFullscreen()">
+    ⛶ Fullscreen
+</button>
 
-<script>
-document.getElementById(
-"gameTitle"
+      <button type="button" onclick="openGameEmbed()">
+    🗔 Open Game in New Tab
+</button>
+
+    </div>
+
+    <script>
+
+        document
+            .getElementById(
+                "websiteFrame"
+            )
+            .src =
+            localStorage.getItem(
+                "gameUrl"
+            );
+
+    </script>
+    
+    <script>
+      document.getElementById(
+    "gameTitle"
 ).textContent =
-localStorage.getItem(
-"gameName"
-);
-</script>
+    localStorage.getItem(
+        "gameName"
+    );
+    </script>
 <script>
 async function toggleGameFullscreen() {
-const frame = document.getElementById("websiteFrame");
+    const frame = document.getElementById("websiteFrame");
 
-try {
-if (document.fullscreenElement) {
-await document.exitFullscreen();
-} else {
-await frame.requestFullscreen();
-}
-} catch (error) {
-console.error("Fullscreen failed:", error);
-}
+    try {
+        if (document.fullscreenElement) {
+            await document.exitFullscreen();
+        } else {
+            await frame.requestFullscreen();
+        }
+    } catch (error) {
+        console.error("Fullscreen failed:", error);
+    }
 }
 </script>
-<script>
+  <script>
 function openGameEmbed() {
-const gameUrl =
-localStorage.getItem("gameUrl");
+    const gameUrl =
+        localStorage.getItem("gameUrl");
 
-if (!gameUrl) {
-alert("No game link was found.");
-return;
-}
+    if (!gameUrl) {
+        alert("No game link was found.");
+        return;
+    }
 
-let validUrl;
+    let validUrl;
 
-try {
-validUrl = new URL(
-gameUrl,
-window.location.href
-);
+    try {
+        validUrl = new URL(
+            gameUrl,
+            window.location.href
+        );
 
-if (
-validUrl.protocol !== "https:" &&
-validUrl.protocol !== "http:"
-) {
-throw new Error("Unsupported URL");
-}
-} catch (error) {
-alert("The saved game link is invalid.");
-return;
-}
+        if (
+            validUrl.protocol !== "https:" &&
+            validUrl.protocol !== "http:"
+        ) {
+            throw new Error("Unsupported URL");
+        }
+    } catch (error) {
+        alert("The saved game link is invalid.");
+        return;
+    }
 
-const gameWindow =
-window.open(
-"about:blank",
-"_blank"
-);
+    const gameWindow =
+        window.open(
+            "about:blank",
+            "_blank"
+        );
 
-if (!gameWindow) {
-alert(
-"The new tab was blocked. Allow popups and try again."
-);
-return;
-}
+    if (!gameWindow) {
+        alert(
+            "The new tab was blocked. Allow popups and try again."
+        );
+        return;
+    }
 
-gameWindow.document.title =
-localStorage.getItem("gameName") ||
-"WorkStudy Game";
+    gameWindow.document.title =
+        localStorage.getItem("gameName") ||
+        "WorkStudy Game";
 
-gameWindow.document.body.style.margin =
-"0";
+    gameWindow.document.body.style.margin =
+        "0";
 
-gameWindow.document.body.style.width =
-"100vw";
+    gameWindow.document.body.style.width =
+        "100vw";
 
-gameWindow.document.body.style.height =
-"100vh";
+    gameWindow.document.body.style.height =
+        "100vh";
 
-gameWindow.document.body.style.overflow =
-"hidden";
+    gameWindow.document.body.style.overflow =
+        "hidden";
 
-gameWindow.document.body.style.background =
-"#000";
+    gameWindow.document.body.style.background =
+        "#000";
 
-const gameFrame =
-gameWindow.document.createElement(
-"iframe"
-);
+    const gameFrame =
+        gameWindow.document.createElement(
+            "iframe"
+        );
 
-gameFrame.src =
-validUrl.href;
+    gameFrame.src =
+        validUrl.href;
 
-gameFrame.title =
-"WorkStudy Game";
+    gameFrame.title =
+        "WorkStudy Game";
 
-gameFrame.style.display =
-"block";
+    gameFrame.style.display =
+        "block";
 
-gameFrame.style.width =
-"100%";
+    gameFrame.style.width =
+        "100%";
 
-gameFrame.style.height =
-"100%";
+    gameFrame.style.height =
+        "100%";
 
-gameFrame.style.border =
-"0";
+    gameFrame.style.border =
+        "0";
 
-gameFrame.setAttribute(
-"allow",
-"fullscreen; autoplay"
-);
+    gameFrame.setAttribute(
+        "allow",
+        "fullscreen; autoplay"
+    );
 
-gameFrame.setAttribute(
-"allowfullscreen",
-""
-);
+    gameFrame.setAttribute(
+        "allowfullscreen",
+        ""
+    );
 
-gameWindow.document.body.appendChild(
-gameFrame
-);
+    gameWindow.document.body.appendChild(
+        gameFrame
+    );
 }
 </script>
 </body>
