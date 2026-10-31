@@ -73,6 +73,7 @@
         <button type="button" onclick="location.href='../games/index.html'">← Back to Games</button>
         <button type="button" onclick="location.href='../index.html'">🏠 Home</button>
         <button type="button" onclick="toggleGameFullscreen()">⛶ Fullscreen</button>
+        <button type="button" onclick="openGameEmbed()">🗔 Open in New Tab</button>
     </div>
 
     <script>
@@ -101,6 +102,36 @@
             } catch (e) {
                 console.error("Fullscreen failed:", e);
             }
+        }
+
+        function openGameEmbed() {
+            const gameUrl  = localStorage.getItem("gameUrl");
+            const gameName = localStorage.getItem("gameName") || "WorkStudy Game";
+
+            if (!gameUrl) { alert("No game link was found."); return; }
+
+            let validUrl;
+            try {
+                validUrl = new URL(gameUrl, window.location.href);
+                if (validUrl.protocol !== "https:" && validUrl.protocol !== "http:") throw new Error();
+            } catch {
+                alert("The saved game link is invalid.");
+                return;
+            }
+
+            const w = window.open("about:blank", "_blank");
+            if (!w) { alert("The new tab was blocked. Allow popups and try again."); return; }
+
+            w.document.title = gameName;
+            Object.assign(w.document.body.style, { margin: "0", width: "100vw", height: "100vh", overflow: "hidden", background: "#000" });
+
+            const f = w.document.createElement("iframe");
+            f.src = validUrl.href;
+            f.title = gameName;
+            Object.assign(f.style, { display: "block", width: "100%", height: "100%", border: "0" });
+            f.setAttribute("allow", "fullscreen; autoplay");
+            f.setAttribute("allowfullscreen", "");
+            w.document.body.appendChild(f);
         }
     </script>
 
