@@ -1,233 +1,166 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  
-  <title id="gameTitle"></title>
-  <link rel="icon" href="../img/game.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game - WorkStudy</title>
+    <link rel="icon" href="../img/game.png">
+    <script src="../js/color.js" defer></script>
+    <script src="../js/customTab.js" defer></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        #gameInfo {
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border-radius: 10px;
+            padding: 6px 12px;
+            pointer-events: none;
+            line-height: 1.3;
+        }
 
-    <h1 id="gameTitle"></h1>
-    
-    <script src="../js/color.js"> </script>
-  <script src="../js/customTab.js" defer></script>
-    <link rel="stylesheet"
-        href="../css/style.css">
+        #gameTitle {
+            display: block;
+            font-size: 15px;
+            font-weight: bold;
+            color: #fff;
+            margin: 0;
+        }
 
+        #gameAuthor {
+            display: block;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.65);
+            margin: 0;
+        }
+
+        #websiteFrame {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            z-index: 1;
+        }
+
+        .topbar {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        #gameSaveStatus {
+            position: fixed;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            font-size: 13px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            padding: 4px 12px;
+            border-radius: 8px;
+            pointer-events: none;
+            display: none;
+        }
+    </style>
 </head>
-
 <body>
 
-<script>
-
-document.getElementById(
-    "gameTitle"
-).textContent =
-    localStorage.getItem(
-        "gameName"
-    );
-
-const author =
-    localStorage.getItem(
-        "gameAuthor"
-    );
-
-if (author) {
-
-    document.getElementById(
-        "gameAuthor"
-    ).textContent =
-        "by " + author;
-
-}
-else {
-
-    document.getElementById(
-        "gameAuthor"
-    ).style.display =
-        "none";
-
-}
-
-document.getElementById(
-    "websiteFrame"
-).src =
-    localStorage.getItem(
-        "gameUrl"
-    );
-
-</script>
-
-
-<h1 id="gameTitle"></h1>
-
-<p id="gameAuthor"></p>
-
-<iframe
-    id="websiteFrame"
-    allow="fullscreen"
-    allowfullscreen>
-</iframe>
-
-    <div class="topbar">
-
-        <button onclick="
-location.href='../games/index.html'
-">
-   ← Back to Games
-</button>
-
-<button
-    onclick="location.href='../index.html'">
-
-   🏠 Home
-
-</button>
-
-        <button type="button" onclick="toggleGameFullscreen()">
-    ⛶ Fullscreen
-</button>
-
-      <button type="button" onclick="openGameEmbed()">
-    🗔 Open Game in New Tab
-</button>
-
+    <div id="gameInfo">
+        <span id="gameTitle"></span>
+        <span id="gameAuthor"></span>
     </div>
 
+    <iframe
+        id="websiteFrame"
+        allow="fullscreen"
+        allowfullscreen>
+    </iframe>
+
+    <div class="topbar">
+        <button id="backToGamesBtn" type="button">← Back to Games</button>
+        <button id="homeBtn" type="button">🏠 Home</button>
+        <button id="saveGameBtn" type="button">💾 Save Game</button>
+        <button id="restoreGameBtn" type="button">📥 Restore Save</button>
+        <button type="button" onclick="toggleGameFullscreen()">⛶ Fullscreen</button>
+        <button type="button" onclick="openGameEmbed()">🗔 Open In New Tab</button>
+    </div>
+
+    <div id="gameSaveStatus"></div>
+
+    <script src="../js/gameFrameSave.js" defer></script>
+
     <script>
+        (function () {
+            const name   = localStorage.getItem("gameName")   || "";
+            const author = localStorage.getItem("gameAuthor") || "";
+            const url    = localStorage.getItem("gameUrl")    || "";
 
-        document
-            .getElementById(
-                "websiteFrame"
-            )
-            .src =
-            localStorage.getItem(
-                "gameUrl"
-            );
+            const titleEl  = document.getElementById("gameTitle");
+            const authorEl = document.getElementById("gameAuthor");
+            const frame    = document.getElementById("websiteFrame");
 
-    </script>
-    
-    <script>
-      document.getElementById(
-    "gameTitle"
-).textContent =
-    localStorage.getItem(
-        "gameName"
-    );
-    </script>
-<script>
-async function toggleGameFullscreen() {
-    const frame = document.getElementById("websiteFrame");
+            if (titleEl)  titleEl.textContent  = name;
+            if (authorEl) authorEl.textContent = author ? "by " + author : "";
+            if (frame && url) frame.src = url;
+        })();
 
-    try {
-        if (document.fullscreenElement) {
-            await document.exitFullscreen();
-        } else {
-            await frame.requestFullscreen();
+        async function toggleGameFullscreen() {
+            const frame = document.getElementById("websiteFrame");
+            try {
+                if (document.fullscreenElement) {
+                    await document.exitFullscreen();
+                } else {
+                    await frame.requestFullscreen();
+                }
+            } catch (e) {
+                console.error("Fullscreen failed:", e);
+            }
         }
-    } catch (error) {
-        console.error("Fullscreen failed:", error);
-    }
-}
-</script>
-  <script>
-function openGameEmbed() {
-    const gameUrl =
-        localStorage.getItem("gameUrl");
 
-    if (!gameUrl) {
-        alert("No game link was found.");
-        return;
-    }
+        function openGameEmbed() {
+            const gameUrl = localStorage.getItem("gameUrl");
+            if (!gameUrl) { alert("No game link was found."); return; }
 
-    let validUrl;
+            let validUrl;
+            try {
+                validUrl = new URL(gameUrl, window.location.href);
+                if (validUrl.protocol !== "https:" && validUrl.protocol !== "http:") {
+                    throw new Error("Unsupported URL");
+                }
+            } catch (e) {
+                alert("The saved game link is invalid.");
+                return;
+            }
 
-    try {
-        validUrl = new URL(
-            gameUrl,
-            window.location.href
-        );
+            const win = window.open("about:blank", "_blank");
+            if (!win) { alert("The new tab was blocked. Allow popups and try again."); return; }
 
-        if (
-            validUrl.protocol !== "https:" &&
-            validUrl.protocol !== "http:"
-        ) {
-            throw new Error("Unsupported URL");
+            win.document.title = localStorage.getItem("gameName") || "WorkStudy Game";
+            win.document.body.style.cssText = "margin:0;width:100vw;height:100vh;overflow:hidden;background:#000";
+
+            const f = win.document.createElement("iframe");
+            f.src = validUrl.href;
+            f.title = "WorkStudy Game";
+            f.style.cssText = "display:block;width:100%;height:100%;border:0";
+            f.setAttribute("allow", "fullscreen; autoplay");
+            f.setAttribute("allowfullscreen", "");
+            win.document.body.appendChild(f);
         }
-    } catch (error) {
-        alert("The saved game link is invalid.");
-        return;
-    }
+    </script>
 
-    const gameWindow =
-        window.open(
-            "about:blank",
-            "_blank"
-        );
-
-    if (!gameWindow) {
-        alert(
-            "The new tab was blocked. Allow popups and try again."
-        );
-        return;
-    }
-
-    gameWindow.document.title =
-        localStorage.getItem("gameName") ||
-        "WorkStudy Game";
-
-    gameWindow.document.body.style.margin =
-        "0";
-
-    gameWindow.document.body.style.width =
-        "100vw";
-
-    gameWindow.document.body.style.height =
-        "100vh";
-
-    gameWindow.document.body.style.overflow =
-        "hidden";
-
-    gameWindow.document.body.style.background =
-        "#000";
-
-    const gameFrame =
-        gameWindow.document.createElement(
-            "iframe"
-        );
-
-    gameFrame.src =
-        validUrl.href;
-
-    gameFrame.title =
-        "WorkStudy Game";
-
-    gameFrame.style.display =
-        "block";
-
-    gameFrame.style.width =
-        "100%";
-
-    gameFrame.style.height =
-        "100%";
-
-    gameFrame.style.border =
-        "0";
-
-    gameFrame.setAttribute(
-        "allow",
-        "fullscreen; autoplay"
-    );
-
-    gameFrame.setAttribute(
-        "allowfullscreen",
-        ""
-    );
-
-    gameWindow.document.body.appendChild(
-        gameFrame
-    );
-}
-</script>
 </body>
-
 </html>

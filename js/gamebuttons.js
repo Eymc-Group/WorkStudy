@@ -35,6 +35,11 @@ window.addEventListener(
         game.name
     );
 
+    localStorage.setItem(
+        "gameAuthor",
+        game.author || ""
+    );
+
     location.href =
         "../pages/game.html";
 
