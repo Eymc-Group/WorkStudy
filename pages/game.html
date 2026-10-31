@@ -93,22 +93,18 @@
     <div class="topbar">
         <button id="backToGamesBtn" type="button">← Back to Games</button>
         <button id="homeBtn" type="button">🏠 Home</button>
-        <button id="saveGameBtn" type="button">💾 Save Game</button>
-        <button id="restoreGameBtn" type="button">📥 Restore Save</button>
         <button type="button" onclick="toggleGameFullscreen()">⛶ Fullscreen</button>
         <button type="button" onclick="openGameEmbed()">🗔 Open In New Tab</button>
     </div>
 
     <div id="gameSaveStatus"></div>
 
-    <script src="../js/gameFrameSave.js" defer></script>
-
     <script>
         (function () {
             const name   = localStorage.getItem("gameName")   || "";
             const author = localStorage.getItem("gameAuthor") || "";
             const url    = localStorage.getItem("gameUrl")    || "";
-
+            
             const titleEl  = document.getElementById("gameTitle");
             const authorEl = document.getElementById("gameAuthor");
             const frame    = document.getElementById("websiteFrame");
