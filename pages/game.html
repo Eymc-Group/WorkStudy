@@ -37,27 +37,6 @@
             color: rgba(255, 255, 255, 0.65);
             margin: 0;
         }
-
-        #websiteFrame {
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-            z-index: 1;
-        }
-
-        .topbar {
-            position: fixed;
-            bottom: 16px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
     </style>
 </head>
 <body>
@@ -67,14 +46,14 @@
         <span id="gameAuthor"></span>
     </div>
 
-    <iframe id="websiteFrame" allow="fullscreen" allowfullscreen></iframe>
-
     <div class="topbar">
         <button type="button" onclick="location.href='../games/index.html'">← Back to Games</button>
         <button type="button" onclick="location.href='../index.html'">🏠 Home</button>
         <button type="button" onclick="toggleGameFullscreen()">⛶ Fullscreen</button>
-        <button type="button" onclick="openGameEmbed()">🗔 Open in New Tab</button>
+        <button type="button" onclick="openGameEmbed()">🗔 Open In New Tab</button>
     </div>
+
+    <iframe id="websiteFrame" allow="fullscreen" allowfullscreen></iframe>
 
     <script>
         (function () {
@@ -123,12 +102,12 @@
             if (!w) { alert("The new tab was blocked. Allow popups and try again."); return; }
 
             w.document.title = gameName;
-            Object.assign(w.document.body.style, { margin: "0", width: "100vw", height: "100vh", overflow: "hidden", background: "#000" });
+            w.document.body.style.cssText = "margin:0;width:100vw;height:100vh;overflow:hidden;background:#000";
 
             const f = w.document.createElement("iframe");
             f.src = validUrl.href;
             f.title = gameName;
-            Object.assign(f.style, { display: "block", width: "100%", height: "100%", border: "0" });
+            f.style.cssText = "display:block;width:100%;height:100%;border:0";
             f.setAttribute("allow", "fullscreen; autoplay");
             f.setAttribute("allowfullscreen", "");
             w.document.body.appendChild(f);
