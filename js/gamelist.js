@@ -184,5 +184,5 @@ const games = [
     { name: "WebFishing", author: "lamedeveloper", path: "https://eymc-group.github.io/WorkStudy/games/bennett/WebFishing.html" },
 
     // Awesome
-     { name: "gn-math.dev", author: "Eymc-Group", path: "https://eymc-group.github.io/WorkStudy/pages/gn-math.dev.html" },
+     { name: "gn-math.dev", author: "Unknown", path: "https://eymc-group.github.io/WorkStudy/pages/gn-math.dev.html" },
 ];
