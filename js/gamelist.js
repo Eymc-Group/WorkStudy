@@ -182,4 +182,7 @@ const games = [
     { name: "Traffic Racer", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Traffic-Racer.html" },
     { name: "Twerk Race 3D", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Twerk-Race-3D.html" },
     { name: "WebFishing", path: "https://eymc-group.github.io/WorkStudy/games/bennett/WebFishing.html" },
+
+    // Awesome
+     { name: "gn-math.dev", path: "https://eymc-group.github.io/WorkStudy/pages/gn-math.dev.html" },
 ];
