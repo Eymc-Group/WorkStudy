@@ -69,7 +69,6 @@ const games = [
     { name: "HexGL", path: "https://eymc-group.github.io/gfiles/games/hexgl/" },
     { name: "Hextris", path: "https://eymc-group.github.io/gfiles/games/hextris/" },
     { name: "Highway Traffic", path: "https://eymc-group.github.io/gfiles/games/highwaytraffic/" },
-    { name: "Hollow Knight", path: "https://eymc-group.github.io/gfiles/games/hollowknight/" },
     { name: "Konnekt", path: "https://eymc-group.github.io/gfiles/games/konnekt/" },
     { name: "Learn To Fly", path: "https://eymc-group.github.io/gfiles/games/learntofly/" },
     { name: "Let's Surf", path: "https://eymc-group.github.io/gfiles/games/letssurf/" },
@@ -103,7 +102,6 @@ const games = [
     { name: "Shuttle Deck", path: "https://eymc-group.github.io/gfiles/games/shuttledeck/" },
     { name: "Sketchbook 04", path: "https://eymc-group.github.io/gfiles/games/sketchbook04/" },
     { name: "Sleeping Beauty", path: "https://eymc-group.github.io/gfiles/games/sleepingbeauty/" },
-    { name: "Slither.io", path: "https://eymc-group.github.io/gfiles/games/slitherio/" },
     { name: "Slope", path: "https://eymc-group.github.io/gfiles/games/slope/" },
     { name: "Slope 2", path: "https://eymc-group.github.io/gfiles/games/slope2/" },
     { name: "Snake", path: "https://eymc-group.github.io/gfiles/games/snake/" },
@@ -151,14 +149,14 @@ const games = [
     { name: "Cookie Clicker (Legacy)", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/cookieclicker.html" },
     { name: "Five Nights at Epstein's", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/fnae.html" },
     { name: "Geometry Dash", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/gd.html" },
-    { name: "Hollow Knight (Legacy)", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/hollowknight.html" },
+    { name: "Hollow Knight", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/hollowknight.html" },
     { name: "Minecraft", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/minecraft.html" },
     { name: "Retro Bowl (Legacy)", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/retrobowl.html" },
     { name: "Run 3 (Legacy)", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/run3.html" },
     { name: "Slope (Legacy)", path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/slope.html" },
     
     // Games By Bennett
-    { name: "BLOODMONEY!", path: "https://eymc-group.github.io/WorkStudy/games/bennett/BLOODMONEY!.html" },
+    { name: "BLOODMONEY! (inappropriate 16+)", path: "https://eymc-group.github.io/WorkStudy/games/bennett/BLOODMONEY!.html" },
     { name: "Bendy and the Ink Machine", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bendy-and-the-Ink-Machine.html" },
     { name: "Bottle Jump 3D", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bottle-Jump-3D.html" },
     { name: "Bowmasters", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bowmasters.html" },
@@ -184,4 +182,7 @@ const games = [
     { name: "Traffic Racer", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Traffic-Racer.html" },
     { name: "Twerk Race 3D", path: "https://eymc-group.github.io/WorkStudy/games/bennett/Twerk-Race-3D.html" },
     { name: "WebFishing", path: "https://eymc-group.github.io/WorkStudy/games/bennett/WebFishing.html" },
+
+    // Awesome
+     { name: "gn-math.dev", path: "https://eymc-group.github.io/WorkStudy/pages/gn-math.dev.html" },
 ];

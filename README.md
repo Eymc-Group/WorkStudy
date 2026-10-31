@@ -16,6 +16,7 @@ WorkStudy is a customizable web hub featuring games, search tools, a soundboard,
 - 💾 Authenticated cloud saves
 - 📥 Progress restoration
 - 🗑️ Save and account deletion
+- 🎨 Coloring board
 - 📱 Mobile-friendly layout
 - 💻 Device and battery information
 - 🏛️ Legacy WorkStudy access
@@ -111,38 +112,77 @@ Theme preferences are saved locally.
 
 ```text
 WorkStudy/
+├── .github/
+│   └── workflows/
+│       └── neocities.yml       — auto-deploy to Neocities
 ├── css/
-│   └── style.css
-├── fonts/
+│   └── style.css               — global styles and themes
+├── fonts/                      — local font files
 ├── games/
-│   └── index.html
-├── img/
+│   ├── bennett/                — games added by Bennett (embedded via GitHub Pages)
+│   ├── legacy-games/           — legacy embedded game pages
+│   │   ├── 2040.html
+│   │   ├── badparenting.html
+│   │   ├── cookieclicker.html
+│   │   ├── fnae.html
+│   │   ├── gd.html
+│   │   ├── hollowknight.html
+│   │   ├── minecraft.html
+│   │   ├── retrobowl.html
+│   │   ├── run3.html
+│   │   └── slope.html
+│   └── index.html              — games browser with search
+├── img/                        — icons and images
 ├── js/
-│   ├── auth.js
-│   ├── cloudSave.js
-│   ├── color.js
-│   ├── legacyconfirm.js
-│   ├── login.js
-│   ├── script.js
-│   └── status.js
+│   ├── auth.js                 — user session read/write helpers
+│   ├── cloudSave.js            — cloud save and load logic
+│   ├── color.js                — theme loading and switching
+│   ├── customTab.js            — custom tab name and favicon
+│   ├── gameFrameSave.js        — in-game save and restore via postMessage
+│   ├── gamebuttons.js          — builds game cards from gamelist
+│   ├── gamelist.js             — list of all games and their paths
+│   ├── iframe.js               — website viewer iframe logic
+│   ├── legacyconfirm.js        — confirm dialog before opening legacy site
+│   ├── login.js                — login form submission and API call
+│   ├── script.js               — main settings, account UI, and init
+│   ├── searchbar.js            — game search filter
+│   ├── status.js               — device info (battery, browser, platform, time)
+│   ├── sw.js                   — service worker for offline caching
+│   ├── users.js                — online user counter via Cloudflare Worker
+│   ├── visits.js               — visit counter via Cloudflare Worker
+│   └── website.js              — saved websites list for the website viewer
+├── legacy/                     — old WorkStudy site (preserved as-is)
+│   ├── index.html
+│   ├── games.html
+│   ├── chat.html
+│   ├── proxys.html
+│   ├── proxys.js
+│   └── *.html                  — individual legacy game embeds
 ├── pages/
 │   ├── chat/
-│   ├── deviceinfo.html
-│   ├── iframe.html
-│   ├── login.html
-│   ├── signup.html
-│   └── soundboard.html
-├── index.html
+│   │   └── index.html          — chat page
+│   ├── boardofcolor.html       — coloring board launcher with fullscreen
+│   ├── coloringboard.html      — full coloring board app (canvas drawing)
+│   ├── deviceinfo.html         — live device and battery info
+│   ├── game.html               — game player with save/restore support
+│   ├── iframe.html             — website viewer with saved sites
+│   ├── login.html              — login page
+│   ├── proxy.html              — proxy page
+│   ├── signup.html             — account registration with Turnstile
+│   └── soundboard.html         — soundboard (embedded from eymc-group.github.io)
+├── index.html                  — homepage
+├── test.json                   — health check endpoint ({ "status": "ok" })
+├── users.js                    — (root-level legacy copy, superseded by js/users.js)
 └── README.md
 ```
 
 ## Cloudflare Workers
 
-WorkStudy uses two separate Cloudflare Workers.
+WorkStudy uses Cloudflare Workers for the account system, cloud saves, visit counting, and online user tracking.
 
 ### WorkStudy API
 
-The account API handles:
+Handles account registration, login, session verification, and deletion.
 
 ```text
 POST   /register
@@ -154,17 +194,14 @@ DELETE /delete-account
 Required configuration:
 
 ```text
-KV binding:
-USERS
-
-Secrets:
-AUTH_SECRET
-TURNSTILE_SECRET
+KV binding:   USERS
+Secrets:      AUTH_SECRET
+              TURNSTILE_SECRET
 ```
 
 ### WorkStudy Saves
 
-The cloud-save API handles:
+Handles saving, loading, and deleting cloud save data.
 
 ```text
 POST   /api/save-progress
@@ -175,27 +212,40 @@ DELETE /api/delete-save
 Required configuration:
 
 ```text
-KV binding:
-SAVES
-
-Secret:
-AUTH_SECRET
+KV binding:   SAVES
+Secret:       AUTH_SECRET
 ```
 
-The `AUTH_SECRET` value must be identical on both Workers.
+### WorkStudy Visits
+
+Records total site visits and returns the current count.
+
+```text
+POST   /visit    — record a visit and return total
+```
+
+### Online Counter
+
+Tracks how many users are currently online using a unique per-browser ID.
+
+```text
+GET    /?id=<userId>    — ping presence and return online count
+```
+
+The `AUTH_SECRET` value must be identical across both the API and Saves Workers.
 
 > [!IMPORTANT]
 > Never commit `AUTH_SECRET`, `TURNSTILE_SECRET`, API keys, passwords, or other private credentials to the repository.
 
 ## Offline Version
 
-The offline branch allows WorkStudy, the soundboard, and games to run from downloaded files.
+The offline branch allows WorkStudy, the soundboard, and games to run entirely from downloaded files without an internet connection.
 
 ### Downloads
 
-1. [Download WorkStudy Offline](https://github.com/schoolwork04/WorkStudy/archive/refs/heads/offline.zip)
-2. [Download the Soundboard](https://github.com/schoolwork04/soundboard/archive/refs/heads/main.zip)
-3. [Download the Games Collection](https://github.com/schoolwork04/gfiles/archive/refs/heads/master.zip)
+1. [Download WorkStudy Offline](https://github.com/Eymc-Group/WorkStudy/archive/refs/heads/offline.zip)
+2. [Download the Soundboard](https://github.com/Eymc-Group/soundboard/archive/refs/heads/main.zip)
+3. [Download the Games Collection](https://github.com/Eymc-Group/gfiles/archive/refs/heads/master.zip)
 
 > [!WARNING]
 > The games package may be large and may take additional time to download and extract.
@@ -204,11 +254,11 @@ The offline branch allows WorkStudy, the soundboard, and games to run from downl
 
 1. Download all three ZIP files.
 2. Extract each ZIP file completely.
-3. Keep the extracted folders together in the same parent folder.
+3. Keep all three extracted folders together in the same parent folder.
 4. Do not rename the extracted folders.
-5. Open the WorkStudy offline `index.html` file.
+5. Open `WorkStudy-offline/index.html` to start.
 
-Example:
+The extracted folders should look like this:
 
 ```text
 Downloads/
@@ -217,11 +267,25 @@ Downloads/
 └── gfiles-master/
 ```
 
-The offline branch may not support server-based features such as accounts, Turnstile, or cloud saves without an internet connection.
+### Offline Paths
+
+Game files are loaded relative to `pages/game.html` inside `WorkStudy-offline/`:
+
+```text
+../../gfiles-master/gfiles-master/games/<game>/
+```
+
+Soundboard is loaded relative to `pages/soundboard.html`:
+
+```text
+../../soundboard-main/soundboard-main/index.html
+```
+
+The offline branch does not support accounts, Turnstile, cloud saves, visit counting, or the online counter, as these require an internet connection to reach the Cloudflare Workers.
 
 ## Local Development
 
-WorkStudy is primarily built with:
+WorkStudy is built with:
 
 ```text
 HTML
@@ -231,9 +295,9 @@ Cloudflare Workers
 Cloudflare Workers KV
 ```
 
-To test the static pages, open `index.html` through a local web server or deploy the repository to a static hosting provider.
+To test the static pages locally, serve the repository through a local web server (e.g. `npx serve` or VS Code Live Server). Opening `index.html` directly as a `file://` URL may cause issues with service workers and some scripts.
 
-When changing authentication or cloud-save code, update related files together:
+When changing authentication or cloud-save code, update all related files together:
 
 ```text
 pages/login.html
@@ -248,26 +312,21 @@ workstudy-saves Worker
 
 ## Backup Checklist
 
-Before making major account-system changes:
+Before making major changes:
 
-1. Commit the current working version.
-2. Download a ZIP backup of the repository.
-3. Save backup copies of both Worker scripts.
-4. Verify that Worker secrets and KV bindings are configured.
-5. Never include secret values in backups stored publicly.
-6. Test login, signup, saving, loading, logout, and account deletion.
-
-Suggested commit message:
-
-```text
-Fix authentication, cloud saves, and account deletion
-```
+1. Commit the current working version to `root`.
+2. Open a pull request into `backup` and merge it.
+3. Download a ZIP backup of the repository if needed.
+4. Save backup copies of both Worker scripts.
+5. Verify that Worker secrets and KV bindings are configured.
+6. Never include secret values in backups stored publicly.
+7. Test login, signup, saving, loading, logout, and account deletion after any auth changes.
 
 ## Credits
 
 ### WorkStudy
 
-Created and maintained by `schoolwork04`.
+Created and maintained by Eymc-Group.
 
 Development assistance and code organization were supported by tools from Microsoft, Anthropic, and GitHub.
 
@@ -286,6 +345,10 @@ Forked from:
 [HTML5GameArchive/gfiles](https://github.com/HTML5GameArchive/gfiles)
 
 Original project credit belongs to HTML5GameArchive and the respective game creators.
+
+### Bennett Games
+
+Additional games contributed by Bennett, hosted under `games/bennett/`.
 
 ### Hosting
 
@@ -317,17 +380,19 @@ Code written specifically for WorkStudy may be licensed separately by the reposi
 ## WorkStudy Development Status
 
 ```text
-Website              ✅
-Multiple mirrors      ✅
-Offline branch        ✅
-Account registration  ✅
-Username/email login  ✅
-Turnstile             ✅
-Password hashing      ✅
-Authentication token  ✅
-Cloud saves           ✅
-Account deletion      ✅
-Missing comma         Still dangerous 💀
+Website               ✅
+Multiple mirrors       ✅
+Offline branch         ✅
+Account registration   ✅
+Username/email login   ✅
+Turnstile              ✅
+Password hashing       ✅
+Authentication token   ✅
+Cloud saves            ✅
+Account deletion       ✅
+Visit counter          ✅
+Online counter         ✅
+Coloring board         ✅
+Game save/restore      ✅
+Custom tab/icon        ✅
 ```
-
-**WorkStudy: powerful enough to run on multiple hosts, fragile enough to fear one missing comma.**
