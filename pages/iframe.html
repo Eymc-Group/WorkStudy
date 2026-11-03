@@ -69,6 +69,68 @@ function openWebsiteNewTab() {
     w.document.close();
 }
 </script>
+    <script>
+      function customTabOpener() {
+    const url = prompt("Enter a website URL:");
+
+    if (!url) return;
+
+    let validUrl;
+
+    try {
+        validUrl = new URL(
+            url.startsWith("http") ? url : "https://" + url
+        );
+    } catch {
+        alert("Invalid URL.");
+        return;
+    }
+
+    const w = window.open("about:blank", "_blank");
+
+    if (!w) {
+        alert("Popup blocked.");
+        return;
+    }
+
+    const title =
+        document.title || "Website";
+
+    const favicon =
+        document.querySelector("link[rel*='icon']")?.href || "";
+
+    w.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>${title}</title>
+            ${favicon ? `${favicon}` : ""}
+            <style>
+                html, body {
+                    margin: 0;
+                    width: 100%;
+                    height: 100%;
+                    overflow: hidden;
+                    background: #000;
+                }
+
+                iframe {
+                    width: 100%;
+                    height: 100%;
+                    border: 0;
+                }
+            </style>
+        </head>
+        <body>
+            ${validUrl.href}
+            </iframe>
+        </body>
+        </html>
+    `);
+
+    w.document.close();
+}  
+    </script>
 
     <link rel="stylesheet" href="../css/style.css">
 
@@ -114,7 +176,7 @@ function openWebsiteNewTab() {
             placeholder="https://example.com">
 
         <button type="button" onclick="loadWebsite()">
-            🌐 Open
+            👇 Open
         </button>
 
         <button type="button" onclick="saveCurrentWebsite()">
@@ -128,6 +190,10 @@ function openWebsiteNewTab() {
         <button type="button" onclick="openWebsiteNewTab()">
             🗔 Open In New Tab
         </button>
+
+        <button onclick="customTabOpener()">
+            🌐 Open Custom URL
+        </button>    
         
     </div>
     
