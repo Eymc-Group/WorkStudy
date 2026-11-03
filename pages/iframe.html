@@ -11,6 +11,18 @@
     <script src="../js/iframe.js" defer></script>
     <script src="../js/website.js" defer></script>
     <script src="../js/customTab.js" defer></script>
+    <script>
+function openWebsiteNewTab() {
+    const frame = document.getElementById("websiteFrame");
+
+    if (!frame || !frame.src) {
+        alert("No website is currently loaded.");
+        return;
+    }
+
+    window.open(frame.src, "_blank");
+}
+</script>
 
     <link rel="stylesheet" href="../css/style.css">
 
@@ -66,8 +78,13 @@
         <button type="button" onclick="location.href='../index.html'">
             🏠 Home
         </button>
+        
+        <button type="button" onclick="openWebsiteNewTab()">
+            🗔 Open In New Tab
+        </button>
+        
     </div>
-
+    
     <div id="savedSites"></div>
 
     <iframe
