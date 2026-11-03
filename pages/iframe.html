@@ -69,67 +69,57 @@ function openWebsiteNewTab() {
     w.document.close();
 }
 </script>
-    <script>
-      function customTabOpener() {
-    const url = prompt("Enter a website URL:");
+    <script>function customTabOpener() {
+    const disguiseUrl = prompt(
+        "Enter the URL to disguise this tab as:"
+    );
 
-    if (!url) return;
+    if (!disguiseUrl) return;
 
-    let validUrl;
+    let target;
 
     try {
-        validUrl = new URL(
-            url.startsWith("http") ? url : "https://" + url
+        target = new URL(
+            disguiseUrl.startsWith("http")
+                ? disguiseUrl
+                : "https://" + disguiseUrl
         );
     } catch {
         alert("Invalid URL.");
         return;
     }
 
-    const w = window.open("about:blank", "_blank");
+    const frame = document.getElementById("websiteFrame");
 
-    if (!w) {
+    if (!frame || !frame.src) {
+        alert("No website is loaded.");
+        return;
+    }
+
+    const win = window.open(target.href, "_blank");
+
+    if (!win) {
         alert("Popup blocked.");
         return;
     }
 
-    const title =
-        document.title || "Website";
-
-    const favicon =
-        document.querySelector("link[rel*='icon']")?.href || "";
-
-    w.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>${title}</title>
-            ${favicon ? `${favicon}` : ""}
-            <style>
-                html, body {
-                    margin: 0;
-                    width: 100%;
-                    height: 100%;
-                    overflow: hidden;
-                    background: #000;
-                }
-
-                iframe {
-                    width: 100%;
-                    height: 100%;
-                    border: 0;
-                }
-            </style>
-        </head>
-        <body>
-            ${validUrl.href}
-            </iframe>
-        </body>
-        </html>
-    `);
-
-    w.document.close();
-}  
+    win.onload = () => {
+        try {
+            win.document.body.innerHTML = `
+                <iframe
+                    src="${frame.src}"
+                    style="
+                        position:fixed;
+                        inset:0;
+                        width:100%;
+                        height:100%;
+                        border:none;
+                    ">
+                </iframe>
+            `;
+        } catch (e) {
+            alert(
+             
     </script>
 
     <link rel="stylesheet" href="../css/style.css">
