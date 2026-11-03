@@ -168,7 +168,7 @@ const games = [
     // =========================================================================
 
     { name: "2040 (Legacy)",               author: "Eymc-Group",             path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/2040.html" },
-    { name: "Bad Parenting",               author: "Unknown",                path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/badparenting.html" },
+    { name: "Bad Parenting (legacy)",      author: "Unknown",                path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/badparenting.html" },
     { name: "Cookie Clicker (Legacy)",     author: "Orteil",                 path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/cookieclicker.html" },
     { name: "Five Nights at Epstein's",    author: "Unknown",                path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/fnae.html" },
     { name: "Geometry Dash",               author: "RobTop Games",           path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/gd.html" },
@@ -220,4 +220,5 @@ const games = [
     // =========================================================================
 
     { name: "Bad Piggies", author: "Rovio Entertainment, EDURocks", path: "https://eymc-group.github.io/WorkStudy/games/imported/Bad-Piggies.html" },
+    { name: "Bad Parenting", author: "Rovio Entertainment, EDURocks", path: "https://eymc-group.github.io/WorkStudy/games/imported/Bad-Parenting-1.html" },
 ];
