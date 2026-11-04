@@ -69,23 +69,6 @@ function openWebsiteNewTab() {
     w.document.close();
 }
 </script>
-  <script>
-function openCustomTab() {
-    let url = prompt("Enter a website URL:");
-
-    if (!url) {
-        alert("No URL entered.");
-        return;
-    }
-
-    if (!url.startsWith("http://") && !url.startsWith("https://")) {
-        url = "https://" + url;
-    }
-
-    window.open(url, "_blank");
-}
-</script>
-
     <link rel="stylesheet" href="../css/style.css">
 
     <style>
@@ -143,11 +126,7 @@ function openCustomTab() {
         
         <button type="button" onclick="openWebsiteNewTab()">
             🗔 Open In New Tab
-        </button>
-
-        <button onclick="openCustomTab()">
-            🌐 Open Custom URL
-        </button>    
+        </button>  
         
     </div>
     
