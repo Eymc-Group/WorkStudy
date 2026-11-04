@@ -15,6 +15,7 @@
     <script src="js/cloudSave.js" defer></script>
     <script src="js/customTab.js" defer></script>
     <script src="js/legacyconfirm.js" defer></script>
+    <script src="js/github-oauth.js" defer></script>
     <link rel="stylesheet" href="css/style.css">
 
 <main class="main">
@@ -163,6 +164,11 @@
 <p id="accountEmail"></p>
 <button id="logoutBtn" type="button">🚪 Logout</button>
 <button id="deleteAccountBtn" type="button">❌ Delete Account</button>
+        <hr>
+        <h3>🔗 GitHub</h3>
+        <button id="githubLinkBtn" type="button">🔗 Link GitHub</button>
+        <button id="githubUnlinkBtn" type="button" style="display:none;">✖ Unlink GitHub</button>
+        <p id="githubStatus" style="font-size:13px;text-align:center;color:var(--text);margin:4px 0 0;"></p>
         <hr>
         <h3>💾 Cloud Saves</h3>
         <button id="saveProgressBtn" type="button">💾 Save Progress</button>
