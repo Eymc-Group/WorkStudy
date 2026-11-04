@@ -200,6 +200,17 @@
             }
         );
 
+        const githubLoginBtn =
+            document.getElementById("githubLoginBtn");
+
+        if (githubLoginBtn) {
+            githubLoginBtn.addEventListener("click", function () {
+                sessionStorage.setItem("gh-oauth-intent", "login");
+                window.location.href =
+                    "https://workstudy-api.354271744.workers.dev/auth/github?intent=login";
+            });
+        }
+
         setStatus("");
     }
 

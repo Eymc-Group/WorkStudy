@@ -702,3 +702,59 @@ body:has(#websitePanel.open) {
     transform: translateY(-2px);
     filter: brightness(1.15);
 }
+
+/* ---- GitHub OAuth ---- */
+
+.btn-github {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 11px 20px;
+    border: none;
+    border-radius: 12px;
+    background: #24292f;
+    color: #fff;
+    font-family: "Pusab", sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    margin-top: 4px;
+}
+
+.btn-github:hover {
+    background: #3a3f47;
+    transform: translateY(-2px);
+}
+
+.btn-github:active {
+    transform: translateY(0);
+}
+
+.github-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    flex-shrink: 0;
+}
+
+.oauth-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 14px 0 10px;
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 13px;
+    font-family: "Pusab", sans-serif;
+}
+
+.oauth-divider::before,
+.oauth-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.15);
+}
