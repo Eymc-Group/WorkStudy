@@ -2,45 +2,197 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - WorkStudy</title>
-
     <link rel="icon" href="../img/favicon.png">
     <link rel="stylesheet" href="../css/style.css">
-
     <script src="../js/auth.js" defer></script>
     <script src="../js/color.js" defer></script>
     <script src="../js/login.js" defer></script>
     <script src="../js/customTab.js" defer></script>
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            box-sizing: border-box;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 400px;
+            background: var(--panel);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 36px 32px 28px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.4), var(--glow);
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .auth-brand {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .auth-brand h1 {
+            font-size: 26px;
+            color: var(--text);
+            margin: 0 0 4px;
+        }
+
+        .auth-brand p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.45);
+            margin: 0;
+            font-family: "Pusab", sans-serif;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .field label {
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            font-family: "Pusab", sans-serif;
+            padding-left: 2px;
+        }
+
+        .field-wrap {
+            position: relative;
+        }
+
+        .field-wrap input {
+            width: 100%;
+            padding: 11px 14px;
+            background: var(--input);
+            color: var(--text);
+            border: 1.5px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            font-family: "Pusab", sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+            box-sizing: border-box;
+        }
+
+        .field-wrap input:focus {
+            border-color: var(--c1);
+            box-shadow: 0 0 0 3px rgba(var(--c1-rgb, 99,102,241), 0.15);
+        }
+
+        .field-wrap input::placeholder {
+            color: rgba(255,255,255,0.3);
+        }
+
+        .show-pw {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.4);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px;
+            line-height: 1;
+            width: auto;
+            margin: 0;
+        }
+
+        .show-pw:hover { color: rgba(255,255,255,0.8); transform: translateY(-50%); box-shadow: none; }
+
+        .field-wrap input[type="password"],
+        .field-wrap input[type="text"] {
+            padding-right: 38px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--c1), var(--c2));
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-family: "Pusab", sans-serif;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform .2s, filter .2s;
+            margin-top: 4px;
+        }
+
+        .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .btn-primary:active { transform: translateY(0); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        #status {
+            min-height: 20px;
+            font-size: 13px;
+            text-align: center;
+            color: var(--text);
+            margin: 10px 0 2px;
+            font-family: "Pusab", sans-serif;
+        }
+
+        #status.error { color: #f87171; }
+        #status.success { color: #4ade80; }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.4);
+            font-family: "Pusab", sans-serif;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .auth-footer a {
+            color: var(--c2);
+            text-decoration: none;
+        }
+
+        .auth-footer a:hover { text-decoration: underline; }
+    </style>
 </head>
-
 <body>
-    <div class="auth-container">
-        <h1>🔐 Login</h1>
+    <div class="auth-card">
 
-        <input
-            id="login"
-            type="text"
-            placeholder="Username or Email"
-            autocomplete="username"
-            maxlength="254"
-        >
+        <div class="auth-brand">
+            <h1>🔐 Welcome back</h1>
+            <p>Sign in to your WorkStudy account</p>
+        </div>
 
-        <input
-            id="password"
-            type="password"
-            placeholder="Password"
-            autocomplete="current-password"
-            maxlength="128"
-        >
+        <div class="field">
+            <label for="login">Username or Email</label>
+            <div class="field-wrap">
+                <input id="login" type="text" placeholder="Enter username or email"
+                    autocomplete="username" maxlength="254">
+            </div>
+        </div>
 
-        <button id="loginBtn" type="button">
-            Login
-        </button>
+        <div class="field">
+            <label for="password">Password</label>
+            <div class="field-wrap">
+                <input id="password" type="password" placeholder="Enter password"
+                    autocomplete="current-password" maxlength="128">
+                <button type="button" class="show-pw" aria-label="Show password" data-target="password">👁</button>
+            </div>
+        </div>
+
+        <button id="loginBtn" type="button" class="btn-primary">Login</button>
+
+        <div id="status" role="status" aria-live="polite"></div>
 
         <div class="oauth-divider"><span>or</span></div>
 
@@ -51,20 +203,23 @@
             Login with GitHub
         </button>
 
-        <div
-            id="status"
-            role="status"
-            aria-live="polite"
-        ></div>
-
-        <div class="links">
-            Don't have an account?
-            <a href="signup.html">Sign Up</a>
-
-            <br><br>
-
-            <a href="../index.html">🏠 Home</a>
+        <div class="auth-footer">
+            <span>Don't have an account? <a href="signup.html">Sign Up</a></span>
+            <a href="../index.html">🏠 Back to Home</a>
         </div>
+
     </div>
+
+    <script>
+        document.querySelectorAll(".show-pw").forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                const input = document.getElementById(btn.dataset.target);
+                if (!input) return;
+                const isHidden = input.type === "password";
+                input.type = isHidden ? "text" : "password";
+                btn.textContent = isHidden ? "🙈" : "👁";
+            });
+        });
+    </script>
 </body>
 </html>
