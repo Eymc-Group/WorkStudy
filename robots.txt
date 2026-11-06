@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://eymc-group.github.io/WorkStudy/sitemap.xml
