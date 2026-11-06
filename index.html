@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>WorkStudy</title>
     <link rel="icon" href="img/favicon.png">
 
@@ -177,6 +177,104 @@
         <div id="saveStatus" style="margin-top: 10px; text-align: center; color: var(--text); font-size: 14px;"></div>
     </div>
 </div>
+        <hr>
+<div class="dropdownHeader">
+    <span>📱 Screen &amp; Mobile</span>
+    <span class="dropdownArrow" data-dropdown="screenDropdown" aria-expanded="false" role="button" tabindex="0">›</span>
+</div>
+<div id="screenDropdown" class="dropdownContent">
+    <p style="font-size:11px;color:rgba(255,255,255,0.4);font-family:'Pusab',sans-serif;margin:0 0 8px;">Your current viewport is highlighted.</p>
+    <div class="screen-preview-grid" id="screenPreviewGrid">
+        <div class="screen-preview-box" data-min="0" data-max="480">
+            <span class="sp-icon">📱</span>
+            <span class="sp-label">Small Phone</span>
+            <span class="sp-size">≤ 480px</span>
+        </div>
+        <div class="screen-preview-box" data-min="481" data-max="640">
+            <span class="sp-icon">📱</span>
+            <span class="sp-label">Phone</span>
+            <span class="sp-size">481 – 640px</span>
+        </div>
+        <div class="screen-preview-box" data-min="641" data-max="768">
+            <span class="sp-icon">📲</span>
+            <span class="sp-label">Large Phone</span>
+            <span class="sp-size">641 – 768px</span>
+        </div>
+        <div class="screen-preview-box" data-min="769" data-max="1024">
+            <span class="sp-icon">📋</span>
+            <span class="sp-label">Tablet</span>
+            <span class="sp-size">769 – 1024px</span>
+        </div>
+        <div class="screen-preview-box" data-min="1025" data-max="1280">
+            <span class="sp-icon">💻</span>
+            <span class="sp-label">Laptop</span>
+            <span class="sp-size">1025 – 1280px</span>
+        </div>
+        <div class="screen-preview-box" data-min="1281" data-max="99999">
+            <span class="sp-icon">🖥️</span>
+            <span class="sp-label">Desktop</span>
+            <span class="sp-size">≥ 1281px</span>
+        </div>
+    </div>
+    <p style="font-size:11px;color:rgba(255,255,255,0.35);font-family:'Pusab',sans-serif;margin:8px 0 4px;" id="screenSizeLabel"></p>
+
+    <div class="safe-zone-row">
+        <span>📐 Safe Zone (notch padding)</span>
+        <label class="safe-zone-toggle" title="Adds padding for notch / home-bar on phones">
+            <input type="checkbox" id="safeZoneToggle">
+            <span class="safe-zone-slider"></span>
+        </label>
+    </div>
+    <p style="font-size:10px;color:rgba(255,255,255,0.25);font-family:'Pusab',sans-serif;margin:4px 0 0;">Pads edges so content clears the notch and home bar.</p>
+</div>
+
+<script>
+(function () {
+    "use strict";
+
+    // ── Screen size highlighter ──────────────────────────────────
+    function updateScreenBoxes() {
+        const w = window.innerWidth;
+        document.querySelectorAll(".screen-preview-box").forEach(function (box) {
+            const min = parseInt(box.dataset.min, 10);
+            const max = parseInt(box.dataset.max, 10);
+            box.classList.toggle("current", w >= min && w <= max);
+        });
+        const label = document.getElementById("screenSizeLabel");
+        if (label) label.textContent = "Current: " + w + " × " + window.innerHeight + "px";
+    }
+
+    updateScreenBoxes();
+    window.addEventListener("resize", updateScreenBoxes);
+
+    // ── Safe zone toggle ─────────────────────────────────────────
+    const szKey    = "workstudy-safe-zone";
+    const szToggle = document.getElementById("safeZoneToggle");
+
+    function applySafeZone(on) {
+        if (on) {
+            document.documentElement.setAttribute("data-safe-zone", "1");
+        } else {
+            document.documentElement.removeAttribute("data-safe-zone");
+        }
+        try { localStorage.setItem(szKey, on ? "1" : "0"); } catch {}
+    }
+
+    // Restore saved preference
+    try {
+        const saved = localStorage.getItem(szKey);
+        if (saved === "1") {
+            szToggle.checked = true;
+            applySafeZone(true);
+        }
+    } catch {}
+
+    szToggle.addEventListener("change", function () {
+        applySafeZone(szToggle.checked);
+    });
+})();
+</script>
+
         <hr>
 <div class="dropdownHeader">
     <span>🫥 Cloaking</span>

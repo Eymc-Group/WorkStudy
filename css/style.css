@@ -758,3 +758,459 @@ body:has(#websitePanel.open) {
     height: 1px;
     background: rgba(255, 255, 255, 0.15);
 }
+
+/* ================================================================
+   RESPONSIVE / MOBILE  — WorkStudy
+   Breakpoints:
+     xs  < 480px   (small phones)
+     sm  < 640px   (phones)
+     md  < 768px   (large phones / small tablets)  ← existing
+     lg  < 1024px  (tablets / small laptops)
+   ================================================================ */
+
+/* ---- Touch-friendly base ---- */
+@media (hover: none) and (pointer: coarse) {
+    /* Minimum tap-target size on touch screens */
+    button,
+    a,
+    input,
+    select,
+    .gameCard {
+        min-height: 44px;
+    }
+
+    .sidebar button,
+    #settingsBtn,
+    #legacyBtn,
+    #websiteBtn,
+    #homeBtn {
+        min-height: 48px;
+        font-size: 15px;
+    }
+
+    /* Larger click area for dropdown arrows */
+    .dropdownArrow {
+        padding: 10px 14px;
+        font-size: 20px;
+    }
+}
+
+/* ---- lg — tablets ---- */
+@media (max-width: 1024px) {
+    .sidebar {
+        gap: 10px;
+    }
+
+    .sidebar button {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+
+    #customizePanel {
+        width: min(340px, 90vw);
+    }
+
+    .gameCard {
+        width: 140px;
+        height: 100px;
+    }
+
+    .welcome h1 {
+        font-size: clamp(28px, 5vw, 52px);
+    }
+}
+
+/* ---- md — large phones / small tablets ---- */
+@media (max-width: 768px) {
+    body {
+        padding: 12px;
+    }
+
+    .sidebar {
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .sidebar button {
+        padding: 10px 14px;
+        font-size: 13px;
+        border-radius: 10px;
+    }
+
+    #settingsBtn {
+        bottom: 12px;
+        right: 12px;
+        padding: 10px 14px;
+        font-size: 20px;
+    }
+
+    #legacyBtn {
+        top: 12px;
+        right: 12px;
+        font-size: 13px;
+        padding: 8px 12px;
+    }
+
+    .welcome h1 {
+        font-size: clamp(22px, 6vw, 40px);
+    }
+
+    .welcome p {
+        font-size: clamp(14px, 3.5vw, 20px);
+    }
+
+    #customizePanel {
+        width: min(320px, 92vw);
+        right: 8px;
+        bottom: 70px;
+        max-height: 75vh;
+        overflow-y: auto;
+    }
+
+    /* Games grid */
+    .gameCard {
+        width: clamp(100px, 42vw, 150px);
+        height: auto;
+        aspect-ratio: 3/2;
+        font-size: 11px;
+        padding: 8px 6px;
+    }
+
+    .gameGrid {
+        gap: 10px;
+        justify-content: center;
+    }
+
+    /* Status panel bottom bar */
+    #statusPanel {
+        font-size: 11px;
+        padding: 4px 8px;
+        gap: 8px;
+    }
+
+    /* Topbar */
+    .topbar {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .topbar button {
+        width: 100%;
+    }
+
+    /* Auth cards */
+    .auth-card {
+        padding: 24px 18px 20px;
+    }
+}
+
+/* ---- sm — phones ---- */
+@media (max-width: 640px) {
+    body {
+        padding: 10px;
+    }
+
+    .sidebar {
+        gap: 6px;
+    }
+
+    .sidebar button {
+        padding: 9px 12px;
+        font-size: 12px;
+        border-radius: 9px;
+    }
+
+    .welcome h1 {
+        font-size: clamp(20px, 7vw, 32px);
+    }
+
+    .welcome p {
+        font-size: 13px;
+    }
+
+    #customizePanel {
+        width: 94vw;
+        left: 3vw;
+        right: 3vw;
+        bottom: 68px;
+    }
+
+    #customizePanel button {
+        font-size: 12px;
+        padding: 9px 10px;
+    }
+
+    .gameCard {
+        width: clamp(90px, 44vw, 130px);
+    }
+
+    /* Iframe / website viewer */
+    #websiteFrame,
+    #gameFrame {
+        border-radius: 8px;
+    }
+
+    /* Updates page cards */
+    .update-card {
+        padding: 14px 12px;
+    }
+}
+
+/* ---- xs — small phones (≤ 480px) ---- */
+@media (max-width: 480px) {
+    body {
+        padding: 8px;
+    }
+
+    h1 { font-size: clamp(18px, 7vw, 28px); }
+    h2 { font-size: clamp(15px, 5vw, 22px); }
+
+    .sidebar {
+        gap: 5px;
+    }
+
+    .sidebar button {
+        padding: 8px 10px;
+        font-size: 11px;
+        border-radius: 8px;
+    }
+
+    #settingsBtn {
+        font-size: 18px;
+        padding: 9px 12px;
+    }
+
+    #customizePanel {
+        width: 98vw;
+        left: 1vw;
+        right: 1vw;
+        bottom: 64px;
+        border-radius: 14px;
+        padding: 14px;
+    }
+
+    .gameCard {
+        width: clamp(80px, 46vw, 115px);
+        font-size: 10px;
+    }
+
+    .auth-card {
+        padding: 20px 14px 16px;
+        border-radius: 14px;
+    }
+
+    .auth-brand h1 {
+        font-size: 20px;
+    }
+
+    .field-wrap input {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .btn-primary {
+        padding: 11px;
+        font-size: 14px;
+    }
+}
+
+/* ---- Safe zone (env() insets for notched phones) ---- */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+    body {
+        padding-left:   max(8px, env(safe-area-inset-left));
+        padding-right:  max(8px, env(safe-area-inset-right));
+        padding-bottom: max(8px, env(safe-area-inset-bottom));
+    }
+
+    #settingsBtn {
+        bottom: max(16px, calc(env(safe-area-inset-bottom) + 8px));
+        right:  max(16px, env(safe-area-inset-right));
+    }
+
+    #statusPanel {
+        bottom: max(0px, env(safe-area-inset-bottom));
+    }
+}
+
+/* ---- Smooth scroll & scroll-snapping helpers ---- */
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+/* ---- Focus rings (accessibility + touch) ---- */
+:focus-visible {
+    outline: 2px solid var(--c2);
+    outline-offset: 2px;
+}
+
+/* ---- Screen size preview boxes (for the settings panel) ---- */
+.screen-preview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.screen-preview-box {
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 10px 8px;
+    text-align: center;
+    cursor: default;
+    font-size: 11px;
+    font-family: "Pusab", sans-serif;
+    color: rgba(255,255,255,0.6);
+    transition: border-color .2s, background .2s;
+}
+
+.screen-preview-box.current {
+    border-color: var(--c2);
+    background: rgba(168,85,247,0.12);
+    color: var(--text);
+}
+
+.screen-preview-box .sp-icon {
+    font-size: 22px;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.screen-preview-box .sp-label {
+    font-weight: bold;
+    display: block;
+    font-size: 12px;
+    margin-bottom: 2px;
+}
+
+.screen-preview-box .sp-size {
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+}
+
+/* Safe zone toggle */
+.safe-zone-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 8px;
+    font-size: 12px;
+    font-family: "Pusab", sans-serif;
+    color: rgba(255,255,255,0.6);
+}
+
+.safe-zone-toggle {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+.safe-zone-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.safe-zone-slider {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.12);
+    border-radius: 22px;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+.safe-zone-slider::before {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border-radius: 50%;
+    left: 3px;
+    top: 3px;
+    transition: transform .2s;
+}
+
+.safe-zone-toggle input:checked + .safe-zone-slider {
+    background: var(--c2);
+}
+
+.safe-zone-toggle input:checked + .safe-zone-slider::before {
+    transform: translateX(18px);
+}
+
+/* ── Safe zone opt-in (data-safe-zone="1" on <html>) ── */
+[data-safe-zone="1"] body {
+    padding-left:   max(8px, env(safe-area-inset-left));
+    padding-right:  max(8px, env(safe-area-inset-right));
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+    padding-top:    max(8px, env(safe-area-inset-top));
+}
+
+[data-safe-zone="1"] #settingsBtn {
+    bottom: max(16px, calc(env(safe-area-inset-bottom) + 8px));
+    right:  max(16px, env(safe-area-inset-right));
+}
+
+[data-safe-zone="1"] #statusPanel {
+    padding-bottom: max(4px, env(safe-area-inset-bottom));
+}
+
+/* ── Touch scrolling & overscroll ── */
+body,
+#customizePanel,
+.gameGrid,
+.dropdownContent {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+/* ── Prevent 300 ms tap delay on older browsers ── */
+a, button, input, select, textarea, label, .dropdownArrow, .gameCard {
+    touch-action: manipulation;
+}
+
+/* ── Smooth image scaling on mobile ── */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ── Responsive iframe / game frame ── */
+#websiteFrame,
+#gameFrame,
+.game-iframe {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* ── Extra-small phones (< 360px) ── */
+@media (max-width: 360px) {
+    body { padding: 6px; }
+
+    .sidebar button {
+        padding: 7px 9px;
+        font-size: 10px;
+    }
+
+    .welcome h1 { font-size: 17px; }
+    .welcome p  { font-size: 12px; }
+
+    #customizePanel {
+        width: 100vw;
+        left: 0;
+        right: 0;
+        border-radius: 14px 14px 0 0;
+        bottom: 0;
+    }
+
+    .auth-card {
+        padding: 16px 12px 14px;
+        border-radius: 12px;
+    }
+}
