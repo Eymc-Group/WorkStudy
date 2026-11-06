@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mirrors - WorkStudy</title>
+    <link rel="icon" href="../img/favicon.png">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/color.js" defer></script>
+    <script src="../js/customTab.js" defer></script>
+    <style>
+        body {
+            padding: 20px 16px 40px;
+            min-height: 100vh;
+        }
+
+        .mirrors-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .mirrors-header h1 {
+            font-size: clamp(22px, 5vw, 38px);
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .mirrors-header p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.45);
+            font-family: "Pusab", sans-serif;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-family: "Pusab", sans-serif;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--c1), var(--c2));
+            color: #fff;
+            transition: transform .2s, filter .2s;
+        }
+        .back-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+        /* ── Grid ── */
+        .mirrors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 14px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 540px) {
+            .mirrors-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ── Card ── */
+        .mirror-card {
+            background: var(--panel);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: transform .2s, box-shadow .2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mirror-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4), var(--glow);
+        }
+
+        .mirror-card-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .mirror-logo {
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            padding: 6px;
+            flex-shrink: 0;
+        }
+
+        .mirror-logo-emoji {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            flex-shrink: 0;
+        }
+
+        .mirror-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .mirror-name {
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--text);
+            font-family: "Pusab", sans-serif;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mirror-url {
+            font-size: 11px;
+            color: rgba(255,255,255,0.35);
+            font-family: "Pusab", sans-serif;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 2px;
+        }
+
+        /* ── Status badge ── */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-family: "Pusab", sans-serif;
+            font-weight: bold;
+            width: fit-content;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .status-online   { background: rgba(74,222,128,.15);  color: #4ade80; border: 1px solid rgba(74,222,128,.35); }
+        .status-offline  { background: rgba(248,113,113,.15); color: #f87171; border: 1px solid rgba(248,113,113,.35); }
+        .status-checking { background: rgba(250,204,21,.12);  color: #facc15; border: 1px solid rgba(250,204,21,.3); }
+        .status-slow     { background: rgba(251,146,60,.14);  color: #fb923c; border: 1px solid rgba(251,146,60,.35); }
+
+        .status-online   .status-dot { background: #4ade80; animation: pulse 2s infinite; }
+        .status-offline  .status-dot { background: #f87171; }
+        .status-checking .status-dot { background: #facc15; animation: pulse 1s infinite; }
+        .status-slow     .status-dot { background: #fb923c; animation: pulse 2s infinite; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.35; }
+        }
+
+        /* ── Meta row ── */
+        .mirror-meta {
+            font-size: 11px;
+            color: rgba(255,255,255,0.3);
+            font-family: "Pusab", sans-serif;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .mirror-meta span { display: flex; align-items: center; gap: 4px; }
+
+        /* ── Deploy chip ── */
+        .deploy-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-family: "Pusab", sans-serif;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        .deploy-success { background: rgba(74,222,128,.12);  color: #4ade80; }
+        .deploy-failure { background: rgba(248,113,113,.12); color: #f87171; }
+        .deploy-pending { background: rgba(250,204,21,.12);  color: #facc15; }
+        .deploy-unknown { background: rgba(255,255,255,.06); color: rgba(255,255,255,.4); }
+
+        /* ── Action buttons ── */
+        .mirror-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 2px;
+        }
+
+        .mirror-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            font-family: "Pusab", sans-serif;
+            font-size: 12px;
+            cursor: pointer;
+            transition: transform .15s, filter .15s;
+            text-align: center;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            min-height: 36px;
+        }
+
+        .mirror-btn-primary   { background: linear-gradient(135deg, var(--c1), var(--c2)); color: #fff; }
+        .mirror-btn-secondary { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.1); }
+        .mirror-btn:hover     { transform: translateY(-1px); filter: brightness(1.1); }
+
+        /* ── Footer controls ── */
+        #footerRow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin-top: 24px;
+        }
+
+        .refresh-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 22px;
+            border-radius: 10px;
+            font-family: "Pusab", sans-serif;
+            font-size: 13px;
+            border: 1px solid rgba(255,255,255,0.12);
+            cursor: pointer;
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.7);
+            transition: background .2s, transform .15s;
+        }
+        .refresh-btn:hover     { background: rgba(255,255,255,0.14); transform: translateY(-1px); }
+        .refresh-btn:disabled  { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .refresh-icon { display: inline-block; transition: transform .6s ease; }
+        .refresh-icon.spinning { transform: rotate(360deg); }
+
+        #lastChecked {
+            font-size: 11px;
+            color: rgba(255,255,255,0.25);
+            font-family: "Pusab", sans-serif;
+        }
+
+        /* ── Summary bar ── */
+        #summaryBar {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+            font-size: 13px;
+            font-family: "Pusab", sans-serif;
+        }
+
+        .summary-pill {
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="back-btn" onclick="history.back()">← Back</button>
+
+    <div class="mirrors-header">
+        <h1>🌐 WorkStudy Mirrors</h1>
+        <p>Real-time status for all deployments</p>
+    </div>
+
+    <div id="summaryBar"></div>
+
+    <div class="mirrors-grid" id="mirrorsGrid"></div>
+
+    <div id="footerRow">
+        <button class="refresh-btn" id="refreshBtn" onclick="checkAll()">
+            <span class="refresh-icon" id="refreshIcon">🔄</span> Refresh All
+        </button>
+        <div id="lastChecked"></div>
+    </div>
+
+    <script>
+    "use strict";
+
+    /*
+     * Status-check strategies
+     * ─────────────────────────────────────────────────────────────────────
+     * "ping"    – HEAD fetch (no-cors) → opaque 200 means reachable
+     * "gh"      – ping + parse GitHub Actions SVG badge for deploy status
+     * "netlify" – ping + parse Netlify deploy-status SVG badge
+     *
+     * For Vercel, Cloudflare Pages, Render, Neocities: no public deploy-status
+     * API is accessible from the browser without an auth token, so we fall back
+     * to a reachability ping.  The ping is honest: an opaque no-cors response
+     * means the server is up; an exception means the network rejected it.
+     * ─────────────────────────────────────────────────────────────────────
+     */
+    const MIRRORS = [
+        {
+            id: "github",
+            name: "GitHub Pages",
+            url: "https://eymc-group.github.io/WorkStudy/",
+            strategy: "gh",
+            // GitHub exposes a public SVG badge for the pages-build-deployment workflow
+            badgeUrl: "https://github.com/Eymc-Group/WorkStudy/actions/workflows/pages/pages-build-deployment/badge.svg",
+            deploysUrl: "https://github.com/Eymc-Group/WorkStudy/actions/workflows/pages/pages-build-deployment",
+            logo: "../img/github.png",
+            primary: true,
+            note: "Official deployment source"
+        },
+        {
+            id: "cloudflare",
+            name: "Cloudflare Pages",
+            url: "https://workstudy-ahc.pages.dev/",
+            strategy: "ping",
+            deploysUrl: "https://dash.cloudflare.com/",
+            logo: "../img/cloudflare.png",
+            note: "Deploy status via uptime check"
+        },
+        {
+            id: "netlify",
+            name: "Netlify",
+            url: "https://workingstudys.netlify.app/",
+            strategy: "netlify",
+            // Netlify exposes a public deploy-status badge SVG
+            badgeUrl: "https://api.netlify.com/api/v1/badges/1044e9b9-1247-46c0-aefe-d6934a4b6acc/deploy-status",
+            deploysUrl: "https://app.netlify.com/sites/workingstudys/deploys",
+            logo: "../img/netlify.png",
+            note: "Deploy status via Netlify badge API"
+        },
+        {
+            id: "render",
+            name: "Render",
+            url: "https://workstudy-u2mi.onrender.com/",
+            strategy: "ping",
+            deploysUrl: "https://dashboard.render.com/",
+            logo: "../img/render.png",
+            note: "Deploy status via uptime check"
+        },
+        {
+            id: "vercel1",
+            name: "Vercel (main)",
+            url: "https://work-study-kappa.vercel.app/",
+            strategy: "ping",
+            deploysUrl: "https://vercel.com/eymc-group/work-study-kappa/deployments",
+            logo: "../img/vercel.png",
+            note: "Deploy status via uptime check"
+        },
+        {
+            id: "vercel2",
+            name: "Vercel (mirror 2)",
+            url: "https://work-study-eymc-group.vercel.app/",
+            strategy: "ping",
+            deploysUrl: "https://vercel.com/eymc-group/work-study-eymc-group/deployments",
+            logo: "../img/vercel.png",
+            note: "Deploy status via uptime check"
+        },
+        {
+            id: "vercel3",
+            name: "Vercel (mirror 3)",
+            url: "https://work-study-git-root-eymc-group.vercel.app/",
+            strategy: "ping",
+            deploysUrl: "https://vercel.com/eymc-group/work-study-git-root-eymc-group/deployments",
+            logo: "../img/vercel.png",
+            note: "Deploy status via uptime check"
+        },
+        {
+            id: "neocities",
+            name: "Neocities",
+            url: "https://workingstudy.neocities.org/",
+            strategy: "ping",
+            deploysUrl: "https://neocities.org/site/workingstudy",
+            logoEmoji: "🌸",
+            note: "Deploy status via uptime check"
+        }
+    ];
+
+    // ── State ─────────────────────────────────────────────────────────────
+    const state = {};
+    MIRRORS.forEach(function (m) {
+        state[m.id] = { status: "checking", deployStatus: null, latency: null };
+    });
+
+    // ── Build initial cards ───────────────────────────────────────────────
+    function buildCards() {
+        const grid = document.getElementById("mirrorsGrid");
+        grid.innerHTML = "";
+
+        MIRRORS.forEach(function (mirror) {
+            const card = document.createElement("div");
+            card.className = "mirror-card";
+            card.id = "card-" + mirror.id;
+
+            const logoHtml = mirror.logoEmoji
+                ? `<div class="mirror-logo-emoji">${mirror.logoEmoji}</div>`
+                : `<img class="mirror-logo" src="${mirror.logo}" alt="${mirror.name}" onerror="this.style.display='none'">`;
+
+            card.innerHTML = `
+                <div class="mirror-card-top">
+                    ${logoHtml}
+                    <div class="mirror-info">
+                        <div class="mirror-name">${mirror.name}${mirror.primary ? " ⭐" : ""}</div>
+                        <div class="mirror-url">${mirror.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}</div>
+                    </div>
+                </div>
+                <div class="status-badge status-checking" id="badge-${mirror.id}">
+                    <span class="status-dot"></span>
+                    <span id="badge-text-${mirror.id}">Checking…</span>
+                </div>
+                <div class="mirror-meta" id="meta-${mirror.id}">
+                    <span>⏱ Latency: —</span>
+                </div>
+                <div class="mirror-actions">
+                    <a href="${mirror.url}" target="_blank" rel="noopener noreferrer" class="mirror-btn mirror-btn-primary">🔗 Visit</a>
+                    ${mirror.deploysUrl
+                        ? `<a href="${mirror.deploysUrl}" target="_blank" rel="noopener noreferrer" class="mirror-btn mirror-btn-secondary">📋 Deploys</a>`
+                        : ""}
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // ── Update a single card ──────────────────────────────────────────────
+    function updateCard(mirror) {
+        const s        = state[mirror.id];
+        const badge    = document.getElementById("badge-" + mirror.id);
+        const badgeTxt = document.getElementById("badge-text-" + mirror.id);
+        const meta     = document.getElementById("meta-" + mirror.id);
+        if (!badge) return;
+
+        // Status class
+        let cls = "status-checking";
+        let lbl = "Checking…";
+        if (s.status === "online") {
+            cls = s.latency && s.latency > 3000 ? "status-slow" : "status-online";
+            lbl = s.latency && s.latency > 3000 ? "Slow" : "Online";
+        } else if (s.status === "offline") {
+            cls = "status-offline";
+            lbl = "Offline";
+        }
+        badge.className = "status-badge " + cls;
+        badgeTxt.textContent = lbl;
+
+        // Meta lines
+        const lines = [];
+        if (s.latency !== null) {
+            lines.push(`<span>⏱ Latency: ${s.latency}ms</span>`);
+        }
+        if (s.deployStatus) {
+            const dCls  = s.deployStatus === "success" ? "deploy-success"
+                        : s.deployStatus === "failed"  ? "deploy-failure"
+                        : s.deployStatus === "pending" ? "deploy-pending"
+                        : "deploy-unknown";
+            const dIcon = s.deployStatus === "success" ? "✅"
+                        : s.deployStatus === "failed"  ? "❌"
+                        : s.deployStatus === "pending" ? "⏳" : "❓";
+            lines.push(`<span><span class="deploy-chip ${dCls}">${dIcon} Deploy: ${s.deployStatus}</span></span>`);
+        }
+        if (mirror.note) {
+            lines.push(`<span style="color:rgba(255,255,255,0.2)">ℹ ${mirror.note}</span>`);
+        }
+        if (lines.length === 0) lines.push(`<span>⏱ Latency: —</span>`);
+        meta.innerHTML = lines.join("");
+
+        updateSummary();
+    }
+
+    // ── Summary bar ───────────────────────────────────────────────────────
+    function updateSummary() {
+        const counts = { online: 0, slow: 0, offline: 0, checking: 0 };
+        MIRRORS.forEach(function (m) {
+            const s = state[m.id].status;
+            if (s === "online" && state[m.id].latency > 3000) counts.slow++;
+            else if (s === "online")   counts.online++;
+            else if (s === "offline")  counts.offline++;
+            else                       counts.checking++;
+        });
+
+        const bar = document.getElementById("summaryBar");
+        const pills = [];
+        if (counts.online)   pills.push(`<span class="summary-pill" style="background:rgba(74,222,128,.12);color:#4ade80;border:1px solid rgba(74,222,128,.3)">✅ ${counts.online} Online</span>`);
+        if (counts.slow)     pills.push(`<span class="summary-pill" style="background:rgba(251,146,60,.12);color:#fb923c;border:1px solid rgba(251,146,60,.3)">⚠️ ${counts.slow} Slow</span>`);
+        if (counts.offline)  pills.push(`<span class="summary-pill" style="background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.3)">❌ ${counts.offline} Offline</span>`);
+        if (counts.checking) pills.push(`<span class="summary-pill" style="background:rgba(250,204,21,.10);color:#facc15;border:1px solid rgba(250,204,21,.25)">⏳ ${counts.checking} Checking</span>`);
+        bar.innerHTML = pills.join("");
+    }
+
+    // ── Ping strategy ─────────────────────────────────────────────────────
+    // Uses no-cors HEAD. An opaque response (the browser received something)
+    // means the server is reachable. A network-level exception means it isn't.
+    async function pingCheck(mirror) {
+        const start = Date.now();
+        try {
+            await fetch(mirror.url, { method: "HEAD", mode: "no-cors", cache: "no-store" });
+            state[mirror.id].status  = "online";
+            state[mirror.id].latency = Date.now() - start;
+        } catch {
+            state[mirror.id].status  = "offline";
+            state[mirror.id].latency = null;
+        }
+        updateCard(mirror);
+    }
+
+    // ── GitHub Actions badge strategy ────────────────────────────────────
+    // GitHub exposes a public SVG badge for any public workflow.
+    // We fetch it with normal CORS (the endpoint supports it) and parse
+    // the status text node.
+    async function githubCheck(mirror) {
+        await pingCheck(mirror);
+        if (!mirror.badgeUrl) return;
+        try {
+            const res = await fetch(mirror.badgeUrl, { cache: "no-store" });
+            if (!res.ok) return;
+            const svg = await res.text();
+            // The badge SVG wraps the status in a <text> element.
+            // Known values: "passing", "failing", "no status", "queued", "in_progress"
+            const m = svg.match(/>\s*(passing|failing|no status|error|success|failure|queued|in[_ ]progress|cancelled)\s*<\/text>/i);
+            if (m) {
+                const v = m[1].toLowerCase().replace(/_/g, " ");
+                state[mirror.id].deployStatus =
+                    v === "passing" || v === "success"             ? "success" :
+                    v === "failing" || v === "failure" || v === "error" ? "failed" :
+                    v === "queued"  || v === "in progress"         ? "pending"
+                    : "unknown";
+            }
+        } catch { /* non-critical */ }
+        updateCard(mirror);
+    }
+
+    // ── Netlify badge strategy ────────────────────────────────────────────
+    // api.netlify.com/api/v1/badges/:site-id/deploy-status returns an SVG.
+    // Parse the status text node.
+    async function netlifyCheck(mirror) {
+        await pingCheck(mirror);
+        if (!mirror.badgeUrl) return;
+        try {
+            const res = await fetch(mirror.badgeUrl, { cache: "no-store" });
+            if (!res.ok) return;
+            const svg = await res.text();
+            const m = svg.match(/>\s*(success|failed|building|cancelled|skipped|unknown)\s*<\/text>/i);
+            if (m) {
+                const v = m[1].toLowerCase();
+                state[mirror.id].deployStatus =
+                    v === "success"  ? "success" :
+                    v === "failed"   ? "failed"  :
+                    v === "building" ? "pending" : "unknown";
+            }
+        } catch { /* non-critical */ }
+        updateCard(mirror);
+    }
+
+    // ── Run all checks ────────────────────────────────────────────────────
+    async function checkAll() {
+        const icon       = document.getElementById("refreshIcon");
+        const refreshBtn = document.getElementById("refreshBtn");
+        refreshBtn.disabled = true;
+
+        // Kick off spin animation
+        icon.classList.remove("spinning");
+        void icon.offsetWidth; // force reflow so the CSS transition restarts
+        icon.classList.add("spinning");
+
+        // Reset all to checking
+        MIRRORS.forEach(function (m) {
+            state[m.id].status       = "checking";
+            state[m.id].latency      = null;
+            state[m.id].deployStatus = null;
+            updateCard(m);
+        });
+
+        const promises = MIRRORS.map(function (mirror) {
+            if (mirror.strategy === "gh")      return githubCheck(mirror);
+            if (mirror.strategy === "netlify") return netlifyCheck(mirror);
+            return pingCheck(mirror);
+        });
+
+        await Promise.allSettled(promises);
+
+        setTimeout(function () { icon.classList.remove("spinning"); }, 700);
+        refreshBtn.disabled = false;
+
+        const now = new Date();
+        document.getElementById("lastChecked").textContent =
+            "Last checked: " + now.toLocaleTimeString();
+    }
+
+    // ── Init ──────────────────────────────────────────────────────────────
+    buildCards();
+    checkAll();
+
+    // Auto-refresh every 2 minutes
+    setInterval(checkAll, 120000);
+    </script>
+</body>
+</html>

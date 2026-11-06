@@ -1,80 +1,176 @@
 (function () {
     "use strict";
 
-    function updateTime() {
-        const time = document.getElementById("time");
-        const currentTime = new Date().toLocaleTimeString();
+    const AUTH_KEYS = Object.freeze({
+        user: "workstudy-user",
+        theme: "workstudy-theme"
+    });
 
-        if (time) {
-            time.textContent = "🕒 " + currentTime;
-        }
+    const AUTH_EVENT_NAME = "workstudy:authchange";
 
-        const timeCard = document.getElementById("timeCard");
-        if (timeCard) {
-            timeCard.textContent = "🕒 " + currentTime;
-        }
-    }
-
-    function updateBrowserInfo() {
-        const browserCard = document.getElementById("browserCard");
-        const platformCard = document.getElementById("platformCard");
-
-        let browser = "Unknown";
-        const ua = navigator.userAgent || "";
-
-        if (ua.includes("Edg")) {
-            browser = "Microsoft Edge";
-        } else if (ua.includes("Chrome")) {
-            browser = "Google Chrome";
-        } else if (ua.includes("Firefox")) {
-            browser = "Firefox";
-        } else if (ua.includes("Safari")) {
-            browser = "Safari";
-        }
-
-        if (browserCard) {
-            browserCard.textContent = "🌐 " + browser;
-        }
-
-        if (platformCard) {
-            platformCard.textContent = "💻 " + (navigator.platform || "Unknown");
-        }
-    }
-
-    async function updateBatteryInfo() {
-        if (!("getBattery" in navigator)) {
-            return;
-        }
-
+    function safeGetItem(key) {
         try {
-            const battery = await navigator.getBattery();
+            return window.localStorage.getItem(key);
+        } catch (error) {
+            return null;
+        }
+    }
 
-            function render() {
-                const percent = Math.round((battery.level || 0) * 100);
-                const batteryText = document.getElementById("battery");
-                const batteryCard = document.getElementById("batteryCard");
+    function safeSetItem(key, value) {
+        try {
+            window.localStorage.setItem(key, value);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
 
-                if (batteryText) {
-                    batteryText.textContent = "🔋 " + percent + "%";
-                }
+    function safeRemoveItem(key) {
+        try {
+            window.localStorage.removeItem(key);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
 
-                if (batteryCard) {
-                    batteryCard.textContent = "🔋 " + percent + "%";
-                }
+    function getCurrentUser() {
+        try {
+            const stored = safeGetItem(AUTH_KEYS.user);
+
+            if (!stored) {
+                return null;
             }
 
-            render();
-            battery.addEventListener("levelchange", render);
+            return JSON.parse(stored);
         } catch (error) {
-            console.warn("Battery API unavailable:", error);
+            return null;
         }
     }
 
-    window.addEventListener("DOMContentLoaded", async function () {
-        updateTime();
-        updateBrowserInfo();
-        await updateBatteryInfo();
+    function setCurrentUser(userData) {
 
-        setInterval(updateTime, 1000);
-    });
+        if (
+            !userData ||
+            typeof userData.username !== "string" ||
+            !userData.username.trim()
+        ) {
+            clearCurrentUser();
+            return false;
+        }
+
+        const saved = safeSetItem(
+            AUTH_KEYS.user,
+            JSON.stringify({
+                username: userData.username.trim(),
+                email: userData.email || null
+            })
+        );
+
+        if (saved) {
+            dispatchAuthChange();
+            return true;
+        }
+
+        return false;
+    }
+
+    function clearCurrentUser() {
+        const removed =
+            safeRemoveItem(AUTH_KEYS.user);
+
+        if (removed) {
+            dispatchAuthChange();
+        }
+    }
+
+    function dispatchAuthChange() {
+        const event = new CustomEvent(
+            AUTH_EVENT_NAME,
+            {
+                detail: {
+                    user: getCurrentUser()
+                }
+            }
+        );
+
+        window.dispatchEvent(event);
+    }
+
+    function updateAccountUI() {
+
+        const loggedOutView =
+            document.getElementById(
+                "loggedOutView"
+            );
+
+        const loggedInView =
+            document.getElementById(
+                "loggedInView"
+            );
+
+        const accountName =
+            document.getElementById(
+                "accountName"
+            );
+
+        if (
+            !loggedOutView ||
+            !loggedInView
+        ) {
+            return false;
+        }
+
+        const user =
+            getCurrentUser();
+
+        const isLoggedIn =
+            Boolean(user);
+
+        loggedOutView.style.display =
+            isLoggedIn
+                ? "none"
+                : "block";
+
+        loggedInView.style.display =
+            isLoggedIn
+                ? "block"
+                : "none";
+
+        if (accountName) {
+            accountName.textContent =
+                isLoggedIn
+                    ? user.username
+                    : "Guest";
+        }
+
+        return isLoggedIn;
+    }
+
+    function subscribeAuthChange(
+        callback
+    ) {
+        window.addEventListener(
+            AUTH_EVENT_NAME,
+            callback
+        );
+
+        return function unsubscribe() {
+            window.removeEventListener(
+                AUTH_EVENT_NAME,
+                callback
+            );
+        };
+    }
+
+    window.WorkStudyAuth =
+        Object.freeze({
+            AUTH_KEYS,
+            getCurrentUser,
+            setCurrentUser,
+            clearCurrentUser,
+            updateAccountUI,
+            subscribeAuthChange,
+            dispatchAuthChange
+        });
 })();

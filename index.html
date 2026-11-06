@@ -2,16 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>WorkStudy</title>
     <link rel="icon" href="img/favicon.png">
 
     <script src="js/auth.js" defer></script>
     <script src="js/color.js" defer></script>
+    <script src="js/users.js" defer></script>
     <script src="js/script.js" defer></script>
     <script src="js/status.js" defer></script>
+    <script src="js/visits.js" defer></script>
+    <script src="js/cloudSave.js" defer></script>
+    <script src="js/customTab.js" defer></script>
     <script src="js/legacyconfirm.js" defer></script>
+    <script src="js/github-oauth.js" defer></script>
     <link rel="stylesheet" href="css/style.css">
+
+<main class="main">
+    <div class="welcome">
+        <!-- Homepage content -->
+    </div>
+
+    <div class="supportContainer">
+        <a
+            href="https://paypal.me/Tony7873"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="supportBtn"
+        >
+            💜 Support WorkStudy
+        </a>
+    </div>
+
+           <a
+        href="https://chat.whatsapp.com/GvS2hJVLwi224kNGpo6WDH"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="joinBtn"
+    >
+        💬 Join WhatsApp Group
+    </a>
+</div>
+</main>
+    
 </head>
 <body>
     <div class="sidebar">
@@ -19,6 +52,8 @@
         <button type="button" onclick="location.href='pages/chat/index.html'">💬 Chat</button>
         <button type="button" onclick="location.href='pages/soundboard.html'">🎵 Soundboard</button>
         <button type="button" onclick="location.href='pages/iframe.html'">🌐 Website Viewer</button>
+        <button type="button" onclick="location.href='pages/proxy.html'">🫥 Proxies</button>
+        <button type="button" onclick="location.href='pages/boardofcolor.html'">🎨 Coloring Board</button>
     </div>
 
     <button id="legacyBtn" type="button" onclick="legacyConfirm()">🏛️ Legacy</button>
@@ -26,7 +61,10 @@
     <main class="main">
         <div class="welcome">
             <h1>Welcome to WorkStudy</h1>
-            <p>Game • Search • Explore</p>
+            <p>I see you Mason Phull 👀</p>
+            <p id="visitCount">👥 Total Visits: Loading...</p>
+            <button type="button" id="updatesBtn" onclick="location.href='pages/updates.html'">📋 Updates</button>
+            <div id="onlineUsers">🟢 Loading...</div>
         </div>
     </main>
 
@@ -57,6 +95,20 @@
             <button type="button" onclick="setTheme('minecraft')">⛏️ Minecraft</button>
             <button type="button" onclick="setTheme('discord')">🎮 Discord</button>
             <button type="button" onclick="setTheme('void')">⚫ Void</button>
+            <button type="button" onclick="setTheme('rose')">🌹 Rose</button>
+            <button type="button" onclick="setTheme('amber')">🟫 Amber</button>
+            <button type="button" onclick="setTheme('sky')">☁️ Sky</button>
+            <button type="button" onclick="setTheme('slate')">🩶 Slate</button>
+            <button type="button" onclick="setTheme('emerald')">💚 Emerald</button>
+            <button type="button" onclick="setTheme('violet')">💜 Violet</button>
+            <button type="button" onclick="setTheme('fuchsia')">🌺 Fuchsia</button>
+            <button type="button" onclick="setTheme('stone')">🪨 Stone</button>
+            <button type="button" onclick="setTheme('zinc')">⚙️ Zinc</button>
+            <button type="button" onclick="setTheme('orange_vibrant')">🔥 Vibrant Orange</button>
+            <button type="button" onclick="setTheme('aqua')">💧 Aqua</button>
+            <button type="button" onclick="setTheme('crimson')">❤️ Crimson</button>
+            <button type="button" onclick="setTheme('gradient_sunset')">🌅 Sunset</button>
+            <button type="button" onclick="setTheme('gradient_ocean')">🌊 Ocean</button>
         </div>
 
         <hr>
@@ -88,34 +140,377 @@
             <span class="dropdownArrow" data-dropdown="dangerDropdown" aria-expanded="false" role="button" tabindex="0">›</span>
         </div>
         <div id="dangerDropdown" class="dropdownContent">
-            <button type="button" onclick="if (window.clearWebsiteData) window.clearWebsiteData(); else localStorage.clear();">🗑️ Clear Website Data</button>
+            <button
+    id="clearWebsiteDataBtn"
+    type="button"
+>
+    🗑️ Clear Website Data
+</button>
         </div>
 
         <hr>
 
-        <div class="dropdownHeader">
-            <span>👤 Account</span>
-            <span class="dropdownArrow" data-dropdown="accountDropdown" aria-expanded="false" role="button" tabindex="0">›</span>
+<div class="dropdownHeader">
+    <span>👤 Account</span>
+    <span class="dropdownArrow" data-dropdown="accountDropdown" aria-expanded="false" role="button" tabindex="0">›</span>
+</div>
+<div id="accountDropdown" class="dropdownContent">
+    <div id="loggedOutView">
+        <button type="button" onclick="window.location.href='pages/login.html'">🔑 Login</button>
+        <button type="button" onclick="window.location.href='pages/signup.html'">📝 Sign Up</button>
+    </div>
+    <div id="loggedInView" style="display:none;">
+        <p id="accountName">Guest</p>
+<p id="accountEmail"></p>
+<button id="logoutBtn" type="button">🚪 Logout</button>
+<button id="deleteAccountBtn" type="button">❌ Delete Account</button>
+        <hr>
+        <h3>🔗 GitHub</h3>
+        <button id="githubLinkBtn" type="button">🔗 Link GitHub</button>
+        <button id="githubUnlinkBtn" type="button" style="display:none;">✖ Unlink GitHub</button>
+        <p id="githubStatus" style="font-size:13px;text-align:center;color:var(--text);margin:4px 0 0;"></p>
+        <hr>
+        <h3>💾 Cloud Saves</h3>
+        <button id="saveProgressBtn" type="button">💾 Save Progress</button>
+        <button id="loadProgressBtn" type="button">📥 Load Progress</button>
+        <button id="deleteProgressBtn" type="button" style="background: linear-gradient(135deg, #991b1b, #ef4444);">🗑️ Delete Save</button>
+        <div id="saveStatus" style="margin-top: 10px; text-align: center; color: var(--text); font-size: 14px;"></div>
+    </div>
+</div>
+        <hr>
+<div class="dropdownHeader">
+    <span>📱 Screen &amp; Mobile</span>
+    <span class="dropdownArrow" data-dropdown="screenDropdown" aria-expanded="false" role="button" tabindex="0">›</span>
+</div>
+<div id="screenDropdown" class="dropdownContent">
+    <p style="font-size:11px;color:rgba(255,255,255,0.4);font-family:'Pusab',sans-serif;margin:0 0 8px;">Your current viewport is highlighted.</p>
+    <div class="screen-preview-grid" id="screenPreviewGrid">
+        <div class="screen-preview-box" data-min="0" data-max="480">
+            <span class="sp-icon">📱</span>
+            <span class="sp-label">Small Phone</span>
+            <span class="sp-size">≤ 480px</span>
         </div>
-        <div id="accountDropdown" class="dropdownContent">
-            <div id="loggedOutView">
-                <button type="button" onclick="window.location.href='pages/login.html'">🔑 Login</button>
-                <button type="button" onclick="window.location.href='pages/signup.html'">📝 Sign Up</button>
-            </div>
-            <div id="loggedInView" style="display:none;">
-                <p id="accountName">Guest</p>
-                <button id="logoutBtn" type="button">🚪 Logout</button>
-            </div>
+        <div class="screen-preview-box" data-min="481" data-max="640">
+            <span class="sp-icon">📱</span>
+            <span class="sp-label">Phone</span>
+            <span class="sp-size">481 – 640px</span>
         </div>
+        <div class="screen-preview-box" data-min="641" data-max="768">
+            <span class="sp-icon">📲</span>
+            <span class="sp-label">Large Phone</span>
+            <span class="sp-size">641 – 768px</span>
+        </div>
+        <div class="screen-preview-box" data-min="769" data-max="1024">
+            <span class="sp-icon">📋</span>
+            <span class="sp-label">Tablet</span>
+            <span class="sp-size">769 – 1024px</span>
+        </div>
+        <div class="screen-preview-box" data-min="1025" data-max="1280">
+            <span class="sp-icon">💻</span>
+            <span class="sp-label">Laptop</span>
+            <span class="sp-size">1025 – 1280px</span>
+        </div>
+        <div class="screen-preview-box" data-min="1281" data-max="99999">
+            <span class="sp-icon">🖥️</span>
+            <span class="sp-label">Desktop</span>
+            <span class="sp-size">≥ 1281px</span>
+        </div>
+    </div>
+    <p style="font-size:11px;color:rgba(255,255,255,0.35);font-family:'Pusab',sans-serif;margin:8px 0 4px;" id="screenSizeLabel"></p>
+
+    <div class="safe-zone-row">
+        <span>📐 Safe Zone (notch padding)</span>
+        <label class="safe-zone-toggle" title="Adds padding for notch / home-bar on phones">
+            <input type="checkbox" id="safeZoneToggle">
+            <span class="safe-zone-slider"></span>
+        </label>
+    </div>
+    <p style="font-size:10px;color:rgba(255,255,255,0.25);font-family:'Pusab',sans-serif;margin:4px 0 0;">Pads edges so content clears the notch and home bar.</p>
+</div>
+
+<script>
+(function () {
+    "use strict";
+
+    // ── Screen size highlighter ──────────────────────────────────
+    function updateScreenBoxes() {
+        const w = window.innerWidth;
+        document.querySelectorAll(".screen-preview-box").forEach(function (box) {
+            const min = parseInt(box.dataset.min, 10);
+            const max = parseInt(box.dataset.max, 10);
+            box.classList.toggle("current", w >= min && w <= max);
+        });
+        const label = document.getElementById("screenSizeLabel");
+        if (label) label.textContent = "Current: " + w + " × " + window.innerHeight + "px";
+    }
+
+    updateScreenBoxes();
+    window.addEventListener("resize", updateScreenBoxes);
+
+    // ── Safe zone toggle ─────────────────────────────────────────
+    const szKey    = "workstudy-safe-zone";
+    const szToggle = document.getElementById("safeZoneToggle");
+
+    function applySafeZone(on) {
+        if (on) {
+            document.documentElement.setAttribute("data-safe-zone", "1");
+        } else {
+            document.documentElement.removeAttribute("data-safe-zone");
+        }
+        try { localStorage.setItem(szKey, on ? "1" : "0"); } catch {}
+    }
+
+    // Restore saved preference
+    try {
+        const saved = localStorage.getItem(szKey);
+        if (saved === "1") {
+            szToggle.checked = true;
+            applySafeZone(true);
+        }
+    } catch {}
+
+    szToggle.addEventListener("change", function () {
+        applySafeZone(szToggle.checked);
+    });
+})();
+</script>
+
+        <hr>
+<div class="dropdownHeader">
+    <span>🫥 Cloaking</span>
+
+    <span
+        class="dropdownArrow"
+        data-dropdown="cloakDropdown"
+        aria-expanded="false"
+        role="button"
+        tabindex="0"
+    >
+        ›
+    </span>
+</div>
+
+<div
+    id="cloakDropdown"
+    class="dropdownContent"
+>
+    <button
+        type="button"
+        onclick="openWorkStudyEmbed()"
+    >
+        🗔 Open WorkStudy in New Tab
+    </button>
+    <label for="customIconUrl">
+    Website Icon URL
+</label>
+
+<input
+    id="customIconUrl"
+    type="url"
+    placeholder="https://example.com/icon.png"
+    autocomplete="off"
+>
+
+<button
+    id="saveCustomIconBtn"
+    type="button"
+>
+    💾 Save Icon
+</button>
+
+<p
+    id="customIconStatus"
+    role="status"
+    aria-live="polite"
+></p>
+
+<script>
+(function () {
+    "use strict";
+
+    const iconInput =
+        document.getElementById("customIconUrl");
+
+    const saveButton =
+        document.getElementById("saveCustomIconBtn");
+
+    const status =
+        document.getElementById("customIconStatus");
+
+    function applyIcon(iconUrl) {
+        let icon =
+            document.querySelector('link[rel~="icon"]');
+
+        if (!icon) {
+            icon = document.createElement("link");
+            icon.rel = "icon";
+            document.head.appendChild(icon);
+        }
+
+        icon.href = iconUrl;
+    }
+
+    function saveIcon() {
+        const value = iconInput.value.trim();
+
+        let iconUrl;
+
+        try {
+            iconUrl = new URL(value);
+
+            if (
+                iconUrl.protocol !== "https:" &&
+                iconUrl.protocol !== "http:"
+            ) {
+                throw new Error("Invalid protocol");
+            }
+        } catch {
+            status.textContent =
+                "❌ Enter a valid image URL.";
+
+            return;
+        }
+
+        const testImage = new Image();
+
+        status.textContent =
+            "Checking icon...";
+
+        testImage.onload = function () {
+            applyIcon(iconUrl.href);
+
+            localStorage.setItem(
+                "workstudy-custom-icon",
+                iconUrl.href
+            );
+
+            status.textContent =
+                "✅ Icon saved!";
+        };
+
+        testImage.onerror = function () {
+            status.textContent =
+                "❌ The image could not be loaded.";
+        };
+
+        testImage.src = iconUrl.href;
+    }
+
+    const savedIcon =
+        localStorage.getItem("workstudy-custom-icon");
+
+    if (savedIcon) {
+        iconInput.value = savedIcon;
+        applyIcon(savedIcon);
+    }
+
+    saveButton.addEventListener(
+        "click",
+        saveIcon
+    );
+})();
+</script>
+    <label for="customTabName">
+    Tab Name
+</label>
+
+<input
+    id="customTabName"
+    type="text"
+    placeholder="WorkStudy"
+    maxlength="60"
+    autocomplete="off"
+>
+
+<button
+    id="saveCustomTabNameBtn"
+    type="button"
+>
+    💾 Save Tab Name
+</button>
+
+<p
+    id="customTabNameStatus"
+    role="status"
+    aria-live="polite"
+></p>
+
+<script>
+(function () {
+    "use strict";
+
+    const input =
+        document.getElementById(
+            "customTabName"
+        );
+
+    const saveButton =
+        document.getElementById(
+            "saveCustomTabNameBtn"
+        );
+
+    const status =
+        document.getElementById(
+            "customTabNameStatus"
+        );
+
+    const storageKey =
+        "workstudy-custom-tab-name";
+
+    function saveTabName() {
+        const tabName =
+            input.value.trim();
+
+        if (!tabName) {
+            status.textContent =
+                "❌ Enter a tab name.";
+
+            return;
+        }
+
+        document.title =
+            tabName;
+
+        localStorage.setItem(
+            storageKey,
+            tabName
+        );
+
+        status.textContent =
+            "✅ Tab name saved!";
+    }
+
+    const savedTabName =
+        localStorage.getItem(
+            storageKey
+        );
+
+    if (savedTabName) {
+        input.value =
+            savedTabName;
+
+        document.title =
+            savedTabName;
+    }
+
+    saveButton.addEventListener(
+        "click",
+        saveTabName
+    );
+})();
+</script>
+    <button
+    id="resetCustomTabBtn"
+    type="button"
+>
+    ↺ Reset Cloaking Settings
+</button>
+</div>
     </aside>
 
     <div id="statusPanel" role="button" tabindex="0" onclick="location.href='pages/deviceinfo.html'">
         <div id="time">🕒 Loading...</div>
         <div id="battery">🔋 Loading...</div>
-    </div>
-
-    <div class="supportContainer">
-        <a href="https://paypal.me/Tony7873" target="_blank" rel="noreferrer" class="supportBtn">💜 Support WorkStudy</a>
     </div>
 </body>
 </html>
