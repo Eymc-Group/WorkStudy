@@ -39,19 +39,32 @@
         } catch { return null; }
     }
 
-    function applyStatus(linked) {
+    function applyStatus(linked, githubUsername) {
         const linkBtn   = document.getElementById("githubLinkBtn");
         const unlinkBtn = document.getElementById("githubUnlinkBtn");
         const statusEl  = document.getElementById("githubStatus");
+        const avatar    = document.getElementById("accountAvatar");
+        const profLink  = document.getElementById("githubProfileLink");
+        const profAnchor= document.getElementById("githubProfileAnchor");
 
         if (linkBtn)   linkBtn.style.display   = linked ? "none" : "";
         if (unlinkBtn) unlinkBtn.style.display = linked ? ""     : "none";
         if (statusEl)  statusEl.textContent    = linked ? "✅ GitHub linked" : "";
+
+        if (linked && githubUsername) {
+            const pfp = "https://github.com/" + githubUsername + ".png?size=80";
+            if (avatar) { avatar.src = pfp; avatar.style.display = "block"; }
+            if (profLink)  profLink.style.display  = "";
+            if (profAnchor) { profAnchor.href = "https://github.com/" + githubUsername; }
+        } else {
+            if (avatar)   avatar.style.display   = "none";
+            if (profLink) profLink.style.display = "none";
+        }
     }
 
     function refresh() {
         checkStatus().then(function (status) {
-            applyStatus(status && status.githubLinked);
+            applyStatus(status && status.githubLinked, status && status.githubUsername);
         });
     }
 
