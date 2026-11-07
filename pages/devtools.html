@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>DevTools - WorkStudy</title>
+    <link rel="icon" href="../img/favicon.png">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/color.js" defer></script>
+    <script src="../js/customTab.js" defer></script>
+    <style>
+        body { padding: 16px 16px 60px; min-height: 100vh; }
+
+        .dt-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .dt-back {
+            padding: 7px 14px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text);
+            font-family: "Pusab", sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        h1 { margin: 0; font-size: clamp(18px, 4vw, 28px); color: var(--text); }
+
+        .dt-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 14px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        @media (max-width: 540px) { .dt-grid { grid-template-columns: 1fr; } }
+
+        .dt-card {
+            background: var(--panel, rgba(255,255,255,0.05));
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .dt-card-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--text);
+            font-family: "Pusab", sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .dt-card-desc {
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+            font-family: "Pusab", sans-serif;
+            line-height: 1.5;
+        }
+        .dt-result {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 11px;
+            font-family: monospace;
+            color: #a3e635;
+            white-space: pre-wrap;
+            word-break: break-all;
+            min-height: 36px;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+        .dt-btn {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(135deg, var(--c1, #6366f1), var(--c2, #8b5cf6));
+            color: #fff;
+            font-family: "Pusab", sans-serif;
+            font-size: 12px;
+            cursor: pointer;
+            transition: filter .15s, transform .15s;
+        }
+        .dt-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
+        .dt-btn:active { transform: none; }
+
+        .dt-section-label {
+            grid-column: 1 / -1;
+            font-size: 12px;
+            font-family: "Pusab", sans-serif;
+            color: rgba(255,255,255,0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 8px 0 2px;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+
+        .status-ok  { color: #4ade80; }
+        .status-err { color: #f87171; }
+        .status-warn{ color: #fbbf24; }
+
+        textarea.dt-input {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 8px;
+            color: var(--text);
+            font-family: monospace;
+            font-size: 12px;
+            resize: vertical;
+        }
+        input.dt-url-input {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 8px;
+            color: var(--text);
+            font-family: "Pusab", sans-serif;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dt-header">
+        <a href="../index.html" class="dt-back">← Home</a>
+        <h1>🛠️ DevTools</h1>
+    </div>
+
+    <div class="dt-grid">
+
+        <div class="dt-section-label">📡 Network</div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">🧲 Fetch Test</div>
+            <div class="dt-card-desc">Test if fetch() can reach a URL. Uses CORS-safe request.</div>
+            <input class="dt-url-input" id="fetchUrl" placeholder="https://example.com" value="https://eymc-group.github.io/WorkStudy/">
+            <button class="dt-btn" onclick="runFetchTest()">Run</button>
+            <div class="dt-result" id="fetchResult">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">🔌 WebSocket Test</div>
+            <div class="dt-card-desc">Test WebSocket connectivity to a public echo server.</div>
+            <button class="dt-btn" onclick="runWSTest()">Run</button>
+            <div class="dt-result" id="wsResult">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">🚦 CORS Test</div>
+            <div class="dt-card-desc">Test CORS to the WorkStudy API endpoint.</div>
+            <button class="dt-btn" onclick="runCORSTest()">Run</button>
+            <div class="dt-result" id="corsResult">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">📡 SSE Test</div>
+            <div class="dt-card-desc">Test Server-Sent Events (EventSource) support.</div>
+            <button class="dt-btn" onclick="runSSETest()">Run</button>
+            <div class="dt-result" id="sseResult">—</div>
+        </div>
+
+        <div class="dt-section-label">🧠 Browser APIs</div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">🧠 Browser Info</div>
+            <div class="dt-card-desc">Device, platform, language, memory, and connection info.</div>
+            <button class="dt-btn" onclick="runBrowserInfo()">Run</button>
+            <div class="dt-result" id="browserResult">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">🎮 WebGL Info</div>
+            <div class="dt-card-desc">Test WebGL support and read GPU renderer string.</div>
+            <button class="dt-btn" onclick="runWebGLTest()">Run</button>
+            <div class="dt-result" id="webglResult">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">📊 Performance</div>
+            <div class="dt-card-desc">Page load time, memory usage, and timing info.</div>
+            <button class="dt-btn" onclick="runPerfTest()">Run</button>
+            <div class="dt-result" id="perfResult">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">📋 Clipboard Test</div>
+            <div class="dt-card-desc">Test if the Clipboard API is accessible.</div>
+            <button class="dt-btn" onclick="runClipboardTest()">Run</button>
+            <div class="dt-result" id="clipResult">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">📍 Geolocation Test</div>
+            <div class="dt-card-desc">Request location permission and read coordinates.</div>
+            <button class="dt-btn" onclick="runGeoTest()">Run</button>
+            <div class="dt-result" id="geoResult">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">🔔 Notifications Test</div>
+            <div class="dt-card-desc">Request notification permission and send a test notification.</div>
+            <button class="dt-btn" onclick="runNotifTest()">Run</button>
+            <div class="dt-result" id="notifResult">—</div>
+        </div>
+
+        <div class="dt-section-label">💾 Storage</div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">💾 localStorage Test</div>
+            <div class="dt-card-desc">Test read/write to localStorage, check usage estimate.</div>
+            <button class="dt-btn" onclick="runLSTest()">Run</button>
+            <div class="dt-result" id="lsResult">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">🗄️ IndexedDB Test</div>
+            <div class="dt-card-desc">Open an IndexedDB database and write/read a value.</div>
+            <button class="dt-btn" onclick="runIDBTest()">Run</button>
+            <div class="dt-result" id="idbResult">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">🚀 Service Worker Status</div>
+            <div class="dt-card-desc">Check if the WorkStudy service worker is registered and active.</div>
+            <button class="dt-btn" onclick="runSWTest()">Run</button>
+            <div class="dt-result" id="swResult">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">🗂️ Storage Estimate</div>
+            <div class="dt-card-desc">Get the browser's storage quota and usage for this origin.</div>
+            <button class="dt-btn" onclick="runStorageEstimate()">Run</button>
+            <div class="dt-result" id="storageResult">—</div>
+        </div>
+
+        <div class="dt-section-label">🧪 Fun / Extra</div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">🎨 Canvas Fingerprint</div>
+            <div class="dt-card-desc">Generate a canvas-based browser fingerprint hash (for fun).</div>
+            <button class="dt-btn" onclick="runCanvasFingerprint()">Run</button>
+            <div class="dt-result" id="canvasResult">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">🔊 Audio Context</div>
+            <div class="dt-card-desc">Test Web Audio API availability and sample rate.</div>
+            <button class="dt-btn" onclick="runAudioTest()">Run</button>
+            <div class="dt-result" id="audioResult">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">📲 PWA Install State</div>
+            <div class="dt-card-desc">Check if WorkStudy is installed as a PWA and manifest details.</div>
+            <button class="dt-btn" onclick="runPWATest()">Run</button>
+            <div class="dt-result" id="pwaResult">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">⌚ Online / Offline</div>
+            <div class="dt-card-desc">Current online status and connection type (if available).</div>
+            <button class="dt-btn" onclick="runOnlineTest()">Run</button>
+            <div class="dt-result" id="onlineResult">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">🧮 JS Eval Sandbox</div>
+            <div class="dt-card-desc">Run a small JS snippet safely in this page's context.</div>
+            <textarea class="dt-input" id="evalCode" rows="3" placeholder="// Enter JS snippet&#10;navigator.language"></textarea>
+            <button class="dt-btn" onclick="runEval()">Run</button>
+            <div class="dt-result" id="evalResult">—</div>
+        </div>
+
+        <div class="dt-section-label">🔧 Utilities</div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">📄 JSON Formatter</div>
+            <div class="dt-card-desc">Paste raw JSON to pretty-print and validate it.</div>
+            <textarea class="dt-input" id="jsonInput" rows="4" placeholder='{"key":"value"}'></textarea>
+            <button class="dt-btn" onclick="runJSON()">Format</button>
+            <div class="dt-result" id="jsonResult">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">🔑 Base64 Encode / Decode</div>
+            <div class="dt-card-desc">Encode or decode a string with Base64.</div>
+            <textarea class="dt-input" id="b64Input" rows="2" placeholder="Enter text or base64…"></textarea>
+            <div style="display:flex;gap:6px;">
+                <button class="dt-btn" style="flex:1" onclick="runB64Encode()">Encode</button>
+                <button class="dt-btn" style="flex:1" onclick="runB64Decode()">Decode</button>
+            </div>
+            <div class="dt-result" id="b64Result">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">🔀 UUID Generator</div>
+            <div class="dt-card-desc">Generate random UUIDs (v4). Click to copy each one.</div>
+            <button class="dt-btn" onclick="runUUID()">Generate 5</button>
+            <div class="dt-result" id="uuidResult" style="cursor:pointer" title="Click to copy" onclick="copyResult('uuidResult')">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">🧊 Hash Generator</div>
+            <div class="dt-card-desc">Hash text with SHA-256 (browser SubtleCrypto).</div>
+            <textarea class="dt-input" id="hashInput" rows="2" placeholder="Text to hash…"></textarea>
+            <button class="dt-btn" onclick="runHash()">SHA-256</button>
+            <div class="dt-result" id="hashResult" style="cursor:pointer" title="Click to copy" onclick="copyResult('hashResult')">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">🔍 Regex Tester</div>
+            <div class="dt-card-desc">Test a regex pattern against a string.</div>
+            <input class="dt-url-input" id="regexPattern" placeholder="/pattern/flags" style="margin-bottom:6px">
+            <textarea class="dt-input" id="regexInput" rows="3" placeholder="Test string…"></textarea>
+            <button class="dt-btn" onclick="runRegex()">Test</button>
+            <div class="dt-result" id="regexResult">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">🕐 Timestamp Converter</div>
+            <div class="dt-card-desc">Convert between Unix timestamps and human-readable dates.</div>
+            <input class="dt-url-input" id="tsInput" placeholder="Unix ms or ISO date" style="margin-bottom:6px">
+            <button class="dt-btn" onclick="runTimestamp()">Convert</button>
+            <div class="dt-result" id="tsResult">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">🌈 Color Converter</div>
+            <div class="dt-card-desc">Convert HEX ↔ RGB ↔ HSL.</div>
+            <input class="dt-url-input" id="colorInput" placeholder="#6366f1 or rgb(99,102,241)" style="margin-bottom:6px">
+            <button class="dt-btn" onclick="runColor()">Convert</button>
+            <div class="dt-result" id="colorResult">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">📐 Text Stats</div>
+            <div class="dt-card-desc">Word count, char count, line count, reading time.</div>
+            <textarea class="dt-input" id="textStatsInput" rows="4" placeholder="Paste text here…"></textarea>
+            <button class="dt-btn" onclick="runTextStats()">Analyze</button>
+            <div class="dt-result" id="textStatsResult">—</div>
+        </div>
+
+        <div class="dt-card">
+            <div class="dt-card-title">🔗 URL Parser</div>
+            <div class="dt-card-desc">Break a URL into its components (protocol, host, path, params).</div>
+            <input class="dt-url-input" id="urlParseInput" placeholder="https://example.com/path?q=1&page=2" style="margin-bottom:6px">
+            <button class="dt-btn" onclick="runURLParse()">Parse</button>
+            <div class="dt-result" id="urlParseResult">—</div>
+        </div>
+
+    </div>
+
+    <script>
+    "use strict";
+
+    function res(id, text, type) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = text;
+        el.className = "dt-result" + (type ? " status-" + type : "");
+    }
+
+    // ── Network ──────────────────────────────────────────────────────────────
+
+    async function runFetchTest() {
+        const url = document.getElementById("fetchUrl").value.trim() || "https://eymc-group.github.io/WorkStudy/";
+        res("fetchResult", "Fetching…");
+        const t = Date.now();
+        try {
+            const r = await fetch(url, { mode: "no-cors", cache: "no-store" });
+            res("fetchResult", "✅ Reachable\nType: " + r.type + "\nLatency: " + (Date.now()-t) + "ms\nURL: " + url, "ok");
+        } catch(e) {
+            res("fetchResult", "❌ Failed: " + e.message, "err");
+        }
+    }
+
+    async function runWSTest() {
+        res("wsResult", "Connecting…");
+        try {
+            const ws = new WebSocket("wss://echo.websocket.org/");
+            const t = Date.now();
+            ws.onopen = function () {
+                ws.send("WorkStudy ping");
+                res("wsResult", "✅ Connected in " + (Date.now()-t) + "ms\nSent: WorkStudy ping");
+            };
+            ws.onmessage = function (e) {
+                res("wsResult", "✅ Echo received in " + (Date.now()-t) + "ms\nMessage: " + e.data, "ok");
+                ws.close();
+            };
+            ws.onerror = function () { res("wsResult", "❌ Connection failed", "err"); };
+            setTimeout(function () { if (ws.readyState !== WebSocket.OPEN && ws.readyState !== WebSocket.CLOSED) { ws.close(); res("wsResult", "⏱ Timeout", "warn"); } }, 8000);
+        } catch(e) {
+            res("wsResult", "❌ " + e.message, "err");
+        }
+    }
+
+    async function runCORSTest() {
+        res("corsResult", "Testing CORS…");
+        const t = Date.now();
+        try {
+            const r = await fetch("https://workstudy-api.354271744.workers.dev/online/count", { cache: "no-store" });
+            const data = await r.json();
+            res("corsResult", "✅ CORS OK in " + (Date.now()-t) + "ms\nStatus: " + r.status + "\nResponse: " + JSON.stringify(data), "ok");
+        } catch(e) {
+            res("corsResult", "❌ CORS failed: " + e.message, "err");
+        }
+    }
+
+    function runSSETest() {
+        res("sseResult", "EventSource: " + (typeof EventSource !== "undefined" ? "✅ Supported" : "❌ Not supported"), typeof EventSource !== "undefined" ? "ok" : "err");
+    }
+
+    // ── Browser APIs ─────────────────────────────────────────────────────────
+
+    function runBrowserInfo() {
+        const n = navigator;
+        const lines = [
+            "UA: " + n.userAgent,
+            "Lang: " + n.language,
+            "Online: " + n.onLine,
+            "Cookies: " + n.cookieEnabled,
+            "HW Concurrency: " + (n.hardwareConcurrency || "?"),
+            "Device Memory: " + ((n.deviceMemory || "?") + " GB"),
+            "Platform: " + n.platform,
+            "DoNotTrack: " + (n.doNotTrack || "?"),
+            "MaxTouch: " + n.maxTouchPoints,
+            "Connection: " + ((n.connection && n.connection.effectiveType) || "?"),
+        ];
+        res("browserResult", lines.join("\n"), "ok");
+    }
+
+    function runWebGLTest() {
+        try {
+            const c = document.createElement("canvas");
+            const gl = c.getContext("webgl") || c.getContext("experimental-webgl");
+            if (!gl) return res("webglResult", "❌ WebGL not supported", "err");
+            const ext = gl.getExtension("WEBGL_debug_renderer_info");
+            const vendor   = ext ? gl.getParameter(ext.UNMASKED_VENDOR_WEBGL)   : "unavailable";
+            const renderer = ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : "unavailable";
+            res("webglResult", "✅ WebGL supported\nVendor: " + vendor + "\nRenderer: " + renderer + "\nVersion: " + gl.getParameter(gl.VERSION), "ok");
+        } catch(e) {
+            res("webglResult", "❌ " + e.message, "err");
+        }
+    }
+
+    function runPerfTest() {
+        const p = performance;
+        const nav = p.getEntriesByType("navigation")[0];
+        const lines = [
+            "now(): " + p.now().toFixed(2) + "ms",
+            "DOM load: " + (nav ? nav.domContentLoadedEventEnd.toFixed(0) + "ms" : "?"),
+            "Full load: " + (nav ? nav.loadEventEnd.toFixed(0) + "ms" : "?"),
+            "Entries: " + p.getEntries().length,
+            "Memory: " + (p.memory ? Math.round(p.memory.usedJSHeapSize/1048576) + " / " + Math.round(p.memory.jsHeapSizeLimit/1048576) + " MB" : "N/A"),
+        ];
+        res("perfResult", lines.join("\n"), "ok");
+    }
+
+    async function runClipboardTest() {
+        try {
+            if (!navigator.clipboard) return res("clipResult", "❌ Clipboard API not supported", "err");
+            await navigator.clipboard.writeText("WorkStudy DevTools test 🛠️");
+            const text = await navigator.clipboard.readText();
+            res("clipResult", "✅ Read/write OK\nContent: " + text, "ok");
+        } catch(e) {
+            res("clipResult", "⚠️ " + e.message + "\n(Write may work but read requires user gesture)", "warn");
+        }
+    }
+
+    function runGeoTest() {
+        if (!navigator.geolocation) return res("geoResult", "❌ Geolocation not supported", "err");
+        res("geoResult", "Requesting location…");
+        navigator.geolocation.getCurrentPosition(
+            function(p) {
+                res("geoResult", "✅ Location granted\nLat: " + p.coords.latitude.toFixed(5) + "\nLon: " + p.coords.longitude.toFixed(5) + "\nAccuracy: " + p.coords.accuracy.toFixed(0) + "m", "ok");
+            },
+            function(e) {
+                res("geoResult", "❌ " + e.message, "err");
+            }
+        );
+    }
+
+    async function runNotifTest() {
+        if (!("Notification" in window)) return res("notifResult", "❌ Notifications not supported", "err");
+        const perm = await Notification.requestPermission();
+        if (perm === "granted") {
+            new Notification("WorkStudy DevTools 🛠️", { body: "Notifications work!", icon: "../img/favicon.png" });
+            res("notifResult", "✅ Permission: granted\nNotification sent!", "ok");
+        } else {
+            res("notifResult", "⚠️ Permission: " + perm, "warn");
+        }
+    }
+
+    // ── Storage ──────────────────────────────────────────────────────────────
+
+    function runLSTest() {
+        try {
+            const t = Date.now();
+            localStorage.setItem("_devtools_test", "ok");
+            const v = localStorage.getItem("_devtools_test");
+            localStorage.removeItem("_devtools_test");
+            const keys = Object.keys(localStorage).length;
+            res("lsResult", "✅ localStorage OK in " + (Date.now()-t) + "ms\nValue: " + v + "\nStored keys: " + keys, "ok");
+        } catch(e) {
+            res("lsResult", "❌ " + e.message, "err");
+        }
+    }
+
+    function runIDBTest() {
+        res("idbResult", "Opening IndexedDB…");
+        try {
+            const req = indexedDB.open("_devtools_test_db", 1);
+            req.onupgradeneeded = function(e) { e.target.result.createObjectStore("test"); };
+            req.onsuccess = function(e) {
+                const db = e.target.result;
+                const tx = db.transaction("test", "readwrite");
+                const store = tx.objectStore("test");
+                store.put("hello", "key1");
+                tx.oncomplete = function() {
+                    const tx2 = db.transaction("test", "readonly");
+                    tx2.objectStore("test").get("key1").onsuccess = function(ev) {
+                        db.close();
+                        indexedDB.deleteDatabase("_devtools_test_db");
+                        res("idbResult", "✅ IndexedDB OK\nRead value: " + ev.target.result, "ok");
+                    };
+                };
+            };
+            req.onerror = function(e) { res("idbResult", "❌ " + e.target.error, "err"); };
+        } catch(e) {
+            res("idbResult", "❌ " + e.message, "err");
+        }
+    }
+
+    async function runSWTest() {
+        if (!("serviceWorker" in navigator)) return res("swResult", "❌ Service Worker not supported", "err");
+        try {
+            const reg = await navigator.serviceWorker.getRegistration("/WorkStudy/");
+            if (!reg) return res("swResult", "⚠️ No SW registered for /WorkStudy/\nTry visiting the main page first.", "warn");
+            const state = reg.active ? "active" : reg.waiting ? "waiting" : reg.installing ? "installing" : "none";
+            res("swResult", "✅ SW registered\nScope: " + reg.scope + "\nState: " + state + "\nScript: " + (reg.active ? reg.active.scriptURL : "?"), "ok");
+        } catch(e) {
+            res("swResult", "❌ " + e.message, "err");
+        }
+    }
+
+    async function runStorageEstimate() {
+        try {
+            if (!navigator.storage || !navigator.storage.estimate) return res("storageResult", "⚠️ StorageManager not supported", "warn");
+            const est = await navigator.storage.estimate();
+            const used = (est.usage / 1048576).toFixed(2);
+            const quota = (est.quota / 1048576).toFixed(2);
+            const pct = ((est.usage / est.quota) * 100).toFixed(1);
+            res("storageResult", "✅ Storage estimate\nUsed: " + used + " MB / " + quota + " MB\n(" + pct + "% of quota)", "ok");
+        } catch(e) {
+            res("storageResult", "❌ " + e.message, "err");
+        }
+    }
+
+    // ── Fun ───────────────────────────────────────────────────────────────────
+
+    function runCanvasFingerprint() {
+        try {
+            const c = document.createElement("canvas");
+            c.width = 200; c.height = 60;
+            const ctx = c.getContext("2d");
+            ctx.textBaseline = "top";
+            ctx.font = "16px sans-serif";
+            ctx.fillStyle = "#6366f1";
+            ctx.fillRect(0, 0, 200, 60);
+            ctx.fillStyle = "white";
+            ctx.fillText("WorkStudy 🛠️ Fingerprint", 2, 2);
+            ctx.strokeStyle = "#fb923c";
+            ctx.arc(80, 40, 15, 0, Math.PI * 2);
+            ctx.stroke();
+            const dataUrl = c.toDataURL();
+            // Simple hash
+            let hash = 0;
+            for (let i = 0; i < dataUrl.length; i++) hash = ((hash << 5) - hash) + dataUrl.charCodeAt(i), hash |= 0;
+            res("canvasResult", "Canvas fingerprint hash: 0x" + (hash >>> 0).toString(16).toUpperCase() + "\n(This value should be consistent per browser/device)", "ok");
+        } catch(e) {
+            res("canvasResult", "❌ " + e.message, "err");
+        }
+    }
+
+    function runAudioTest() {
+        try {
+            const AC = window.AudioContext || window.webkitAudioContext;
+            if (!AC) return res("audioResult", "❌ AudioContext not supported", "err");
+            const ac = new AC();
+            res("audioResult", "✅ AudioContext supported\nSample rate: " + ac.sampleRate + " Hz\nState: " + ac.state + "\nMax channels: " + ac.destination.maxChannelCount, "ok");
+            ac.close();
+        } catch(e) {
+            res("audioResult", "❌ " + e.message, "err");
+        }
+    }
+
+    async function runPWATest() {
+        const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
+        const lines = ["Display mode: " + (isStandalone ? "standalone (installed PWA)" : "browser tab")];
+        try {
+            const res2 = await fetch("../manifest.json");
+            const mf = await res2.json();
+            lines.push("Manifest name: " + mf.name);
+            lines.push("Start URL: " + mf.start_url);
+            lines.push("Icons: " + (mf.icons || []).length);
+        } catch { lines.push("Manifest: could not fetch"); }
+        if ("serviceWorker" in navigator) {
+            const reg = await navigator.serviceWorker.getRegistration("/WorkStudy/").catch(() => null);
+            lines.push("SW: " + (reg ? "registered" : "not registered"));
+        }
+        res("pwaResult", lines.join("\n"), "ok");
+    }
+
+    function runOnlineTest() {
+        const n = navigator;
+        const conn = n.connection || n.mozConnection || n.webkitConnection;
+        const lines = [
+            "Online: " + (n.onLine ? "✅ Yes" : "❌ No"),
+            "Type: " + (conn ? conn.effectiveType : "?"),
+            "Downlink: " + (conn ? conn.downlink + " Mbps" : "?"),
+            "RTT: " + (conn ? conn.rtt + "ms" : "?"),
+            "Save-data: " + (conn ? conn.saveData : "?"),
+        ];
+        res("onlineResult", lines.join("\n"), n.onLine ? "ok" : "err");
+    }
+
+    function runEval() {
+        const code = document.getElementById("evalCode").value.trim();
+        if (!code) return res("evalResult", "No code entered", "warn");
+        try {
+            const result = Function('"use strict"; return (' + code + ')')();
+            res("evalResult", typeof result === "object" ? JSON.stringify(result, null, 2) : String(result), "ok");
+        } catch(e) {
+            res("evalResult", "❌ " + e.toString(), "err");
+        }
+    }
+
+    // ── Utilities ─────────────────────────────────────────────────────────────
+
+    function runJSON() {
+        const raw = document.getElementById("jsonInput").value.trim();
+        if (!raw) return res("jsonResult", "No input", "warn");
+        try {
+            const parsed = JSON.parse(raw);
+            res("jsonResult", JSON.stringify(parsed, null, 2), "ok");
+        } catch(e) {
+            res("jsonResult", "❌ Invalid JSON: " + e.message, "err");
+        }
+    }
+
+    function runB64Encode() {
+        const v = document.getElementById("b64Input").value;
+        try { res("b64Result", btoa(unescape(encodeURIComponent(v))), "ok"); }
+        catch(e) { res("b64Result", "❌ " + e.message, "err"); }
+    }
+    function runB64Decode() {
+        const v = document.getElementById("b64Input").value.trim();
+        try { res("b64Result", decodeURIComponent(escape(atob(v))), "ok"); }
+        catch(e) { res("b64Result", "❌ Invalid base64: " + e.message, "err"); }
+    }
+
+    function runUUID() {
+        const uuids = [];
+        for (let i = 0; i < 5; i++) {
+            uuids.push(([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+                (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)));
+        }
+        res("uuidResult", uuids.join("\n"), "ok");
+    }
+
+    async function runHash() {
+        const text = document.getElementById("hashInput").value;
+        if (!text) return res("hashResult", "No input", "warn");
+        try {
+            const enc = new TextEncoder().encode(text);
+            const buf = await crypto.subtle.digest("SHA-256", enc);
+            const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,"0")).join("");
+            res("hashResult", hex, "ok");
+        } catch(e) {
+            res("hashResult", "❌ " + e.message, "err");
+        }
+    }
+
+    function runRegex() {
+        const pattern = document.getElementById("regexPattern").value.trim();
+        const input   = document.getElementById("regexInput").value;
+        if (!pattern) return res("regexResult", "No pattern", "warn");
+        try {
+            const m = pattern.match(/^\/(.+)\/([gimsuy]*)$/);
+            const rx = m ? new RegExp(m[1], m[2]) : new RegExp(pattern);
+            const matches = [...(input.matchAll(new RegExp(rx.source, rx.flags.includes("g") ? rx.flags : rx.flags + "g")))];
+            if (!matches.length) return res("regexResult", "No matches found", "warn");
+            const lines = matches.map((m, i) => `[${i+1}] "${m[0]}" at index ${m.index}` + (m.length > 1 ? "\n    Groups: " + m.slice(1).join(", ") : ""));
+            res("regexResult", matches.length + " match(es):\n" + lines.join("\n"), "ok");
+        } catch(e) {
+            res("regexResult", "❌ Invalid regex: " + e.message, "err");
+        }
+    }
+
+    function runTimestamp() {
+        const v = document.getElementById("tsInput").value.trim() || String(Date.now());
+        const lines = [];
+        const isNum = /^\d+$/.test(v);
+        if (isNum) {
+            const ms  = v.length > 10 ? Number(v) : Number(v) * 1000;
+            const d   = new Date(ms);
+            lines.push("Unix ms:   " + ms);
+            lines.push("Unix s:    " + Math.floor(ms/1000));
+            lines.push("ISO:       " + d.toISOString());
+            lines.push("Local:     " + d.toLocaleString());
+            lines.push("UTC:       " + d.toUTCString());
+        } else {
+            const d = new Date(v);
+            if (isNaN(d)) return res("tsResult", "❌ Could not parse date", "err");
+            lines.push("Unix ms:   " + d.getTime());
+            lines.push("Unix s:    " + Math.floor(d.getTime()/1000));
+            lines.push("ISO:       " + d.toISOString());
+            lines.push("Local:     " + d.toLocaleString());
+        }
+        res("tsResult", lines.join("\n"), "ok");
+    }
+
+    function runColor() {
+        const v = document.getElementById("colorInput").value.trim();
+        if (!v) return res("colorResult", "No input", "warn");
+        let r, g, b;
+        const hexM = v.match(/^#?([0-9a-f]{3,6})$/i);
+        const rgbM = v.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+        const hslM = v.match(/hsla?\(\s*([\d.]+)\s*,\s*([\d.]+)%?\s*,\s*([\d.]+)%?/i);
+        if (hexM) {
+            const h = hexM[1].length === 3 ? hexM[1].split("").map(x=>x+x).join("") : hexM[1];
+            r = parseInt(h.slice(0,2),16); g = parseInt(h.slice(2,4),16); b = parseInt(h.slice(4,6),16);
+        } else if (rgbM) {
+            [,r,g,b] = rgbM.map(Number);
+        } else if (hslM) {
+            const h2=Number(hslM[1]),s=Number(hslM[2])/100,l=Number(hslM[3])/100;
+            const q=l<0.5?l*(1+s):l+s-l*s,p=2*l-q,hk=h2/360;
+            const hue=(t)=>{if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<1/2)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p;};
+            r=Math.round(hue(hk+1/3)*255); g=Math.round(hue(hk)*255); b=Math.round(hue(hk-1/3)*255);
+        } else { return res("colorResult","❌ Unrecognized format. Use #hex, rgb(), or hsl()","err"); }
+        const hex="#"+[r,g,b].map(x=>x.toString(16).padStart(2,"0")).join("");
+        const rn=(r/255),gn=(g/255),bn=(b/255);
+        const max=Math.max(rn,gn,bn),min=Math.min(rn,gn,bn),d=max-min;
+        const l=(max+min)/2;
+        const s=d===0?0:(d/(1-Math.abs(2*l-1)));
+        const hh=d===0?0:max===rn?((gn-bn)/d%6)*60:max===gn?((bn-rn)/d+2)*60:((rn-gn)/d+4)*60;
+        const lines=[
+            "HEX:  " + hex.toUpperCase(),
+            "RGB:  rgb(" + r + ", " + g + ", " + b + ")",
+            "HSL:  hsl(" + Math.round(hh<0?hh+360:hh) + ", " + Math.round(s*100) + "%, " + Math.round(l*100) + "%)",
+        ];
+        res("colorResult", lines.join("\n"), "ok");
+    }
+
+    function runTextStats() {
+        const text = document.getElementById("textStatsInput").value;
+        if (!text) return res("textStatsResult", "No input", "warn");
+        const words = text.trim().split(/\s+/).filter(Boolean).length;
+        const chars  = text.length;
+        const nosp   = text.replace(/\s/g,"").length;
+        const lines  = text.split("\n").length;
+        const sents  = (text.match(/[.!?]+/g)||[]).length;
+        const mins   = Math.ceil(words / 200);
+        res("textStatsResult",
+            "Words:       " + words + "\n" +
+            "Characters:  " + chars + " (w/ spaces)\n" +
+            "Characters:  " + nosp  + " (no spaces)\n" +
+            "Lines:       " + lines + "\n" +
+            "Sentences:   " + sents + "\n" +
+            "Reading time: ~" + mins + " min", "ok");
+    }
+
+    function runURLParse() {
+        let raw = document.getElementById("urlParseInput").value.trim();
+        if (!raw) return res("urlParseResult", "No URL", "warn");
+        if (!/^https?:\/\//i.test(raw)) raw = "https://" + raw;
+        try {
+            const u = new URL(raw);
+            const params = [...u.searchParams.entries()].map(([k,v])=>"  " + k + " = " + v).join("\n");
+            const lines = [
+                "Protocol:  " + u.protocol,
+                "Host:      " + u.host,
+                "Hostname:  " + u.hostname,
+                "Port:      " + (u.port || "(default)"),
+                "Pathname:  " + u.pathname,
+                "Search:    " + (u.search || "(none)"),
+                "Hash:      " + (u.hash || "(none)"),
+            ];
+            if (params) lines.push("Params:\n" + params);
+            res("urlParseResult", lines.join("\n"), "ok");
+        } catch(e) {
+            res("urlParseResult", "❌ " + e.message, "err");
+        }
+    }
+
+    function copyResult(id) {
+        const el = document.getElementById(id);
+        if (!el || !navigator.clipboard) return;
+        navigator.clipboard.writeText(el.textContent).then(function() {
+            const orig = el.style.borderColor;
+            el.style.border = "1px solid #4ade80";
+            setTimeout(function() { el.style.border = ""; }, 1000);
+        });
+    }
+    </script>
+</body>
+</html>

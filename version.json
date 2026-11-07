@@ -1,6 +1,6 @@
 {
-  "version": "1.3.0",
-  "releasedAt": "2026-11-06",
-  "changelog": "Leaderboard, online counter, GitHub profiles, support page, improved mobile layout",
+  "version": "1.4.0",
+  "releasedAt": "2026-11-07",
+  "changelog": "Leaderboard star ratings, faster online counter, improved SEO, version badge, mirrors live status, better PWA support, more devtools",
   "downloadUrl": "https://github.com/Eymc-Group/WorkStudy/archive/refs/heads/root.zip"
 }

@@ -3,48 +3,75 @@
 <head>
     
 <meta charset="UTF-8">
-    
     <meta name="google-site-verification" content="jjF3-saYzpDuGonDBfyKTbWR7S1R14zfjF_dNFJh3hg" />
-    <title>WorkStudy - Games, Search & Explore</title>
-    <link rel="canonical"
-href="https://eymc-group.github.io/WorkStudy/">
+
+    <!-- ═══ Primary SEO ═══ -->
+    <title>WorkStudy – Free Unblocked Games, Cloud Saves &amp; Web Tools | 150+ Games</title>
+    <meta name="description" content="Play 150+ free unblocked browser games at school or work — Slope, Run 3, 1v1.LOL, BTD4, Cookie Clicker, Geometry Dash, Retro Bowl and more. Cloud saves, leaderboard, website viewer, themes, and web utilities. No download, no login required.">
+    <meta name="keywords" content="WorkStudy, unblocked games, browser games, free games, school games, games at school, games at work, Slope unblocked, Run 3 unblocked, 1v1 LOL unblocked, BTD4, Cookie Clicker, Geometry Dash, Retro Bowl, unblocked game site, cloud saves, game leaderboard, web tools, online games, HTML5 games, games not blocked, free game platform">
+    <meta name="author" content="Eymc Group">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="rating" content="general">
+    <meta name="revisit-after" content="3 days">
+    <link rel="canonical" href="https://eymc-group.github.io/WorkStudy/">
+
+    <!-- ═══ Open Graph (Facebook, Discord, etc.) ═══ -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="WorkStudy">
+    <meta property="og:title" content="WorkStudy – Free Browser Games & Web Tools">
+    <meta property="og:description" content="Play 150+ free unblocked games — Slope, Run 3, BTD4, Cookie Clicker & more. Cloud saves, leaderboard, themes, website viewer. No download needed.">
+    <meta property="og:url" content="https://eymc-group.github.io/WorkStudy/">
+    <meta property="og:image" content="https://eymc-group.github.io/WorkStudy/img/favicon.png">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta property="og:locale" content="en_US">
+
+    <!-- ═══ Twitter / X Card ═══ -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="WorkStudy – Free Browser Games & Web Tools">
+    <meta name="twitter:description" content="Play 150+ free unblocked games — Slope, Run 3, BTD4, Cookie Clicker & more. Cloud saves, leaderboard, themes, website viewer. No download needed.">
+    <meta name="twitter:image" content="https://eymc-group.github.io/WorkStudy/img/favicon.png">
+
+    <!-- ═══ Structured Data (JSON-LD) ═══ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "WorkStudy",
+      "url": "https://eymc-group.github.io/WorkStudy/",
+      "description": "Play 150+ free unblocked browser games at school or work. Cloud saves, leaderboard, themes, website viewer and web utilities. No download or login required.",
+      "applicationCategory": "GameApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires a modern web browser",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "author": { "@type": "Organization", "name": "Eymc Group", "url": "https://github.com/Eymc-Group" }
+    }
+    </script>
+
+    <!-- ═══ PWA ═══ -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="WorkStudy">
+    <link rel="apple-touch-icon" href="img/favicon.png">
+
+    <!-- ═══ Theme ═══ -->
     <meta name="theme-color" content="#6b21a8">
-
-    <link rel="icon"
-type="image/png"
-href="img/favicon.png">
-
-<meta name="description"
-content="WorkStudy is a browser-based platform featuring games, cloud saves, customization, themes, search tools, and web utilities in one place.">
-
-<meta name="keywords"
-content="WorkStudy,games,browser games,cloud saves,tools,customization">
-
-<meta name="author"
-content="Eymc Group">
-
-<meta property="og:title"
-content="WorkStudy">
-
-<meta property="og:description"
-content="Game • Search • Explore">
-
-<meta property="og:type"
-content="website">
-
-<meta property="og:url"
-content="https://eymc-group.github.io/WorkStudy/">
-
-<meta property="og:image"
-content="https://eymc-group.github.io/WorkStudy/img/favicon.png">
-
-<meta name="twitter:card"
-content="summary_large_image">
+    <link rel="icon" type="image/png" href="img/favicon.png">
 
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <link rel="icon" href="img/favicon.png">
 
+    <!-- PWA service worker registration -->
+    <script>
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+            navigator.serviceWorker.register("sw.js").catch(function () {});
+        });
+    }
+    </script>
     <script src="js/auth.js" defer></script>
     <script src="js/color.js" defer></script>
     <script src="js/users.js" defer></script>
@@ -115,6 +142,23 @@ new experiences from one place.
         </div>
     </main>
 
+    <!-- Version badge — sits above Settings button bottom-right -->
+    <div id="versionBadge" style="
+        position: fixed;
+        bottom: 68px;
+        right: 14px;
+        z-index: 999;
+        font-size: 10px;
+        font-family: 'Pusab', monospace, sans-serif;
+        color: rgba(255,255,255,0.35);
+        background: rgba(0,0,0,0.3);
+        padding: 2px 7px;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.1);
+        pointer-events: none;
+        letter-spacing: 0.3px;
+    ">v1.4.0</div>
+
     <button id="settingsBtn" type="button" aria-controls="customizePanel" aria-expanded="false">⚙️ Settings</button>
 
     <aside id="customizePanel" aria-label="Settings panel">
@@ -178,6 +222,15 @@ new experiences from one place.
             <button type="button" onclick="if (window.testWorkerImage) window.testWorkerImage();">🖼️ Test Worker Image</button>
             <button type="button" onclick="if (window.testPWA) window.testPWA();">🚀 Test PWA</button>
             <button type="button" onclick="if (window.testServiceWorker) window.testServiceWorker();">🚀 Test Service Worker</button>
+            <button type="button" onclick="if (window.testIndexedDB) window.testIndexedDB(); else alert('IndexedDB: ' + (window.indexedDB ? '✅ Supported' : '❌ Not supported'));">🗄️ Test IndexedDB</button>
+            <button type="button" onclick="if (window.testLocalStorage) window.testLocalStorage(); else { try { localStorage.setItem('_test','1'); localStorage.removeItem('_test'); alert('localStorage ✅'); } catch(e) { alert('localStorage ❌ ' + e); } }">💾 Test localStorage</button>
+            <button type="button" onclick="if (window.testClipboard) window.testClipboard(); else navigator.clipboard.writeText('WorkStudy test').then(()=>alert('Clipboard ✅')).catch(e=>alert('Clipboard ❌ ' + e));">📋 Test Clipboard</button>
+            <button type="button" onclick="if (window.testNotifications) window.testNotifications(); else Notification.requestPermission().then(p=>alert('Notifications: ' + p));">🔔 Test Notifications</button>
+            <button type="button" onclick="if (window.testGeolocation) window.testGeolocation(); else navigator.geolocation ? navigator.geolocation.getCurrentPosition(p=>alert('Geolocation ✅ lat:'+p.coords.latitude.toFixed(4)),e=>alert('Geolocation ❌ '+e.message)) : alert('Geolocation ❌ not supported');">📍 Test Geolocation</button>
+            <button type="button" onclick="const info=['UA: '+navigator.userAgent,'Lang: '+navigator.language,'Online: '+navigator.onLine,'Cookies: '+navigator.cookieEnabled,'HW Concurrency: '+navigator.hardwareConcurrency,'Memory: '+((navigator.deviceMemory||'?')+'GB'),'Platform: '+navigator.platform].join('\n'); alert(info);">🧠 Browser Info</button>
+            <button type="button" onclick="const c=document.createElement('canvas');const gl=c.getContext('webgl')||c.getContext('experimental-webgl');if(gl){const ext=gl.getExtension('WEBGL_debug_renderer_info');alert('WebGL ✅\n'+(ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):'GPU info unavailable'));}else{alert('WebGL ❌');}">🎮 Test WebGL</button>
+            <button type="button" onclick="alert('Performance:\nnow: '+performance.now().toFixed(2)+'ms\nentries: '+performance.getEntries().length+'\nmemory: '+((performance.memory ? Math.round(performance.memory.usedJSHeapSize/1048576)+'MB used' : 'N/A')));">📊 Performance Info</button>
+            <button type="button" onclick="location.href='pages/devtools.html'">🛠️ Open DevTools Page</button>
         </div>
 
         <hr>

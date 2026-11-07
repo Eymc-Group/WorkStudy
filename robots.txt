@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
 
+# Disallow utility pages that shouldn't be indexed
+Disallow: /WorkStudy/pages/github-callback.html
+Disallow: /WorkStudy/pages/gn-math.dev.html
+
 Sitemap: https://eymc-group.github.io/WorkStudy/sitemap.xml
