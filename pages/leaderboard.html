@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Leaderboard - WorkStudy</title>
+    <link rel="icon" href="../img/favicon.png">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/color.js" defer></script>
+    <script src="../js/customTab.js" defer></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            background: var(--bg, #0f172a);
+            color: var(--text, #e2e8f0);
+            font-family: "Pusab", sans-serif;
+        }
+
+        /* ── Top bar ── */
+        .lb-topbar {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--bg, #0f172a);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+
+        .lb-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text, #e2e8f0);
+            font-family: "Pusab", sans-serif;
+            font-size: 13px;
+            text-decoration: none;
+            transition: background .2s;
+        }
+        .lb-back:hover { background: rgba(255,255,255,0.13); }
+
+        .lb-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--text, #e2e8f0);
+            margin: 0;
+            text-align: center;
+            flex: 1;
+        }
+
+        .lb-refresh {
+            padding: 7px 14px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--c1, #6366f1), var(--c2, #8b5cf6));
+            border: none;
+            color: #fff;
+            font-family: "Pusab", sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            transition: filter .2s, transform .2s;
+        }
+        .lb-refresh:hover { filter: brightness(1.15); transform: translateY(-1px); }
+        .lb-refresh:active { transform: translateY(0); }
+        .lb-refresh:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        /* ── Tabs ── */
+        .lb-tabs {
+            display: flex;
+            gap: 6px;
+            padding: 12px 16px 0;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .lb-tabs::-webkit-scrollbar { display: none; }
+
+        .lb-tab {
+            flex-shrink: 0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1.5px solid rgba(255,255,255,0.1);
+            background: transparent;
+            color: rgba(255,255,255,0.5);
+            font-family: "Pusab", sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all .2s;
+        }
+        .lb-tab:hover { background: rgba(255,255,255,0.07); color: var(--text); }
+        .lb-tab.active {
+            background: linear-gradient(135deg, var(--c1, #6366f1), var(--c2, #8b5cf6));
+            border-color: transparent;
+            color: #fff;
+        }
+
+        /* ── Main content ── */
+        .lb-content {
+            padding: 16px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* ── Skeleton ── */
+        .skeleton {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .skeleton-row {
+            height: 62px;
+            border-radius: 14px;
+            background: linear-gradient(90deg,
+                rgba(255,255,255,0.05) 25%,
+                rgba(255,255,255,0.1) 50%,
+                rgba(255,255,255,0.05) 75%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+        }
+        @keyframes shimmer { to { background-position: -200% 0; } }
+
+        /* ── Empty state ── */
+        .lb-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255,255,255,0.35);
+            font-size: 15px;
+        }
+        .lb-empty-icon { font-size: 48px; display: block; margin-bottom: 12px; }
+
+        /* ── Entry card ── */
+        .lb-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .lb-entry {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: var(--panel, rgba(255,255,255,0.05));
+            border: 1px solid rgba(255,255,255,0.07);
+            transition: background .15s;
+        }
+        .lb-entry:hover { background: rgba(255,255,255,0.08); }
+
+        /* Top 3 highlight */
+        .lb-entry.rank-1 { border-color: rgba(255,215,0,0.4); background: rgba(255,215,0,0.06); }
+        .lb-entry.rank-2 { border-color: rgba(192,192,192,0.3); background: rgba(192,192,192,0.05); }
+        .lb-entry.rank-3 { border-color: rgba(205,127,50,0.3); background: rgba(205,127,50,0.05); }
+
+        .lb-rank {
+            width: 32px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: bold;
+            color: rgba(255,255,255,0.5);
+            flex-shrink: 0;
+        }
+        .lb-rank.rank-1 { color: #ffd700; }
+        .lb-rank.rank-2 { color: #c0c0c0; }
+        .lb-rank.rank-3 { color: #cd7f32; }
+
+        .lb-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .lb-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .lb-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .lb-name-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .lb-username {
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--text, #e2e8f0);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .lb-gh-link {
+            flex-shrink: 0;
+            opacity: 0.5;
+            transition: opacity .2s;
+            line-height: 1;
+        }
+        .lb-gh-link:hover { opacity: 1; }
+        .lb-gh-link svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--text, #e2e8f0);
+            display: block;
+        }
+
+        .lb-value {
+            font-size: 13px;
+            color: rgba(255,255,255,0.45);
+            margin-top: 2px;
+        }
+        .lb-value span {
+            color: var(--c2, #8b5cf6);
+            font-weight: bold;
+        }
+
+        @media (max-width: 480px) {
+            .lb-topbar { padding: 10px 12px; }
+            .lb-title { font-size: 17px; }
+            .lb-back, .lb-refresh { font-size: 12px; padding: 6px 10px; }
+            .lb-content { padding: 12px; }
+            .lb-entry { padding: 10px 12px; gap: 10px; }
+            .lb-avatar { width: 36px; height: 36px; font-size: 15px; }
+            .lb-username { font-size: 13px; }
+            .lb-rank { width: 26px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="lb-topbar">
+        <a href="../index.html" class="lb-back">← Home</a>
+        <h1 class="lb-title">🏆 Leaderboard</h1>
+        <button class="lb-refresh" id="refreshBtn">🔄 Refresh</button>
+    </div>
+
+    <div class="lb-tabs" id="tabsRow">
+        <button class="lb-tab active" data-tab="score">🏆 Top Score</button>
+        <button class="lb-tab" data-tab="time">⏱️ Most Time</button>
+        <button class="lb-tab" data-tab="games">🎮 Most Games</button>
+        <button class="lb-tab" data-tab="visits">👁️ Most Visits</button>
+    </div>
+
+    <div class="lb-content">
+        <div id="lbOutput"></div>
+    </div>
+
+    <script>
+    "use strict";
+
+    const API = "https://workstudy-api.354271744.workers.dev";
+    let currentTab = "score";
+    let cachedData = null;
+
+    const RANK_MEDALS = ["🥇", "🥈", "🥉"];
+
+    // ── Avatar colours keyed by first char ──────────────────────
+    const PALETTE = [
+        "#6366f1","#8b5cf6","#ec4899","#f59e0b",
+        "#10b981","#3b82f6","#ef4444","#14b8a6"
+    ];
+    function avatarColor(name) {
+        const code = (name || "?").charCodeAt(0);
+        return PALETTE[code % PALETTE.length];
+    }
+
+    function fmtTime(mins) {
+        mins = Number(mins) || 0;
+        if (mins < 60) return mins + "m";
+        return Math.floor(mins / 60) + "h " + (mins % 60) + "m";
+    }
+
+    function valueLabel(entry, tab) {
+        switch (tab) {
+            case "score":   return { label: "Score",    val: (Number(entry.score) || 0).toLocaleString() };
+            case "time":    return { label: "Time",     val: fmtTime(entry.minutesOnSite) };
+            case "games":   return { label: "Games",    val: (Number(entry.gamesPlayed) || 0).toLocaleString() };
+            case "visits":  return { label: "Visits",   val: (Number(entry.visits) || 0).toLocaleString() };
+        }
+    }
+
+    function sortedData(data, tab) {
+        const copy = [...data];
+        const key = { score: "score", time: "minutesOnSite", games: "gamesPlayed", visits: "visits" }[tab];
+        copy.sort((a, b) => (Number(b[key]) || 0) - (Number(a[key]) || 0));
+        return copy;
+    }
+
+    const GH_SVG = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>`;
+
+    function renderList(data) {
+        const out = document.getElementById("lbOutput");
+
+        if (!data || data.length === 0) {
+            out.innerHTML = `<div class="lb-empty">
+                <span class="lb-empty-icon">📭</span>
+                No entries yet. Be the first on the board!
+            </div>`;
+            return;
+        }
+
+        const sorted = sortedData(data, currentTab);
+        const rows = sorted.map((entry, i) => {
+            const rank = i + 1;
+            const rankClass = rank <= 3 ? ` rank-${rank}` : "";
+            const rankDisplay = rank <= 3
+                ? `<div class="lb-rank rank-${rank}">${RANK_MEDALS[rank - 1]}</div>`
+                : `<div class="lb-rank">#${rank}</div>`;
+
+            // Avatar
+            let avatarHtml;
+            if (entry.githubUsername) {
+                avatarHtml = `<div class="lb-avatar"><img
+                    src="https://avatars.githubusercontent.com/${encodeURIComponent(entry.githubUsername)}?s=84"
+                    alt="${entry.username}"
+                    onerror="this.parentElement.innerHTML='<span>${(entry.username||'?')[0].toUpperCase()}</span>';this.parentElement.style.background='${avatarColor(entry.username)}';"
+                ></div>`;
+            } else {
+                avatarHtml = `<div class="lb-avatar" style="background:${avatarColor(entry.username)}">
+                    ${(entry.username || "?")[0].toUpperCase()}
+                </div>`;
+            }
+
+            // GitHub link
+            const ghLink = entry.githubUsername
+                ? `<a href="https://github.com/${encodeURIComponent(entry.githubUsername)}" target="_blank" rel="noopener" class="lb-gh-link" title="@${entry.githubUsername}">${GH_SVG}</a>`
+                : "";
+
+            const { label, val } = valueLabel(entry, currentTab);
+
+            return `<div class="lb-entry${rankClass}">
+                ${rankDisplay}
+                ${avatarHtml}
+                <div class="lb-info">
+                    <div class="lb-name-row">
+                        <span class="lb-username">${entry.username || "Unknown"}</span>
+                        ${ghLink}
+                    </div>
+                    <div class="lb-value">${label}: <span>${val}</span></div>
+                </div>
+            </div>`;
+        }).join("");
+
+        out.innerHTML = `<div class="lb-list">${rows}</div>`;
+    }
+
+    function showSkeleton() {
+        const rows = Array.from({ length: 8 }, () => `<div class="skeleton-row"></div>`).join("");
+        document.getElementById("lbOutput").innerHTML = `<div class="skeleton">${rows}</div>`;
+    }
+
+    async function fetchLeaderboard(force) {
+        const btn = document.getElementById("refreshBtn");
+        btn.disabled = true;
+        if (!cachedData || force) {
+            showSkeleton();
+            try {
+                const res = await fetch(API + "/leaderboard");
+                const data = await res.json();
+                cachedData = data.success ? (data.leaderboard || []) : [];
+            } catch {
+                cachedData = [];
+            }
+        }
+        renderList(cachedData);
+        btn.disabled = false;
+    }
+
+    // ── Tabs ──────────────────────────────────────────────────────
+    document.getElementById("tabsRow").addEventListener("click", function (e) {
+        const btn = e.target.closest(".lb-tab");
+        if (!btn) return;
+        document.querySelectorAll(".lb-tab").forEach(t => t.classList.remove("active"));
+        btn.classList.add("active");
+        currentTab = btn.dataset.tab;
+        if (cachedData) renderList(cachedData);
+    });
+
+    document.getElementById("refreshBtn").addEventListener("click", () => fetchLeaderboard(true));
+
+    fetchLeaderboard(false);
+    </script>
+</body>
+</html>

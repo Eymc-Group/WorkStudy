@@ -1238,3 +1238,118 @@ img {
         border-radius: 12px;
     }
 }
+
+/* ── Homepage button row ────────────────────────────────────────── */
+.homepage-btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.homepage-btn-row button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border-radius: 12px;
+    border: none;
+    font-family: "Pusab", sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease;
+    white-space: nowrap;
+}
+
+.homepage-btn-row button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.15);
+}
+
+#updatesBtn {
+    background: linear-gradient(135deg, var(--c1, #6366f1), var(--c2, #8b5cf6));
+    box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+    display: inline-flex;
+    margin-top: 0;
+    padding: 10px 18px;
+}
+
+#leaderboardBtn {
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    box-shadow: 0 4px 14px rgba(239,68,68,0.3);
+    display: inline-flex;
+    margin-top: 0;
+    padding: 10px 18px;
+}
+
+#mirrorsBtn {
+    background: rgba(255,255,255,0.1);
+    border: 1.5px solid rgba(255,255,255,0.15) !important;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    display: inline-flex;
+    margin-top: 0;
+    padding: 10px 18px;
+}
+
+#supportBtn2 {
+    background: linear-gradient(135deg, #ec4899, #a855f7);
+    box-shadow: 0 4px 14px rgba(168,85,247,0.3);
+    display: inline-flex;
+    margin-top: 0;
+    padding: 10px 18px;
+}
+
+/* ── Update banner ──────────────────────────────────────────────── */
+#updateBanner {
+    margin: 10px auto 0;
+    max-width: 420px;
+    background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(239,68,68,0.15));
+    border: 1.5px solid rgba(245,158,11,0.4);
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-family: "Pusab", sans-serif;
+    color: #fcd34d;
+    text-align: center;
+    line-height: 1.5;
+}
+
+#updateBanner a {
+    color: #fbbf24;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+/* ── Account avatar row ─────────────────────────────────────────── */
+#accountProfileRow {
+    padding: 4px 0 0;
+}
+
+/* ── Small-screen homepage button fixes ─────────────────────────── */
+@media (max-width: 480px) {
+    .homepage-btn-row {
+        gap: 6px;
+    }
+    .homepage-btn-row button,
+    #updatesBtn, #leaderboardBtn, #mirrorsBtn, #supportBtn2 {
+        padding: 8px 12px;
+        font-size: 12px;
+        border-radius: 10px;
+    }
+}
+
+@media (max-width: 360px) {
+    .homepage-btn-row {
+        flex-direction: column;
+        align-items: center;
+    }
+    .homepage-btn-row button,
+    #updatesBtn, #leaderboardBtn, #mirrorsBtn, #supportBtn2 {
+        width: 100%;
+        justify-content: center;
+        font-size: 12px;
+    }
+}

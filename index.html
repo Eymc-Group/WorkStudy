@@ -51,6 +51,8 @@ content="summary_large_image">
     <script src="js/customTab.js" defer></script>
     <script src="js/legacyconfirm.js" defer></script>
     <script src="js/github-oauth.js" defer></script>
+    <script src="js/online.js" defer></script>
+    <script src="js/version-check.js" defer></script>
     <link rel="stylesheet" href="css/style.css">
 
 <main class="main">
@@ -58,18 +60,7 @@ content="summary_large_image">
         <!-- Homepage content -->
     </div>
 
-    <div class="supportContainer">
-        <a
-            href="https://paypal.me/Tony7873"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="supportBtn"
-        >
-            💜 Support WorkStudy
-        </a>
-    </div>
-
-           <a
+    <a
         href="https://chat.whatsapp.com/GvS2hJVLwi224kNGpo6WDH"
         target="_blank"
         rel="noopener noreferrer"
@@ -98,9 +89,14 @@ content="summary_large_image">
             <h1>Welcome to WorkStudy</h1>
             <p>I see you Mason Phull 👀</p>
             <p id="visitCount">👥 Total Visits: Loading...</p>
-            <button type="button" id="updatesBtn" onclick="location.href='pages/updates.html'">📋 Updates</button>
-            <button type="button" id="mirrorsBtn" onclick="location.href='pages/mirrors.html'">🌐 Mirrors</button>
+            <div class="homepage-btn-row">
+                <button type="button" id="updatesBtn" onclick="location.href='pages/updates.html'">📋 Updates</button>
+                <button type="button" id="leaderboardBtn" onclick="location.href='pages/leaderboard.html'">🏆 Leaderboard</button>
+                <button type="button" id="mirrorsBtn" onclick="location.href='pages/mirrors.html'">🌐 Mirrors</button>
+                <button type="button" id="supportBtn2" onclick="location.href='pages/support.html'">💜 Support</button>
+            </div>
             <div id="onlineUsers">🟢 Loading...</div>
+            <div id="updateBanner" style="display:none;"></div>
         </div>
     </main>
 
@@ -196,9 +192,17 @@ content="summary_large_image">
         <button type="button" onclick="window.location.href='pages/signup.html'">📝 Sign Up</button>
     </div>
     <div id="loggedInView" style="display:none;">
-        <p id="accountName">Guest</p>
-<p id="accountEmail"></p>
-<button id="logoutBtn" type="button">🚪 Logout</button>
+        <div id="accountProfileRow" style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+            <img id="accountAvatar" src="" alt="" style="width:40px;height:40px;border-radius:50%;border:2px solid var(--c1);display:none;object-fit:cover;">
+            <div>
+                <p id="accountName" style="margin:0;font-weight:bold;">Guest</p>
+                <p id="accountEmail" style="margin:0;font-size:12px;opacity:0.6;"></p>
+            </div>
+        </div>
+        <div id="githubProfileLink" style="display:none;text-align:center;margin-bottom:8px;">
+            <a id="githubProfileAnchor" href="#" target="_blank" rel="noopener" style="font-size:12px;color:var(--c2);text-decoration:none;">🐱 View GitHub Profile →</a>
+        </div>
+        <button id="logoutBtn" type="button">🚪 Logout</button>
 <button id="deleteAccountBtn" type="button">❌ Delete Account</button>
         <hr>
         <h3>🔗 GitHub</h3>
