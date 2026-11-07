@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
+<meta charset="UTF-8">
+    
     <meta name="google-site-verification" content="jjF3-saYzpDuGonDBfyKTbWR7S1R14zfjF_dNFJh3hg" />
     <title>WorkStudy - Games, Search & Explore</title>
+    <link rel="canonical"
+href="https://eymc-group.github.io/WorkStudy/">
+    <meta name="theme-color" content="#6b21a8">
 
-<meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+    <link rel="icon"
+type="image/png"
+href="img/favicon.png">
 
 <meta name="description"
-content="WorkStudy is a browser-based platform featuring games, cloud saves, customization options, themes, and web tools.">
+content="WorkStudy is a browser-based platform featuring games, cloud saves, customization, themes, search tools, and web utilities in one place.">
 
 <meta name="keywords"
 content="WorkStudy,games,browser games,cloud saves,tools,customization">
@@ -35,10 +40,9 @@ content="https://eymc-group.github.io/WorkStudy/img/favicon.png">
 
 <meta name="twitter:card"
 content="summary_large_image">
+
     
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>WorkStudy</title>
     <link rel="icon" href="img/favicon.png">
 
     <script src="js/auth.js" defer></script>
@@ -73,6 +77,17 @@ content="summary_large_image">
     
 </head>
 <body>
+
+
+    <h1>WorkStudy</h1>
+
+<p>
+WorkStudy is a browser-based platform featuring games,
+cloud saves, customization, search tools, and web
+utilities. Explore content, save progress, and discover
+new experiences from one place.
+</p>
+    
     <div class="sidebar">
         <button type="button" onclick="location.href='games/index.html'">🎮 Games</button>
         <button type="button" onclick="location.href='pages/chat/index.html'">💬 Chat</button>
@@ -211,9 +226,14 @@ content="summary_large_image">
         <p id="githubStatus" style="font-size:13px;text-align:center;color:var(--text);margin:4px 0 0;"></p>
         <hr>
         <h3>💾 Cloud Saves</h3>
-        <button id="saveProgressBtn" type="button">💾 Save Progress</button>
-        <button id="loadProgressBtn" type="button">📥 Load Progress</button>
-        <button id="deleteProgressBtn" type="button" style="background: linear-gradient(135deg, #991b1b, #ef4444);">🗑️ Delete Save</button>
+        <p id="lastSavedLabel" style="font-size:11px;text-align:center;color:rgba(255,255,255,0.4);font-family:'Pusab',sans-serif;margin:0 0 6px;min-height:14px;"></p>
+        <button id="saveProgressBtn" type="button">💾 Save to Cloud</button>
+        <button id="loadProgressBtn" type="button">📥 Load from Cloud</button>
+        <hr style="border-color:rgba(255,255,255,0.08);margin:8px 0;">
+        <button id="exportSaveBtn" type="button" style="background:linear-gradient(135deg,#0ea5e9,#6366f1);">📦 Export Backup File</button>
+        <button id="importSaveBtn" type="button" style="background:linear-gradient(135deg,#059669,#0ea5e9);">📂 Import Backup File</button>
+        <input id="importSaveInput" type="file" accept=".json" style="display:none;">
+        <button id="deleteProgressBtn" type="button" style="background: linear-gradient(135deg, #991b1b, #ef4444);">🗑️ Delete Cloud Save</button>
         <div id="saveStatus" style="margin-top: 10px; text-align: center; color: var(--text); font-size: 14px;"></div>
     </div>
 </div>

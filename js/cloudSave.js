@@ -21,6 +21,10 @@
             "auth-token"
         ]);
 
+    // Auto-save interval: every 5 minutes while logged in
+    const AUTO_SAVE_INTERVAL_MS = 5 * 60 * 1000;
+    const LAST_SAVED_KEY = "workstudy-last-cloud-save";
+
     class CloudSaveManager {
         constructor(apiUrl) {
             this.apiUrl =
@@ -801,6 +805,103 @@
             return result;
         }
 
+        collectCookies() {
+            // Grab all readable cookies as key/value pairs
+            const result = {};
+            try {
+                document.cookie.split(";").forEach(function (pair) {
+                    const eqIdx = pair.indexOf("=");
+                    if (eqIdx === -1) return;
+                    const key = pair.slice(0, eqIdx).trim();
+                    const value = pair.slice(eqIdx + 1).trim();
+                    if (key && !BLOCKED_KEYS.has(key)) result[key] = value;
+                });
+            } catch {}
+            return result;
+        }
+
+        restoreCookies(cookies) {
+            if (!cookies || typeof cookies !== "object") return;
+            try {
+                for (const [key, value] of Object.entries(cookies)) {
+                    if (!key || BLOCKED_KEYS.has(key)) continue;
+                    // Restore with a generous expiry (30 days)
+                    document.cookie = key + "=" + value + "; path=/; max-age=" + (30 * 24 * 3600);
+                }
+            } catch {}
+        }
+
+        formatBytes(bytes) {
+            if (bytes < 1024) return bytes + " B";
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+            return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+        }
+
+        formatTimestamp(iso) {
+            try {
+                const d = new Date(iso);
+                return d.toLocaleDateString() + " " + d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            } catch { return iso; }
+        }
+
+        updateLastSavedLabel() {
+            try {
+                const ts = localStorage.getItem(LAST_SAVED_KEY);
+                const el = document.getElementById("lastSavedLabel");
+                if (el) el.textContent = ts ? "☁️ Last saved: " + this.formatTimestamp(ts) : "";
+            } catch {}
+        }
+
+        // Export save data as a downloadable .json file
+        async exportToFile() {
+            const session = this.getAuthenticatedSession();
+            if (!session) return;
+            this.updateStatus("📦 Preparing local backup file...", "loading");
+            try {
+                const result = await this.collectSaveData();
+                const blob = new Blob(
+                    [JSON.stringify({ saveData: result.saveData, exportedAt: new Date().toISOString() }, null, 2)],
+                    { type: "application/json" }
+                );
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "workstudy-backup-" + new Date().toISOString().slice(0, 10) + ".json";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                this.updateStatus("✅ Backup file downloaded!", "success");
+            } catch (err) {
+                this.updateStatus("❌ " + (err.message || "Export failed."), "error");
+            }
+        }
+
+        // Import a .json file exported by exportToFile
+        async importFromFile(file) {
+            if (!file) return;
+            this.updateStatus("📂 Reading backup file...", "loading");
+            try {
+                const text = await file.text();
+                const parsed = JSON.parse(text);
+                const saveData = parsed.saveData || parsed;
+                const backup = this.getBackupFromSaveData(saveData);
+                if (!backup) throw new Error("File does not contain a valid WorkStudy backup.");
+
+                const confirmed = window.confirm(
+                    "⚠️ This will replace ALL local data with the file backup. Continue?"
+                );
+                if (!confirmed) { this.updateStatus("Import cancelled.", "loading"); return; }
+
+                this.updateStatus("📂 Restoring from file...", "loading");
+                await this.restoreBackup(backup);
+                this.updateStatus("✅ Restored from file! Reloading...", "success");
+                setTimeout(function () { window.location.reload(); }, 1500);
+            } catch (err) {
+                this.updateStatus("❌ " + (err.message || "Import failed."), "error");
+            }
+        }
+
         async exportIndexedDB() {
             if (
                 !window.indexedDB ||
@@ -1011,7 +1112,7 @@
 
         async collectSaveData() {
             const backup = {
-                version: 1,
+                version: 2,
 
                 createdAt:
                     new Date()
@@ -1026,6 +1127,9 @@
                     this.collectStorage(
                         sessionStorage
                     ),
+
+                cookies:
+                    this.collectCookies(),
 
                 indexedDB:
                     await this
@@ -1426,6 +1530,11 @@
             await this.restoreIndexedDB(
                 backup.indexedDB
             );
+
+            // Restore cookies if present (v2+)
+            if (backup.cookies) {
+                this.restoreCookies(backup.cookies);
+            }
         }
 
         async saveProgress() {
@@ -1490,8 +1599,13 @@
                         .indexedDB
                         .length;
 
+                const sizeBytes = JSON.stringify(result.saveData).length;
+                const now = new Date().toISOString();
+                try { localStorage.setItem(LAST_SAVED_KEY, now); } catch {}
+                this.updateLastSavedLabel();
+
                 this.updateStatus(
-                    `✅ Saved local storage, session storage, and ${databaseCount} IndexedDB database(s)!`,
+                    `✅ Saved! localStorage, sessionStorage, cookies & ${databaseCount} IndexedDB DB(s) · ${this.formatBytes(sizeBytes)}`,
                     "success"
                 );
 
@@ -1738,52 +1852,78 @@
             new CloudSaveManager();
 
         const saveButton =
-            document.getElementById(
-                "saveProgressBtn"
-            );
-
+            document.getElementById("saveProgressBtn");
         const loadButton =
-            document.getElementById(
-                "loadProgressBtn"
-            );
-
+            document.getElementById("loadProgressBtn");
         const deleteButton =
-            document.getElementById(
-                "deleteProgressBtn"
-            );
+            document.getElementById("deleteProgressBtn");
+        const exportBtn =
+            document.getElementById("exportSaveBtn");
+        const importBtn =
+            document.getElementById("importSaveBtn");
+        const importInput =
+            document.getElementById("importSaveInput");
 
         if (saveButton) {
-            saveButton.addEventListener(
-                "click",
-                function () {
-                    cloudSave
-                        .saveProgress();
-                }
-            );
+            saveButton.addEventListener("click", function () {
+                cloudSave.saveProgress();
+            });
         }
 
         if (loadButton) {
-            loadButton.addEventListener(
-                "click",
-                function () {
-                    cloudSave
-                        .loadProgress();
-                }
-            );
+            loadButton.addEventListener("click", function () {
+                cloudSave.loadProgress();
+            });
         }
 
         if (deleteButton) {
-            deleteButton.addEventListener(
-                "click",
-                function () {
-                    cloudSave
-                        .deleteSave();
-                }
-            );
+            deleteButton.addEventListener("click", function () {
+                cloudSave.deleteSave();
+            });
         }
 
-        window.WorkStudyCloudSave =
-            cloudSave;
+        if (exportBtn) {
+            exportBtn.addEventListener("click", function () {
+                cloudSave.exportToFile();
+            });
+        }
+
+        if (importBtn && importInput) {
+            importBtn.addEventListener("click", function () {
+                importInput.click();
+            });
+            importInput.addEventListener("change", function () {
+                if (importInput.files && importInput.files[0]) {
+                    cloudSave.importFromFile(importInput.files[0]);
+                    importInput.value = "";
+                }
+            });
+        }
+
+        // Show last saved timestamp on load
+        cloudSave.updateLastSavedLabel();
+
+        // Auto-save every 5 minutes if logged in
+        setInterval(function () {
+            const token = cloudSave.getAuthToken();
+            if (token) cloudSave.saveProgress();
+        }, AUTO_SAVE_INTERVAL_MS);
+
+        // Best-effort save on page unload
+        window.addEventListener("beforeunload", function () {
+            const token = cloudSave.getAuthToken();
+            if (!token) return;
+            // Use sendBeacon for reliability on unload
+            try {
+                const data = { saveData: {} }; // lightweight ping; full save already happened via interval
+                navigator.sendBeacon && navigator.sendBeacon(
+                    cloudSave.apiUrl + "/api/ping",
+                    JSON.stringify({ ts: Date.now() })
+                );
+            } catch {}
+        });
+
+        window.WorkStudyCloudSave = cloudSave;
     }
 
     if (
