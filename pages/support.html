@@ -209,23 +209,15 @@
             <div class="card-icon">☕</div>
             <p class="card-name">Buy Me a Coffee</p>
             <p class="card-desc">Buy the dev a coffee</p>
-            <a href="https://buymeacoffee.com/workstudy" target="_blank" rel="noopener noreferrer" class="card-btn">Open BMAC</a>
-        </div>
-
-        <!-- Cash App -->
-        <div class="card">
-            <div class="card-icon">💵</div>
-            <p class="card-name">Cash App</p>
-            <p class="card-desc">Send via Cash App</p>
-            <a href="https://cash.app/$Tony7873" target="_blank" rel="noopener noreferrer" class="card-btn">Open Cash App</a>
+            <a href="https://buymeacoffee.com/Tony7873" target="_blank" rel="noopener noreferrer" class="card-btn">Open BMAC</a>
         </div>
 
         <!-- Stripe -->
         <div class="card">
             <div class="card-icon">💳</div>
-            <p class="card-name">Stripe</p>
+            <p class="card-name">Stripe (not working)</p>
             <p class="card-desc">One-time or recurring card payment</p>
-            <a href="https://donate.stripe.com/workstudy" target="_blank" rel="noopener noreferrer" class="card-btn">Donate via Stripe</a>
+            <a href="example.com" target="_blank" rel="noopener noreferrer" class="card-btn">Donate via Stripe</a>
         </div>
 
         <!-- TD Bank / E-transfer -->
@@ -233,7 +225,7 @@
             <div class="card-icon">🏦</div>
             <p class="card-name">TD Bank — E-Transfer</p>
             <p class="card-desc">Send an Interac e-Transfer to:</p>
-            <p class="card-email">altanthonyalt78@gmail.com</p>
+            <p class="card-email">psfanthony12@gmail.com</p>
             <button class="card-btn copy-btn" id="copyEmailBtn" onclick="copyEmail()">📋 Copy Email</button>
         </div>
 
@@ -244,13 +236,13 @@
     <script>
         function copyEmail() {
             const btn = document.getElementById("copyEmailBtn");
-            navigator.clipboard.writeText("altanthonyalt78@gmail.com").then(function () {
+            navigator.clipboard.writeText("psfantony12@gmail.com").then(function () {
                 btn.textContent = "✅ Copied!";
                 setTimeout(function () { btn.textContent = "📋 Copy Email"; }, 2000);
             }).catch(function () {
                 // Fallback for older browsers
                 const ta = document.createElement("textarea");
-                ta.value = "altanthonyalt78@gmail.com";
+                ta.value = "psfanthony12@gmail.com";
                 ta.style.position = "fixed";
                 ta.style.opacity = "0";
                 document.body.appendChild(ta);
