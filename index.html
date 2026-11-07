@@ -226,9 +226,14 @@ new experiences from one place.
         <p id="githubStatus" style="font-size:13px;text-align:center;color:var(--text);margin:4px 0 0;"></p>
         <hr>
         <h3>💾 Cloud Saves</h3>
-        <button id="saveProgressBtn" type="button">💾 Save Progress</button>
-        <button id="loadProgressBtn" type="button">📥 Load Progress</button>
-        <button id="deleteProgressBtn" type="button" style="background: linear-gradient(135deg, #991b1b, #ef4444);">🗑️ Delete Save</button>
+        <p id="lastSavedLabel" style="font-size:11px;text-align:center;color:rgba(255,255,255,0.4);font-family:'Pusab',sans-serif;margin:0 0 6px;min-height:14px;"></p>
+        <button id="saveProgressBtn" type="button">💾 Save to Cloud</button>
+        <button id="loadProgressBtn" type="button">📥 Load from Cloud</button>
+        <hr style="border-color:rgba(255,255,255,0.08);margin:8px 0;">
+        <button id="exportSaveBtn" type="button" style="background:linear-gradient(135deg,#0ea5e9,#6366f1);">📦 Export Backup File</button>
+        <button id="importSaveBtn" type="button" style="background:linear-gradient(135deg,#059669,#0ea5e9);">📂 Import Backup File</button>
+        <input id="importSaveInput" type="file" accept=".json" style="display:none;">
+        <button id="deleteProgressBtn" type="button" style="background: linear-gradient(135deg, #991b1b, #ef4444);">🗑️ Delete Cloud Save</button>
         <div id="saveStatus" style="margin-top: 10px; text-align: center; color: var(--text); font-size: 14px;"></div>
     </div>
 </div>
