@@ -20,6 +20,8 @@ const PRECACHE_URLS = [
     "/WorkStudy/js/version-check.js",
     "/WorkStudy/js/customTab.js",
     "/WorkStudy/img/favicon.png",
+    "/WorkStudy/img/icon-192.png",
+    "/WorkStudy/img/icon-512.png",
     "/WorkStudy/manifest.json",
     "/WorkStudy/version.json",
     "/WorkStudy/games/index.html",

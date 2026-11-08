@@ -13,73 +13,71 @@
   "dir": "ltr",
   "categories": ["games", "entertainment", "utilities"],
   "id": "/WorkStudy/",
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+
   "icons": [
-    {
-      "src": "img/favicon.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "img/favicon.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "img/favicon.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "img/favicon.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    { "src": "img/icon-72.png",  "sizes": "72x72",   "type": "image/png", "purpose": "any" },
+    { "src": "img/icon-96.png",  "sizes": "96x96",   "type": "image/png", "purpose": "any" },
+    { "src": "img/icon-128.png", "sizes": "128x128", "type": "image/png", "purpose": "any" },
+    { "src": "img/icon-144.png", "sizes": "144x144", "type": "image/png", "purpose": "any" },
+    { "src": "img/icon-152.png", "sizes": "152x152", "type": "image/png", "purpose": "any" },
+    { "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "img/icon-384.png", "sizes": "384x384", "type": "image/png", "purpose": "any" },
+    { "src": "img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
+
   "screenshots": [
     {
-      "src": "img/favicon.png",
-      "sizes": "512x512",
+      "src": "img/screenshot-wide.png",
+      "sizes": "1920x1080",
       "type": "image/png",
       "label": "WorkStudy Home",
       "form_factor": "wide"
     },
     {
-      "src": "img/favicon.png",
-      "sizes": "512x512",
+      "src": "img/screenshot-narrow.png",
+      "sizes": "1080x1920",
       "type": "image/png",
       "label": "WorkStudy Mobile",
       "form_factor": "narrow"
     }
   ],
+
   "shortcuts": [
     {
       "name": "🎮 Games",
       "short_name": "Games",
       "description": "Browse all 150+ unblocked games",
       "url": "/WorkStudy/games/index.html?source=shortcut",
-      "icons": [{ "src": "img/favicon.png", "sizes": "192x192" }]
+      "icons": [{ "src": "img/icon-96.png", "sizes": "96x96" }]
     },
     {
       "name": "🏆 Leaderboard",
       "short_name": "Leaderboard",
       "description": "View the global leaderboard",
       "url": "/WorkStudy/pages/leaderboard.html?source=shortcut",
-      "icons": [{ "src": "img/favicon.png", "sizes": "192x192" }]
+      "icons": [{ "src": "img/icon-96.png", "sizes": "96x96" }]
     },
     {
       "name": "🌐 Website Viewer",
       "short_name": "Viewer",
       "description": "Browse websites through the viewer",
       "url": "/WorkStudy/pages/iframe.html?source=shortcut",
-      "icons": [{ "src": "img/favicon.png", "sizes": "192x192" }]
+      "icons": [{ "src": "img/icon-96.png", "sizes": "96x96" }]
     }
   ],
-  "related_applications": [],
+
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.eymcgroup.workstudy",
+      "id": "com.eymcgroup.workstudy"
+    }
+  ],
   "prefer_related_applications": false,
+
   "share_target": {
     "action": "/WorkStudy/pages/iframe.html",
     "method": "GET",
