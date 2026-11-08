@@ -265,20 +265,6 @@
             letter-spacing: 0.5px;
         }
 
-        .stat-stars {
-            font-size: 10px;
-            color: #f59e0b;
-            letter-spacing: -1px;
-            opacity: 0.8;
-        }
-        .lb-score-stars {
-            display: block;
-            font-size: 10px;
-            color: #f59e0b;
-            letter-spacing: -1px;
-            opacity: 0.8;
-        }
-        .lb-stat-highlight .stat-stars { opacity: 1; color: #fbbf24; }
 
         @media (max-width: 480px) {
             .lb-topbar { padding: 10px 12px; }
@@ -391,26 +377,6 @@ function sortedData(data, tab) {
 
             const hl = (tab) => currentTab === tab ? " lb-stat-highlight" : "";
 
-            // Star rating: show ★ based on rank within sorted list for each stat
-            const sortedByScore  = [...allData].sort((a,b)=>(Number(b.score)||0)-(Number(a.score)||0));
-            const sortedByTime   = [...allData].sort((a,b)=>(Number(b.minutesOnSite)||0)-(Number(a.minutesOnSite)||0));
-            const sortedByGames  = [...allData].sort((a,b)=>(Number(b.gamesPlayed)||0)-(Number(a.gamesPlayed)||0));
-            const sortedByVisits = [...allData].sort((a,b)=>(Number(b.visits)||0)-(Number(a.visits)||0));
-
-            function starRating(rankIn, total) {
-                if (total <= 1) return "★★★★★";
-                const pct = 1 - (rankIn / total);
-                if (pct >= 0.9) return "★★★★★";
-                if (pct >= 0.7) return "★★★★☆";
-                if (pct >= 0.5) return "★★★☆☆";
-                if (pct >= 0.3) return "★★☆☆☆";
-                return "★☆☆☆☆";
-            }
-
-            const rScore  = sortedByScore.findIndex(e=>e.username===entry.username);
-            const rTime   = sortedByTime.findIndex(e=>e.username===entry.username);
-            const rGames  = sortedByGames.findIndex(e=>e.username===entry.username);
-            const rVisits = sortedByVisits.findIndex(e=>e.username===entry.username);
             const total   = allData.length;
 
             return `<div class="lb-entry${rankClass}">
@@ -422,14 +388,14 @@ function sortedData(data, tab) {
                         ${ghLink}
                     </div>
                     <div class="lb-stats">
-                        <div class="lb-stat${hl("time")}">⏱️ <span class="stat-val">${fmtTime(mins)}</span> <span class="stat-stars">${starRating(rTime,total)}</span></div>
-                        <div class="lb-stat${hl("games")}">🎮 <span class="stat-val">${gamesP.toLocaleString()}</span> <span class="stat-stars">${starRating(rGames,total)}</span></div>
-                        <div class="lb-stat${hl("visits")}">👁️ <span class="stat-val">${visitsN.toLocaleString()}</span> <span class="stat-stars">${starRating(rVisits,total)}</span></div>
+                        <div class="lb-stat${hl("time")}">⏱️ <span class="stat-val">${fmtTime(mins)}</span></div>
+                        <div class="lb-stat${hl("games")}">🎮 <span class="stat-val">${gamesP.toLocaleString()}</span></div>
+                        <div class="lb-stat${hl("visits")}">👁️ <span class="stat-val">${visitsN.toLocaleString()}</span></div>
                     </div>
                 </div>
                 <div class="lb-score">
                     <div class="lb-score-num">${scoreN.toLocaleString()}</div>
-                    <div class="lb-score-label">pts <span class="lb-score-stars">${starRating(rScore,total)}</span></div>
+                    <div class="lb-score-label">pts</div>
                 </div>
             </div>`;
         }).join("");
