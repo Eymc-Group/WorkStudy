@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>You're Offline – WorkStudy</title>
+    <meta name="robots" content="noindex">
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <style>
+        :root {
+            --bg:    #0f172a;
+            --panel: #1e293b;
+            --text:  #f1f5f9;
+            --muted: rgba(241,245,249,0.4);
+            --c1:    #7c3aed;
+            --c2:    #a855f7;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: "Pusab", system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            gap: 24px;
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 72px;
+            line-height: 1;
+            filter: drop-shadow(0 0 24px rgba(168,85,247,0.4));
+        }
+
+        h1 {
+            font-size: clamp(22px, 5vw, 36px);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--c1), var(--c2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        p {
+            font-size: 14px;
+            color: var(--muted);
+            max-width: 320px;
+            line-height: 1.6;
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 360px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .cached-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .cached-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+            text-decoration: none;
+            font-size: 13px;
+            transition: background .15s;
+        }
+
+        .cached-link:hover { background: rgba(255,255,255,0.1); }
+
+        .retry-btn {
+            padding: 12px 28px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, var(--c1), var(--c2));
+            color: #fff;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .2s, filter .2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .retry-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+        #status {
+            font-size: 12px;
+            color: var(--muted);
+            height: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="icon">📡</div>
+
+    <h1>You're Offline</h1>
+    <p>No internet connection detected. You can still access cached pages below, or try again when you're back online.</p>
+
+    <div class="card">
+        <div class="card-title">📦 Cached Pages</div>
+        <div class="cached-links">
+            <a class="cached-link" href="/WorkStudy/">🏠 Home</a>
+            <a class="cached-link" href="/WorkStudy/games/index.html">🎮 Games</a>
+            <a class="cached-link" href="/WorkStudy/pages/leaderboard.html">🏆 Leaderboard</a>
+            <a class="cached-link" href="/WorkStudy/pages/updates.html">📋 Updates</a>
+        </div>
+    </div>
+
+    <button class="retry-btn" onclick="tryReconnect()">
+        🔄 Try Again
+    </button>
+    <div id="status"></div>
+
+    <script>
+        function tryReconnect() {
+            const btn = document.querySelector(".retry-btn");
+            const status = document.getElementById("status");
+            btn.disabled = true;
+            btn.textContent = "⏳ Checking…";
+            status.textContent = "";
+
+            fetch("/WorkStudy/?offline-check=" + Date.now(), { cache: "no-store" })
+                .then(function () {
+                    status.textContent = "✅ Back online! Redirecting…";
+                    setTimeout(function () {
+                        window.location.href = "/WorkStudy/";
+                    }, 800);
+                })
+                .catch(function () {
+                    btn.disabled = false;
+                    btn.innerHTML = "🔄 Try Again";
+                    status.textContent = "Still offline. Try again in a moment.";
+                });
+        }
+
+        // Auto-reconnect when network comes back
+        window.addEventListener("online", function () {
+            document.getElementById("status").textContent = "✅ Connection restored! Redirecting…";
+            setTimeout(function () {
+                window.location.href = "/WorkStudy/";
+            }, 800);
+        });
+    </script>
+</body>
+</html>

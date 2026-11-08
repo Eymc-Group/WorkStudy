@@ -120,9 +120,61 @@
     <script>
     if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
-            navigator.serviceWorker.register("sw.js").catch(function () {});
+            navigator.serviceWorker.register("sw.js").then(function (reg) {
+                // Check for updates every 60 seconds
+                setInterval(function () { reg.update(); }, 60000);
+            }).catch(function () {});
         });
     }
+
+    // ── PWA Install Prompt ────────────────────────────────────────────────
+    let _deferredInstall = null;
+
+    window.addEventListener("beforeinstallprompt", function (e) {
+        e.preventDefault();
+        _deferredInstall = e;
+        const banner = document.getElementById("pwa-install-banner");
+        if (banner) banner.style.display = "flex";
+    });
+
+    window.addEventListener("appinstalled", function () {
+        _deferredInstall = null;
+        const banner = document.getElementById("pwa-install-banner");
+        if (banner) banner.style.display = "none";
+    });
+
+    window.installPWA = function () {
+        if (!_deferredInstall) return;
+        _deferredInstall.prompt();
+        _deferredInstall.userChoice.then(function () {
+            _deferredInstall = null;
+            const banner = document.getElementById("pwa-install-banner");
+            if (banner) banner.style.display = "none";
+        });
+    };
+
+    window.dismissInstallBanner = function () {
+        const banner = document.getElementById("pwa-install-banner");
+        if (banner) banner.style.display = "none";
+        try { sessionStorage.setItem("pwa-banner-dismissed", "1"); } catch (e) {}
+    };
+
+    // Don't show if already dismissed this session
+    document.addEventListener("DOMContentLoaded", function () {
+        try {
+            if (sessionStorage.getItem("pwa-banner-dismissed") === "1") {
+                const banner = document.getElementById("pwa-install-banner");
+                if (banner) banner.style.display = "none";
+            }
+        } catch (e) {}
+
+        // Also hide if already running as installed PWA
+        if (window.matchMedia("(display-mode: standalone)").matches ||
+            window.navigator.standalone === true) {
+            const banner = document.getElementById("pwa-install-banner");
+            if (banner) banner.style.display = "none";
+        }
+    });
     </script>
     <script src="js/auth.js" defer></script>
     <script src="js/color.js" defer></script>
@@ -157,6 +209,23 @@
 </head>
 <body>
 
+    <!-- ── PWA Install Banner ───────────────────────────────────────────── -->
+    <div id="pwa-install-banner" style="display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:9999;
+         background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border-radius:16px;padding:12px 18px;
+         align-items:center;gap:12px;box-shadow:0 8px 32px rgba(124,58,237,.5);max-width:calc(100vw - 32px);width:360px;
+         font-family:'Pusab',system-ui,sans-serif;font-size:13px;">
+        <span style="font-size:28px;flex-shrink:0">📲</span>
+        <span style="flex:1;line-height:1.4"><strong>Install WorkStudy</strong><br>
+            <span style="opacity:.85">Play games &amp; use tools offline</span></span>
+        <button onclick="installPWA()" style="background:#fff;color:#7c3aed;border:none;border-radius:10px;
+            padding:7px 14px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;">
+            Install
+        </button>
+        <button onclick="dismissInstallBanner()" style="background:rgba(255,255,255,.2);color:#fff;border:none;
+            border-radius:8px;width:28px;height:28px;cursor:pointer;font-size:16px;line-height:1;flex-shrink:0;">
+            ✕
+        </button>
+    </div>
 
     <h1>WorkStudy</h1>
 
