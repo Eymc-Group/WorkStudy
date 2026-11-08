@@ -32,9 +32,12 @@
     const sessionId = getSessionId();
     let minutesOnSite = 0;
     let firstPing = true;
+    let pingCount = 0;
 
     async function ping() {
-        minutesOnSite++;
+        pingCount++;
+        // Increment minutesOnSite every 4 pings (= every ~60s)
+        if (pingCount % 4 === 0) minutesOnSite++;
         const token = getToken();
         const headers = { "Content-Type": "application/json" };
         if (token) headers["Authorization"] = "Bearer " + token;
@@ -46,7 +49,7 @@
             });
             if (res.ok) {
                 const data = await res.json();
-                if (firstPing && typeof data.count === "number") {
+                if (typeof data.count === "number") {
                     setOnlineCount(data.count);
                     firstPing = false;
                 }
@@ -77,14 +80,14 @@
         } catch {}
     }
 
-    // Initial ping immediately, then every 60s
+    // Initial ping immediately, then every 15s
     ping();
-    setInterval(ping, 60000);
+    setInterval(ping, 15000);
 
-    // Poll count every 30s
+    // Poll count every 15s (in sync with ping)
     pollCount();
-    setInterval(pollCount, 30000);
+    setInterval(pollCount, 15000);
 
-    // Record visit after 2s delay (not a bounce)
-    setTimeout(recordVisit, 2000);
+    // Record visit after 1s delay (not a bounce)
+    setTimeout(recordVisit, 1000);
 })();

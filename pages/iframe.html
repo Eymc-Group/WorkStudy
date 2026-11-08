@@ -12,6 +12,67 @@
     <script src="../js/website.js" defer></script>
     <script src="../js/customTab.js" defer></script>
     <script>
+function getUrl() {
+    let url = (document.getElementById("urlInput").value || "").trim();
+    if (!url) return null;
+    if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+    return url;
+}
+
+function setStatus(msg, type) {
+    const el = document.getElementById("fetchStatus");
+    el.style.display = msg ? "" : "none";
+    el.textContent = msg || "";
+    el.style.background = type === "error" ? "rgba(239,68,68,0.15)" :
+                          type === "ok"    ? "rgba(16,185,129,0.15)" :
+                                             "rgba(255,255,255,0.08)";
+}
+
+function loadIframe() {
+    const url = getUrl();
+    if (!url) return setStatus("Please enter a URL.", "error");
+    const frame = document.getElementById("websiteFrame");
+    frame.style.display = "";
+    document.getElementById("fetchFrame").style.display = "none";
+    frame.src = url;
+    setStatus("🖼️ Embedding: " + url, "ok");
+}
+
+// Keep old name for compatibility with website.js
+function loadWebsite() { loadIframe(); }
+
+async function fetchAndEmbed() {
+    const url = getUrl();
+    if (!url) return setStatus("Please enter a URL.", "error");
+
+    setStatus("⏳ Fetching…");
+    document.getElementById("websiteFrame").style.display = "none";
+    const ff = document.getElementById("fetchFrame");
+    ff.style.display = "none";
+
+    try {
+        // Use a CORS proxy since direct fetch of external sites is blocked by CORS
+        const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
+        const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(10000) });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const html = await res.text();
+
+        // Inject base tag so relative URLs resolve correctly
+        const injected = html.replace(/<head([^>]*)>/i,
+            `<head$1><base href="${url}"><meta name="referrer" content="no-referrer">`);
+
+        const blob = new Blob([injected], { type: "text/html" });
+        const blobUrl = URL.createObjectURL(blob);
+
+        ff.src = blobUrl;
+        ff.style.display = "";
+        setStatus("✅ Fetched: " + url, "ok");
+    } catch (e) {
+        setStatus("❌ Fetch failed: " + (e.message || "network error") + ". Try iFrame instead.", "error");
+        document.getElementById("websiteFrame").style.display = "";
+    }
+}
+
 function openWebsiteNewTab() {
     const frame = document.getElementById("websiteFrame");
 
@@ -92,18 +153,21 @@ function openWebsiteNewTab() {
             opacity: 0.9;
         }
 
-        #websiteFrame {
+        #websiteFrame,
+        #fetchFrame {
             width: 100%;
-            height: calc(100vh - 220px);
+            height: calc(100vh - 240px);
             border: none;
         }
     </style>
 </head>
 <body>
 
+    <div id="fetchStatus" style="display:none;padding:8px 16px;text-align:center;font-size:13px;border-radius:8px;margin:8px 10px 0;background:rgba(255,255,255,0.08);color:var(--text,#e2e8f0);"></div>
+
     <div class="welcome">
-        <h1>Website Iframe</h1>
-        <p>Enter a website URL below to view it inside an iframe.</p>
+        <h1>Website Viewer</h1>
+        <p>🖼️ <strong>iFrame</strong> — embed the site directly &nbsp;|&nbsp; 📥 <strong>Fetch</strong> — fetch &amp; display the HTML source</p>
     </div>
 
     <div class="topbar">
@@ -112,8 +176,12 @@ function openWebsiteNewTab() {
             id="urlInput"
             placeholder="https://example.com">
 
-        <button type="button" onclick="loadWebsite()">
-            👇 Open
+        <button type="button" onclick="loadIframe()">
+            🖼️ iFrame
+        </button>
+
+        <button type="button" onclick="fetchAndEmbed()">
+            📥 Fetch
         </button>
 
         <button type="button" onclick="saveCurrentWebsite()">
@@ -123,10 +191,10 @@ function openWebsiteNewTab() {
         <button type="button" onclick="location.href='../index.html'">
             🏠 Home
         </button>
-        
+
         <button type="button" onclick="openWebsiteNewTab()">
-            🗔 Open In New Tab
-        </button>  
+            🗔 New Tab
+        </button>
         
     </div>
     
@@ -135,6 +203,13 @@ function openWebsiteNewTab() {
     <iframe
         id="websiteFrame"
         title="Website Preview">
+    </iframe>
+
+    <iframe
+        id="fetchFrame"
+        title="Fetched Content"
+        sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+        style="display:none;">
     </iframe>
 
 </body>
