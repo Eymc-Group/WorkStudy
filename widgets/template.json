@@ -1,0 +1,52 @@
+{
+  "type": "AdaptiveCard",
+  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+  "version": "1.6",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "${title}",
+      "weight": "Bolder",
+      "size": "Medium",
+      "color": "Accent"
+    },
+    {
+      "type": "TextBlock",
+      "text": "${description}",
+      "size": "Small",
+      "isSubtle": true,
+      "wrap": true
+    },
+    {
+      "type": "ColumnSet",
+      "columns": [
+        {
+          "type": "Column",
+          "width": "stretch",
+          "items": [
+            {
+              "type": "ActionSet",
+              "actions": [
+                { "type": "Action.OpenUrl", "title": "${links[0].label}", "url": "${links[0].url}" },
+                { "type": "Action.OpenUrl", "title": "${links[1].label}", "url": "${links[1].url}" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "Column",
+          "width": "stretch",
+          "items": [
+            {
+              "type": "ActionSet",
+              "actions": [
+                { "type": "Action.OpenUrl", "title": "${links[2].label}", "url": "${links[2].url}" },
+                { "type": "Action.OpenUrl", "title": "${links[3].label}", "url": "${links[3].url}" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

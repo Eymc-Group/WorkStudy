@@ -1,6 +1,6 @@
 {
-  "version": "1.4.0",
-  "releasedAt": "2026-11-07",
-  "changelog": "Leaderboard star ratings, faster online counter, improved SEO, version badge, mirrors live status, better PWA support, more devtools",
+  "version": "2.7.41",
+  "releasedAt": "2026-11-08",
+  "changelog": "PWABuilder enhancements: scope_extensions, file_handlers, launch_handler, protocol_handlers, widget, edge_side_panel, tabbed display, note_taking, periodic background sync, push notifications. Leaderboard stars removed. PWA offline page + install banner.",
   "downloadUrl": "https://github.com/Eymc-Group/WorkStudy/archive/refs/heads/root.zip"
 }

@@ -123,11 +123,44 @@
     if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
             navigator.serviceWorker.register("sw.js").then(function (reg) {
-                // Check for updates every 60 seconds
+                // Periodic update check
                 setInterval(function () { reg.update(); }, 60000);
+
+                // Periodic background sync — refresh leaderboard & check for updates
+                if ("periodicSync" in reg) {
+                    navigator.permissions.query({ name: "periodic-background-sync" }).then(function (status) {
+                        if (status.state === "granted") {
+                            reg.periodicSync.register("refresh-leaderboard", { minInterval: 3600000 }).catch(function(){});
+                            reg.periodicSync.register("check-updates",       { minInterval: 86400000 }).catch(function(){});
+                        }
+                    }).catch(function(){});
+                }
+
+                // Listen for update-available message from SW
+                navigator.serviceWorker.addEventListener("message", function (e) {
+                    if (e.data && e.data.type === "UPDATE_AVAILABLE") {
+                        const badge = document.getElementById("versionBadge");
+                        if (badge) {
+                            badge.style.background = "linear-gradient(135deg,#dc2626,#ef4444)";
+                            badge.title = "Update available: " + e.data.version + " — click to reload";
+                            badge.style.cursor = "pointer";
+                            badge.onclick = function () { window.location.reload(); };
+                        }
+                    }
+                });
             }).catch(function () {});
         });
     }
+
+    // Push notification permission (request only on explicit user action via askPushPermission())
+    window.askPushPermission = function () {
+        if (!("Notification" in window)) return;
+        Notification.requestPermission().then(function (perm) {
+            if (perm === "granted") {
+                console.log("[WorkStudy] Push notifications enabled.");
+            }
+        });
+    };
 
     // ── PWA Install Prompt ────────────────────────────────────────────────
     let _deferredInstall = null;
@@ -280,7 +313,7 @@ new experiences from one place.
         border: 1px solid rgba(255,255,255,0.1);
         pointer-events: none;
         letter-spacing: 0.3px;
-    ">v1.4.0</div>
+    ">v2.7.41</div>
 
     <button id="settingsBtn" type="button" aria-controls="customizePanel" aria-expanded="false">⚙️ Settings</button>
 

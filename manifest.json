@@ -2,10 +2,11 @@
   "name": "WorkStudy",
   "short_name": "WorkStudy",
   "description": "150+ free unblocked browser games, cloud saves, leaderboard, themes and web utilities — no download required.",
+  "version": "2.7.41",
   "start_url": "/WorkStudy/?source=pwa",
   "scope": "/WorkStudy/",
   "display": "standalone",
-  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "display_override": ["window-controls-overlay", "tabbed", "standalone", "minimal-ui"],
   "orientation": "any",
   "background_color": "#0f172a",
   "theme_color": "#6b21a8",
@@ -66,6 +67,66 @@
       "description": "Browse websites through the viewer",
       "url": "/WorkStudy/pages/iframe.html?source=shortcut",
       "icons": [{ "src": "img/icon-96.png", "sizes": "96x96" }]
+    }
+  ],
+
+  "scope_extensions": [
+    { "origin": "https://eymc-group.github.io" },
+    { "origin": "https://workstudy-api.354271744.workers.dev" }
+  ],
+
+  "file_handlers": [
+    {
+      "action": "/WorkStudy/pages/iframe.html",
+      "accept": {
+        "text/html": [".html", ".htm"],
+        "text/plain": [".txt"],
+        "application/json": [".json"]
+      },
+      "icons": [{ "src": "img/icon-96.png", "sizes": "96x96" }],
+      "launch_type": "single-client"
+    }
+  ],
+
+  "launch_handler": {
+    "client_mode": ["focus-existing", "navigate-existing", "auto"]
+  },
+
+  "protocol_handlers": [
+    {
+      "protocol": "web+workstudy",
+      "url": "/WorkStudy/pages/iframe.html?url=%s"
+    }
+  ],
+
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+
+  "note_taking": {
+    "new_note_url": "/WorkStudy/pages/devtools.html"
+  },
+
+  "widgets": [
+    {
+      "name": "WorkStudy Quick Launch",
+      "description": "Quick access to WorkStudy games and tools",
+      "tag": "workstudy-quick",
+      "template": "workstudy-widget",
+      "ms_ac_template": "widgets/template.json",
+      "data": "widgets/data.json",
+      "type": "application/json",
+      "screenshots": [
+        {
+          "src": "img/screenshot-narrow.png",
+          "sizes": "1080x1920",
+          "label": "WorkStudy Widget"
+        }
+      ],
+      "icons": [{ "src": "img/icon-192.png", "sizes": "192x192" }],
+      "backgrounds": [{ "src": "img/icon-512.png", "sizes": "512x512" }],
+      "auth": false,
+      "update": 86400
     }
   ],
 

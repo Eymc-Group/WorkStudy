@@ -1,0 +1,10 @@
+{
+  "title": "WorkStudy",
+  "description": "150+ free unblocked games",
+  "links": [
+    { "label": "🎮 Play Games",    "url": "/WorkStudy/games/index.html" },
+    { "label": "🏆 Leaderboard",  "url": "/WorkStudy/pages/leaderboard.html" },
+    { "label": "🌐 Website Viewer","url": "/WorkStudy/pages/iframe.html" },
+    { "label": "🔧 DevTools",     "url": "/WorkStudy/pages/devtools.html" }
+  ]
+}
