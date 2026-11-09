@@ -1,6 +1,6 @@
 {
-  "version": "2.7.41",
+  "version": "2.8.42",
   "releasedAt": "2026-11-08",
-  "changelog": "PWABuilder enhancements: scope_extensions, file_handlers, launch_handler, protocol_handlers, widget, edge_side_panel, tabbed display, note_taking, periodic background sync, push notifications. Leaderboard stars removed. PWA offline page + install banner.",
+  "changelog": "Final public release: movies & shows page (maple.fun iframes + ad warning), homepage redesign with hero section and feature cards, app store support (itch.io, Amazon Appstore, Google Play TWA), all branches synced.",
   "downloadUrl": "https://github.com/Eymc-Group/WorkStudy/archive/refs/heads/root.zip"
 }

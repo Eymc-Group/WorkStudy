@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movies &amp; Shows — WorkStudy</title>
+  <meta name="description" content="Watch free movies and TV shows on WorkStudy. Stream popular titles directly in your browser — no sign-up required.">
+  <link rel="canonical" href="https://eymc-group.github.io/WorkStudy/pages/movies.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" href="../img/favicon.png" type="image/png">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#6b21a8">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg2: #1e293b;
+      --bg3: #334155;
+      --accent: #7c3aed;
+      --accent2: #a855f7;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #334155;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --radius: 12px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topbar a.back {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color .2s;
+    }
+    .topbar a.back:hover { color: var(--text); }
+    .topbar h1 { font-size: 1.1rem; font-weight: 700; }
+    .topbar .badge {
+      margin-left: auto;
+      background: var(--warn);
+      color: #000;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+      letter-spacing: .05em;
+      cursor: pointer;
+    }
+
+    /* ── Tab bar ── */
+    .tabs {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 4px;
+      padding: 0 16px;
+      overflow-x: auto;
+    }
+    .tab {
+      padding: 10px 18px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--muted);
+      border-bottom: 3px solid transparent;
+      transition: color .2s, border-color .2s;
+      white-space: nowrap;
+    }
+    .tab.active { color: var(--accent2); border-bottom-color: var(--accent2); }
+    .tab:hover:not(.active) { color: var(--text); }
+
+    /* ── Search ── */
+    .search-bar {
+      padding: 16px 20px 8px;
+    }
+    .search-bar input {
+      width: 100%;
+      max-width: 500px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: var(--radius);
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .search-bar input::placeholder { color: var(--muted); }
+    .search-bar input:focus { border-color: var(--accent2); }
+
+    /* ── Grid ── */
+    .section { padding: 20px; }
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .15s, border-color .15s, box-shadow .15s;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+      box-shadow: 0 8px 24px rgba(124,58,237,.25);
+    }
+    .card-poster {
+      aspect-ratio: 2/3;
+      background: var(--bg3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      inset: 0;
+    }
+    .card-poster .emoji-fallback {
+      font-size: 3.5rem;
+      z-index: 1;
+    }
+    .card-type-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: rgba(0,0,0,.7);
+      color: var(--muted);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      z-index: 2;
+    }
+    .card-info { padding: 10px 10px 12px; }
+    .card-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+      line-height: 1.3;
+      margin-bottom: 4px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card-year { font-size: 0.72rem; color: var(--muted); }
+
+    /* ── Player modal ── */
+    .player-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: rgba(0,0,0,.85);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .player-modal.open { display: flex; }
+    .player-wrap {
+      background: #000;
+      border-radius: var(--radius);
+      overflow: hidden;
+      width: 100%;
+      max-width: 1000px;
+      aspect-ratio: 16/9;
+      position: relative;
+    }
+    .player-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+    .player-title-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 1000px;
+      padding: 10px 0;
+      gap: 12px;
+    }
+    .player-title { font-size: 1rem; font-weight: 700; }
+    .player-close {
+      background: var(--bg3);
+      border: none;
+      color: var(--text);
+      border-radius: 8px;
+      padding: 7px 14px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      flex-shrink: 0;
+      transition: background .15s;
+    }
+    .player-close:hover { background: var(--danger); }
+
+    /* ── Ad warning overlay ── */
+    #ad-warning {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 600;
+      background: rgba(0,0,0,.92);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    #ad-warning.open { display: flex; }
+    .warning-box {
+      background: var(--bg2);
+      border: 2px solid var(--warn);
+      border-radius: 16px;
+      padding: 32px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+    }
+    .warning-icon { font-size: 3rem; margin-bottom: 16px; }
+    .warning-box h2 { font-size: 1.3rem; margin-bottom: 10px; }
+    .warning-box p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 10px; }
+    .warning-box ul {
+      text-align: left;
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.8;
+      margin: 12px 0 20px;
+      padding-left: 20px;
+    }
+    .warning-box ul li { margin-bottom: 2px; }
+    .warn-proceed {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 28px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 10px;
+      transition: background .15s;
+    }
+    .warn-proceed:hover { background: var(--accent2); }
+    .warn-cancel {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 10px;
+      padding: 10px 28px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      width: 100%;
+      transition: border-color .15s, color .15s;
+    }
+    .warn-cancel:hover { border-color: var(--muted); color: var(--text); }
+
+    /* ── Empty state ── */
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 60px 20px;
+      font-size: 0.9rem;
+    }
+    .empty .big { font-size: 3rem; margin-bottom: 12px; }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+      .section { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  <a href="../index.html" class="back">← Home</a>
+  <h1>🎬 Movies &amp; Shows</h1>
+  <span class="badge" onclick="showAdInfo()">⚠️ Ad Warning</span>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('all', this)">All</button>
+  <button class="tab" onclick="switchTab('movies', this)">Movies</button>
+  <button class="tab" onclick="switchTab('tv', this)">TV Shows</button>
+  <button class="tab" onclick="switchTab('action', this)">Action</button>
+  <button class="tab" onclick="switchTab('comedy', this)">Comedy</button>
+  <button class="tab" onclick="switchTab('scifi', this)">Sci-Fi</button>
+  <button class="tab" onclick="switchTab('animation', this)">Animation</button>
+  <button class="tab" onclick="switchTab('horror', this)">Horror</button>
+</div>
+
+<!-- Search -->
+<div class="search-bar">
+  <input type="text" id="search-input" placeholder="🔍  Search movies &amp; shows..." oninput="filterContent()">
+</div>
+
+<!-- Content grid -->
+<div class="section">
+  <div class="section-label" id="section-label">All Content</div>
+  <div class="grid" id="content-grid"></div>
+  <div class="empty" id="empty-state" style="display:none">
+    <div class="big">🔍</div>
+    No results found. Try a different search.
+  </div>
+</div>
+
+<!-- Ad Warning Modal -->
+<div id="ad-warning">
+  <div class="warning-box">
+    <div class="warning-icon">⚠️</div>
+    <h2>Heads Up About Ads</h2>
+    <p>Movies and shows here are streamed from <strong>maple.fun</strong>, a free third-party service. You may encounter:</p>
+    <ul>
+      <li>🔔 Pop-up ads when clicking play</li>
+      <li>📺 Pre-roll video ads before content</li>
+      <li>🖱️ Redirect ads on first click</li>
+      <li>🔗 New tabs opening unexpectedly</li>
+    </ul>
+    <p><strong>Tips:</strong> Use an ad blocker (uBlock Origin), close any unexpected pop-ups, and don't click anything that asks you to install software.</p>
+    <button class="warn-proceed" id="warn-proceed-btn">I Understand — Watch Now</button>
+    <button class="warn-cancel" onclick="closeAdWarning()">Cancel</button>
+  </div>
+</div>
+
+<!-- Player Modal -->
+<div id="player-modal" class="player-modal">
+  <div class="player-title-bar">
+    <span class="player-title" id="player-title"></span>
+    <button class="player-close" onclick="closePlayer()">✕ Close</button>
+  </div>
+  <div class="player-wrap">
+    <iframe id="player-iframe" allowfullscreen allow="autoplay; fullscreen" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
+  </div>
+</div>
+
+<script>
+// ── Content library ──────────────────────────────────────────────────────────
+// TMDB IDs for popular titles — maple.fun uses /embed/movie/{id} and /embed/tv/{id}
+const CONTENT = [
+  // ── Action Movies ──
+  { id: 299536, type: "movie", title: "Avengers: Infinity War", year: 2018, genre: "action", emoji: "🦸" },
+  { id: 299534, type: "movie", title: "Avengers: Endgame", year: 2019, genre: "action", emoji: "🦸" },
+  { id: 557, type: "movie", title: "Spider-Man", year: 2002, genre: "action", emoji: "🕷️" },
+  { id: 1726, type: "movie", title: "Iron Man", year: 2008, genre: "action", emoji: "🤖" },
+  { id: 155, type: "movie", title: "The Dark Knight", year: 2008, genre: "action", emoji: "🦇" },
+  { id: 603, type: "movie", title: "The Matrix", year: 1999, genre: "action", emoji: "💊" },
+  { id: 258489, type: "movie", title: "Guardians of the Galaxy", year: 2014, genre: "action", emoji: "🌌" },
+  { id: 100402, type: "movie", title: "Captain America: Winter Soldier", year: 2014, genre: "action", emoji: "🛡️" },
+  { id: 271110, type: "movie", title: "Captain America: Civil War", year: 2016, genre: "action", emoji: "🛡️" },
+  { id: 284054, type: "movie", title: "Black Panther", year: 2018, genre: "action", emoji: "🐾" },
+  { id: 315635, type: "movie", title: "Spider-Man: Homecoming", year: 2017, genre: "action", emoji: "🕷️" },
+  { id: 429617, type: "movie", title: "Spider-Man: Far From Home", year: 2019, genre: "action", emoji: "🕷️" },
+  { id: 634649, type: "movie", title: "Spider-Man: No Way Home", year: 2021, genre: "action", emoji: "🕷️" },
+  { id: 1930, type: "movie", title: "Top Gun", year: 1986, genre: "action", emoji: "✈️" },
+  { id: 361743, type: "movie", title: "Top Gun: Maverick", year: 2022, genre: "action", emoji: "✈️" },
+  { id: 157336, type: "movie", title: "Interstellar", year: 2014, genre: "scifi", emoji: "🌌" },
+  { id: 27205, type: "movie", title: "Inception", year: 2010, genre: "scifi", emoji: "💭" },
+
+  // ── Comedy Movies ──
+  { id: 862, type: "movie", title: "Toy Story", year: 1995, genre: "animation", emoji: "🤠" },
+  { id: 863, type: "movie", title: "Toy Story 2", year: 1999, genre: "animation", emoji: "🤠" },
+  { id: 10193, type: "movie", title: "Toy Story 3", year: 2010, genre: "animation", emoji: "🤠" },
+  { id: 585, type: "movie", title: "Monsters, Inc.", year: 2001, genre: "animation", emoji: "👾" },
+  { id: 12, type: "movie", title: "Finding Nemo", year: 2003, genre: "animation", emoji: "🐠" },
+  { id: 920, type: "movie", title: "Cars", year: 2006, genre: "animation", emoji: "🚗" },
+  { id: 9806, type: "movie", title: "The Incredibles", year: 2004, genre: "animation", emoji: "⚡" },
+  { id: 68718, type: "movie", title: "Django Unchained", year: 2012, genre: "action", emoji: "🤠" },
+  { id: 680, type: "movie", title: "Pulp Fiction", year: 1994, genre: "action", emoji: "💼" },
+  { id: 11, type: "movie", title: "Star Wars: A New Hope", year: 1977, genre: "scifi", emoji: "⭐" },
+  { id: 1891, type: "movie", title: "The Empire Strikes Back", year: 1980, genre: "scifi", emoji: "⭐" },
+  { id: 1892, type: "movie", title: "Return of the Jedi", year: 1983, genre: "scifi", emoji: "⭐" },
+
+  // ── Sci-Fi ──
+  { id: 76341, type: "movie", title: "Mad Max: Fury Road", year: 2015, genre: "scifi", emoji: "🏜️" },
+  { id: 335984, type: "movie", title: "Blade Runner 2049", year: 2017, genre: "scifi", emoji: "🤖" },
+  { id: 438631, type: "movie", title: "Dune", year: 2021, genre: "scifi", emoji: "🏜️" },
+  { id: 693134, type: "movie", title: "Dune: Part Two", year: 2024, genre: "scifi", emoji: "🏜️" },
+  { id: 603692, type: "movie", title: "John Wick: Chapter 4", year: 2023, genre: "action", emoji: "🔫" },
+  { id: 385687, type: "movie", title: "Fast X", year: 2023, genre: "action", emoji: "🚗" },
+
+  // ── Horror ──
+  { id: 420817, type: "movie", title: "Aladdin (2019)", year: 2019, genre: "animation", emoji: "🧞" },
+  { id: 420818, type: "movie", title: "The Lion King (2019)", year: 2019, genre: "animation", emoji: "🦁" },
+  { id: 447332, type: "movie", title: "A Quiet Place", year: 2018, genre: "horror", emoji: "🤫" },
+  { id: 592350, type: "movie", title: "A Quiet Place Part II", year: 2021, genre: "horror", emoji: "🤫" },
+  { id: 496243, type: "movie", title: "Parasite", year: 2019, genre: "horror", emoji: "🏠" },
+  { id: 423108, type: "movie", title: "It", year: 2017, genre: "horror", emoji: "🤡" },
+  { id: 459488, type: "movie", title: "It Chapter Two", year: 2019, genre: "horror", emoji: "🤡" },
+  { id: 455207, type: "movie", title: "Get Out", year: 2017, genre: "horror", emoji: "😱" },
+  { id: 400160, type: "movie", title: "Five Nights at Freddy's", year: 2023, genre: "horror", emoji: "🐻" },
+
+  // ── TV Shows ──
+  { id: 1396, type: "tv", title: "Breaking Bad", year: 2008, genre: "action", emoji: "🧪" },
+  { id: 1399, type: "tv", title: "Game of Thrones", year: 2011, genre: "action", emoji: "⚔️" },
+  { id: 66732, type: "tv", title: "Stranger Things", year: 2016, genre: "scifi", emoji: "🔦" },
+  { id: 60625, type: "tv", title: "Rick and Morty", year: 2013, genre: "animation", emoji: "🛸" },
+  { id: 1434, type: "tv", title: "Family Guy", year: 1999, genre: "animation", emoji: "🐕" },
+  { id: 2993, type: "tv", title: "The Office", year: 2005, genre: "comedy", emoji: "📎" },
+  { id: 2316, type: "tv", title: "The Office (US)", year: 2005, genre: "comedy", emoji: "📎" },
+  { id: 1418, type: "tv", title: "The Big Bang Theory", year: 2007, genre: "comedy", emoji: "⚛️" },
+  { id: 456, type: "tv", title: "The Simpsons", year: 1989, genre: "animation", emoji: "🍩" },
+  { id: 2190, type: "tv", title: "South Park", year: 1997, genre: "animation", emoji: "🏔️" },
+  { id: 94954, type: "tv", title: "Arcane", year: 2021, genre: "animation", emoji: "🔮" },
+  { id: 44217, type: "tv", title: "Vikings", year: 2013, genre: "action", emoji: "⚔️" },
+  { id: 1403, type: "tv", title: "Agents of S.H.I.E.L.D.", year: 2013, genre: "action", emoji: "🕵️" },
+  { id: 95403, type: "tv", title: "Squid Game", year: 2021, genre: "action", emoji: "🦑" },
+  { id: 94605, type: "tv", title: "Ozark", year: 2017, genre: "action", emoji: "💰" },
+  { id: 1402, type: "tv", title: "The Walking Dead", year: 2010, genre: "horror", emoji: "🧟" },
+  { id: 100, type: "tv", title: "Breaking Bad", year: 2008, genre: "action", emoji: "🧪" },
+  { id: 1413, type: "tv", title: "American Horror Story", year: 2011, genre: "horror", emoji: "😱" },
+  { id: 60735, type: "tv", title: "The Flash", year: 2014, genre: "action", emoji: "⚡" },
+  { id: 62688, type: "tv", title: "Supergirl", year: 2015, genre: "action", emoji: "🦸‍♀️" },
+  { id: 69050, type: "tv", title: "Riverdale", year: 2017, genre: "action", emoji: "🌊" },
+  { id: 1709, type: "tv", title: "Naruto", year: 2002, genre: "animation", emoji: "🍃" },
+  { id: 31911, type: "tv", title: "Attack on Titan", year: 2013, genre: "animation", emoji: "⚔️" },
+  { id: 46261, type: "tv", title: "My Hero Academia", year: 2016, genre: "animation", emoji: "💪" },
+  { id: 65334, type: "tv", title: "Demon Slayer", year: 2019, genre: "animation", emoji: "🔥" },
+  { id: 37854, type: "tv", title: "One Piece", year: 1999, genre: "animation", emoji: "☠️" },
+];
+
+// Deduplicate by id+type
+const seen = new Set();
+const LIBRARY = CONTENT.filter(item => {
+  const key = item.type + item.id;
+  if (seen.has(key)) return false;
+  seen.add(key);
+  return true;
+});
+
+// ── State ────────────────────────────────────────────────────────────────────
+let activeTab = "all";
+let pendingItem = null;
+let warningAccepted = localStorage.getItem("movies-warn-ok") === "1";
+
+// ── Render ───────────────────────────────────────────────────────────────────
+function getFiltered() {
+  const q = document.getElementById("search-input").value.trim().toLowerCase();
+  return LIBRARY.filter(item => {
+    const tabMatch =
+      activeTab === "all" ||
+      (activeTab === "movies" && item.type === "movie") ||
+      (activeTab === "tv"     && item.type === "tv") ||
+      item.genre === activeTab;
+    const searchMatch = !q || item.title.toLowerCase().includes(q) || String(item.year).includes(q);
+    return tabMatch && searchMatch;
+  });
+}
+
+function renderGrid() {
+  const items = getFiltered();
+  const grid  = document.getElementById("content-grid");
+  const empty = document.getElementById("empty-state");
+  const label = document.getElementById("section-label");
+
+  const tabNames = { all:"All Content", movies:"Movies", tv:"TV Shows", action:"Action", comedy:"Comedy", scifi:"Sci-Fi", animation:"Animation", horror:"Horror" };
+  label.textContent = tabNames[activeTab] || "Content";
+
+  if (!items.length) {
+    grid.innerHTML = "";
+    empty.style.display = "block";
+    return;
+  }
+  empty.style.display = "none";
+
+  grid.innerHTML = items.map(item => `
+    <div class="card" onclick="handleCardClick(${item.id},'${item.type}','${item.title.replace(/'/g,"&#39;")}')">
+      <div class="card-poster">
+        <img
+          src="https://image.tmdb.org/t/p/w300${getPoster(item.id, item.type)}"
+          alt="${item.title}"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='block'"
+        >
+        <span class="emoji-fallback" style="display:none">${item.emoji}</span>
+        <span class="card-type-badge">${item.type === "tv" ? "TV" : "MOVIE"}</span>
+      </div>
+      <div class="card-info">
+        <div class="card-title">${item.title}</div>
+        <div class="card-year">${item.year}</div>
+      </div>
+    </div>
+  `).join("");
+}
+
+// TMDB poster path cache (using a known set for popular titles)
+const POSTER_MAP = {
+  "movie-299536": "/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg",
+  "movie-299534": "/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
+  "movie-557":    "/gh4cZbhZxyTbgxQPxzomOUFMFfN.jpg",
+  "movie-1726":   "/78lPtwv72eTNqFW9COBF8l5eB8M.jpg",
+  "movie-155":    "/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+  "movie-603":    "/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg",
+  "movie-258489": "/r7vmZjiyZw9rpJMQJdXpjd9gRkl.jpg",
+  "movie-100402": "/5TQ6JUPnGS7G0xuTzHCRIJk24DP.jpg",
+  "movie-284054": "/uxzzxijgPIY7slzFvMotPv8wjKA.jpg",
+  "movie-315635": "/c24sv2weTHPsmDa7jEMN0m2P3RT.jpg",
+  "movie-634649": "/1g0dhYtq4irTY1GPXvft6k9XvAm.jpg",
+  "movie-361743": "/t9Ne4bASnf0S2NFMQ9UhwFKW3Hm.jpg",
+  "movie-157336": "/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+  "movie-27205":  "/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg",
+  "movie-438631": "/d5NXSklXo0qyIYkgV94XAgMIckC.jpg",
+  "movie-693134": "/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg",
+  "movie-603692": "/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg",
+  "movie-447332": "/nAU74GmpUk7t5iklEp3bufwDq4n.jpg",
+  "movie-496243": "/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg",
+  "movie-423108": "/9E2y5Q7WlCVHxXcO87AQRNUoOzo.jpg",
+  "movie-455207": "/tFXcEccSQMf3lfhfXKSU9iRBpa3.jpg",
+  "movie-11":     "/6FfCtAuVAW8XJjZ7eWeLibRLWTw.jpg",
+  "tv-1396":      "/ggFHVNu6YYI5L9pCfOacjizRGt.jpg",
+  "tv-1399":      "/u3bZgnGQ9T01sWNhyveQz0wH0Hl.jpg",
+  "tv-66732":     "/49WJfeN0moxb9IPfGn8AIqMGskD.jpg",
+  "tv-60625":     "/cvhNj9eoRBe5SxjCbQTkh05UP5K.jpg",
+  "tv-456":       "/2IWouZCMCCQFBwbxaECpI2KcGSa.jpg",
+  "tv-94954":     "/fqldf2t8ztc9aiwn3k6mlX3tvRT.jpg",
+  "tv-95403":     "/dDlEmu3EZ0Pgg93K2SVNLCjCSvE.jpg",
+  "tv-1709":      "/xppeysfvDKVx775MFuH8Z9ex24r.jpg",
+  "tv-31911":     "/hTP1DtLGFamjfu8WqjnuQdP1n4i.jpg",
+  "tv-37854":     "/e3NBGiAifW9Xt8xD5tpARskjccO.jpg",
+  "tv-65334":     "/xUfRZu2mi8jH6SzQEJGP6tjBuYj.jpg",
+};
+function getPoster(id, type) {
+  return POSTER_MAP[type + "-" + id] || "";
+}
+
+// ── Interactions ─────────────────────────────────────────────────────────────
+function switchTab(tab, el) {
+  activeTab = tab;
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  el.classList.add("active");
+  renderGrid();
+}
+
+function filterContent() {
+  renderGrid();
+}
+
+function handleCardClick(id, type, title) {
+  pendingItem = { id, type, title };
+  if (warningAccepted) {
+    launchPlayer(id, type, title);
+  } else {
+    openAdWarning();
+  }
+}
+
+function openAdWarning() {
+  document.getElementById("ad-warning").classList.add("open");
+  document.getElementById("warn-proceed-btn").onclick = function () {
+    warningAccepted = true;
+    localStorage.setItem("movies-warn-ok", "1");
+    closeAdWarning();
+    if (pendingItem) {
+      launchPlayer(pendingItem.id, pendingItem.type, pendingItem.title);
+      pendingItem = null;
+    }
+  };
+}
+
+function closeAdWarning() {
+  document.getElementById("ad-warning").classList.remove("open");
+}
+
+function showAdInfo() {
+  warningAccepted = false;
+  localStorage.removeItem("movies-warn-ok");
+  pendingItem = null;
+  openAdWarning();
+  document.getElementById("warn-proceed-btn").onclick = function () {
+    warningAccepted = true;
+    localStorage.setItem("movies-warn-ok", "1");
+    closeAdWarning();
+  };
+}
+
+function launchPlayer(id, type, title) {
+  document.getElementById("player-title").textContent = title;
+  document.getElementById("player-iframe").src =
+    "https://maple.fun/embed/" + type + "/" + id;
+  document.getElementById("player-modal").classList.add("open");
+}
+
+function closePlayer() {
+  document.getElementById("player-modal").classList.remove("open");
+  document.getElementById("player-iframe").src = "";
+}
+
+// Close player on backdrop click
+document.getElementById("player-modal").addEventListener("click", function (e) {
+  if (e.target === this) closePlayer();
+});
+
+// Close warning on backdrop click
+document.getElementById("ad-warning").addEventListener("click", function (e) {
+  if (e.target === this) closeAdWarning();
+});
+
+// Keyboard ESC
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Escape") {
+    closePlayer();
+    closeAdWarning();
+  }
+});
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+renderGrid();
+</script>
+
+</body>
+</html>

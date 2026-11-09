@@ -4,13 +4,21 @@
   <!-- ═══ Main Pages ═══ -->
   <url>
     <loc>https://eymc-group.github.io/WorkStudy/</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-11-08</lastmod>
     <priority>1.0</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://eymc-group.github.io/WorkStudy/games/index.html</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-11-08</lastmod>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <!-- ═══ Entertainment ═══ -->
+  <url>
+    <loc>https://eymc-group.github.io/WorkStudy/pages/movies.html</loc>
+    <lastmod>2026-11-08</lastmod>
     <priority>0.9</priority>
     <changefreq>weekly</changefreq>
   </url>
@@ -18,13 +26,13 @@
   <!-- ═══ Community / Social ═══ -->
   <url>
     <loc>https://eymc-group.github.io/WorkStudy/pages/leaderboard.html</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-11-08</lastmod>
     <priority>0.8</priority>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://eymc-group.github.io/WorkStudy/pages/updates.html</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-11-08</lastmod>
     <priority>0.7</priority>
     <changefreq>weekly</changefreq>
   </url>
@@ -32,13 +40,13 @@
   <!-- ═══ Utility Pages ═══ -->
   <url>
     <loc>https://eymc-group.github.io/WorkStudy/pages/devtools.html</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-11-08</lastmod>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://eymc-group.github.io/WorkStudy/pages/iframe.html</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-11-08</lastmod>
     <priority>0.6</priority>
     <changefreq>monthly</changefreq>
   </url>
@@ -46,13 +54,13 @@
   <!-- ═══ Info Pages ═══ -->
   <url>
     <loc>https://eymc-group.github.io/WorkStudy/pages/mirrors.html</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-11-08</lastmod>
     <priority>0.6</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://eymc-group.github.io/WorkStudy/pages/support.html</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-11-08</lastmod>
     <priority>0.6</priority>
     <changefreq>monthly</changefreq>
   </url>
@@ -60,13 +68,13 @@
   <!-- ═══ Account Pages ═══ -->
   <url>
     <loc>https://eymc-group.github.io/WorkStudy/pages/login.html</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-11-08</lastmod>
     <priority>0.5</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://eymc-group.github.io/WorkStudy/pages/signup.html</loc>
-    <lastmod>2026-11-07</lastmod>
+    <lastmod>2026-11-08</lastmod>
     <priority>0.5</priority>
     <changefreq>monthly</changefreq>
   </url>
