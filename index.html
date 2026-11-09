@@ -263,224 +263,42 @@
         </button>
     </div>
 
-    <!-- ══════════════════════════════════════════════════════
-         HOMEPAGE HERO + NAV
-    ══════════════════════════════════════════════════════ -->
-    <div id="ws-hero">
-        <div id="ws-hero-inner">
-            <div id="ws-logo-wrap">
-                <img src="img/icon-192.png" alt="WorkStudy logo" id="ws-logo-img">
-            </div>
-            <h1 id="ws-title">WorkStudy</h1>
-            <p id="ws-tagline">150+ free unblocked games, movies, tools & more</p>
-            <div id="ws-stats-row">
-                <span id="visitCount">👥 Loading...</span>
-                <span id="onlineUsers">🟢 Loading...</span>
-            </div>
-            <div id="ws-cta-row">
-                <button class="ws-cta-primary" onclick="location.href='games/index.html'">🎮 Play Games</button>
-                <button class="ws-cta-secondary" onclick="location.href='pages/movies.html'">🎬 Movies &amp; Shows</button>
-            </div>
-        </div>
+    <h1>WorkStudy</h1>
+
+<p>
+WorkStudy is a browser-based platform featuring games,
+cloud saves, customization, search tools, and web
+utilities. Explore content, save progress, and discover
+new experiences from one place.
+</p>
+
+    <div class="sidebar">
+        <button type="button" onclick="location.href='games/index.html'">🎮 Games</button>
+        <button type="button" onclick="location.href='pages/movies.html'">🎬 Movies &amp; Shows</button>
+        <button type="button" onclick="location.href='pages/chat/index.html'">💬 Chat</button>
+        <button type="button" onclick="location.href='pages/soundboard.html'">🎵 Soundboard</button>
+        <button type="button" onclick="location.href='pages/iframe.html'">🌐 Website Viewer</button>
+        <button type="button" onclick="location.href='pages/proxy.html'">🫥 Proxies</button>
+        <button type="button" onclick="location.href='pages/boardofcolor.html'">🎨 Coloring Board</button>
     </div>
 
-    <!-- Feature cards -->
-    <div id="ws-cards">
-        <div class="ws-card" onclick="location.href='games/index.html'">
-            <div class="ws-card-icon">🎮</div>
-            <div class="ws-card-title">Games</div>
-            <div class="ws-card-desc">150+ unblocked browser games</div>
-        </div>
-        <div class="ws-card" onclick="location.href='pages/movies.html'">
-            <div class="ws-card-icon">🎬</div>
-            <div class="ws-card-title">Movies &amp; Shows</div>
-            <div class="ws-card-desc">Stream free movies &amp; TV</div>
-        </div>
-        <div class="ws-card" onclick="location.href='pages/iframe.html'">
-            <div class="ws-card-icon">🌐</div>
-            <div class="ws-card-title">Website Viewer</div>
-            <div class="ws-card-desc">Browse any site in-app</div>
-        </div>
-        <div class="ws-card" onclick="location.href='pages/leaderboard.html'">
-            <div class="ws-card-icon">🏆</div>
-            <div class="ws-card-title">Leaderboard</div>
-            <div class="ws-card-desc">Global player rankings</div>
-        </div>
-        <div class="ws-card" onclick="location.href='pages/chat/index.html'">
-            <div class="ws-card-icon">💬</div>
-            <div class="ws-card-title">Chat</div>
-            <div class="ws-card-desc">Talk with other players</div>
-        </div>
-        <div class="ws-card" onclick="location.href='pages/soundboard.html'">
-            <div class="ws-card-icon">🎵</div>
-            <div class="ws-card-title">Soundboard</div>
-            <div class="ws-card-desc">Play & share sounds</div>
-        </div>
-        <div class="ws-card" onclick="location.href='pages/proxy.html'">
-            <div class="ws-card-icon">🫥</div>
-            <div class="ws-card-title">Proxies</div>
-            <div class="ws-card-desc">Bypass network restrictions</div>
-        </div>
-        <div class="ws-card" onclick="location.href='pages/boardofcolor.html'">
-            <div class="ws-card-icon">🎨</div>
-            <div class="ws-card-title">Coloring Board</div>
-            <div class="ws-card-desc">Draw &amp; create art</div>
-        </div>
-    </div>
-
-    <!-- Quick links bar -->
-    <div id="ws-quicklinks">
-        <button type="button" onclick="location.href='pages/updates.html'">📋 Updates</button>
-        <button type="button" onclick="location.href='pages/mirrors.html'">🌐 Mirrors</button>
-        <button type="button" onclick="location.href='pages/support.html'">💜 Support</button>
-        <button type="button" id="legacyBtn" onclick="legacyConfirm()">🏛️ Legacy</button>
-    </div>
-
-    <div id="updateBanner" style="display:none;"></div>
+    <button id="legacyBtn" type="button" onclick="legacyConfirm()">🏛️ Legacy</button>
 
     <main class="main">
-        <div class="welcome" style="display:none">
-            <p id="visitCount-hidden"></p>
-            <div class="homepage-btn-row" style="display:none">
+        <div class="welcome">
+            <h2>Welcome To WorkStudy</h2>
+            <p>I see you Mason Phull 👀</p>
+            <p id="visitCount">👥 Total Visits: Loading...</p>
+            <div class="homepage-btn-row">
                 <button type="button" id="updatesBtn" onclick="location.href='pages/updates.html'">📋 Updates</button>
                 <button type="button" id="leaderboardBtn" onclick="location.href='pages/leaderboard.html'">🏆 Leaderboard</button>
                 <button type="button" id="mirrorsBtn" onclick="location.href='pages/mirrors.html'">🌐 Mirrors</button>
                 <button type="button" id="supportBtn2" onclick="location.href='pages/support.html'">💜 Support</button>
             </div>
+            <div id="onlineUsers">🟢 Loading...</div>
+            <div id="updateBanner" style="display:none;"></div>
         </div>
     </main>
-
-    <!-- ══════════════════════════════════════════════════════
-         HOMEPAGE STYLES (scoped, won't affect game pages)
-    ══════════════════════════════════════════════════════ -->
-    <style>
-    /* Hero */
-    #ws-hero {
-        padding: 48px 20px 32px;
-        text-align: center;
-        background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(107,33,168,.35) 0%, transparent 70%);
-    }
-    #ws-hero-inner { max-width: 640px; margin: 0 auto; }
-    #ws-logo-img {
-        width: 80px; height: 80px;
-        border-radius: 20px;
-        box-shadow: 0 8px 32px rgba(107,33,168,.5);
-        margin-bottom: 16px;
-    }
-    #ws-title {
-        font-size: clamp(2rem, 7vw, 3rem);
-        font-weight: 900;
-        margin: 0 0 8px;
-        background: linear-gradient(135deg, #fff 30%, #c084fc);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-    #ws-tagline {
-        font-size: clamp(.9rem, 2.5vw, 1.1rem);
-        color: rgba(255,255,255,.55);
-        margin: 0 0 20px;
-    }
-    #ws-stats-row {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        font-size: .82rem;
-        color: rgba(255,255,255,.45);
-        margin-bottom: 24px;
-        flex-wrap: wrap;
-    }
-    #ws-cta-row {
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-        flex-wrap: wrap;
-    }
-    .ws-cta-primary {
-        background: linear-gradient(135deg, #7c3aed, #a855f7);
-        color: #fff;
-        border: none;
-        border-radius: 14px;
-        padding: 13px 28px;
-        font-size: 1rem;
-        font-weight: 700;
-        cursor: pointer;
-        box-shadow: 0 4px 20px rgba(124,58,237,.4);
-        transition: transform .15s, box-shadow .15s;
-    }
-    .ws-cta-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(124,58,237,.55); }
-    .ws-cta-secondary {
-        background: rgba(255,255,255,.08);
-        color: #fff;
-        border: 1px solid rgba(255,255,255,.2);
-        border-radius: 14px;
-        padding: 13px 28px;
-        font-size: 1rem;
-        font-weight: 700;
-        cursor: pointer;
-        transition: background .15s, transform .15s;
-    }
-    .ws-cta-secondary:hover { background: rgba(255,255,255,.14); transform: translateY(-2px); }
-
-    /* Feature cards */
-    #ws-cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 14px;
-        padding: 0 20px 24px;
-        max-width: 900px;
-        margin: 0 auto;
-    }
-    .ws-card {
-        background: rgba(255,255,255,.05);
-        border: 1px solid rgba(255,255,255,.1);
-        border-radius: 16px;
-        padding: 20px 14px 18px;
-        text-align: center;
-        cursor: pointer;
-        transition: background .15s, border-color .15s, transform .15s, box-shadow .15s;
-    }
-    .ws-card:hover {
-        background: rgba(107,33,168,.25);
-        border-color: rgba(168,85,247,.5);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 24px rgba(107,33,168,.3);
-    }
-    .ws-card-icon { font-size: 2.2rem; margin-bottom: 10px; }
-    .ws-card-title { font-size: .9rem; font-weight: 700; margin-bottom: 5px; }
-    .ws-card-desc { font-size: .75rem; color: rgba(255,255,255,.45); line-height: 1.4; }
-
-    /* Quick links */
-    #ws-quicklinks {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        flex-wrap: wrap;
-        padding: 0 20px 32px;
-    }
-    #ws-quicklinks button {
-        background: rgba(255,255,255,.07);
-        color: rgba(255,255,255,.7);
-        border: 1px solid rgba(255,255,255,.12);
-        border-radius: 20px;
-        padding: 7px 16px;
-        font-size: .82rem;
-        cursor: pointer;
-        transition: background .15s, color .15s;
-    }
-    #ws-quicklinks button:hover { background: rgba(255,255,255,.14); color: #fff; }
-
-    /* WhatsApp join btn — keep visible */
-    .joinBtn {
-        display: block;
-        text-align: center;
-        margin: 0 auto 24px;
-    }
-    @media (max-width: 480px) {
-        #ws-cards { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 12px 20px; }
-        #ws-hero { padding: 32px 16px 20px; }
-    }
-    </style>
 
     <!-- Version badge — sits above Settings button bottom-right -->
     <div id="versionBadge" style="
