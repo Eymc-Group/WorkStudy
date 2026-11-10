@@ -1,0 +1,58 @@
+Before reaching the free message limit, commit and push all completed work to the repository. Begin by creating and populating the img/GameIcons/ directory with appropriate icons for every game. Every game entry must display its corresponding gameImage, with the game's title shown directly beneath the image. After completing this task, update js/gamelist.js on the offline branch, verify that the changes work correctly, and push them to all relevant branches to keep development synchronized.
+Store all generated HTML files in claude/example.html (or the most appropriate project directory) so future sessions can reuse existing work instead of recreating it.
+Session Startup Procedure
+At the start of every session:
+Read the entire repository structure and all relevant project files.
+Review the latest commits, active branches, and repository status.
+Identify completed tasks, unfinished tasks, known issues, and project priorities.
+Continue only the unfinished work and avoid duplicating previously completed work.
+Update documentation whenever requirements, architecture, file structure, or implementation details change.
+Treat the repository as the single source of truth for project state and progress.
+Check README.md and any encoded project-state files before beginning new development.
+Session Completion Procedure
+Before ending any session:
+Commit and push all progress, regardless of completion status.
+Use one of the following commit messages:
+finished when all assigned work is fully complete.
+unfinished when any portion of the work remains incomplete.
+If the commit message is unfinished, include a detailed commit description containing:
+Completed tasks.
+Remaining tasks.
+Known bugs, blockers, limitations, or technical debt.
+Recommended next actions.
+Important notes for the next session.
+Push all commits before reaching the free message limit whenever possible.
+Documentation Requirements
+Maintain a comprehensive README.md that includes:
+Project overview and objectives.
+Development roadmap.
+Current implementation status.
+Completed features.
+Pending features and tasks.
+Repository structure and file organization.
+Branch purposes and responsibilities.
+File naming conventions and storage locations.
+Session handoff instructions.
+Known issues, workarounds, and technical debt.
+Instructions for restoring project context.
+Persistent Project State
+To preserve context across sessions, generate an encoded project-state file derived from README.md using the following process:
+README.md → Binary → Base64 → AGFGX
+Store both:
+The encoded output.
+The decoding instructions.
+within the repository.
+When restoring context in a future session, reverse the process:
+AGFGX → Base64 → Binary → README.md
+Verify that the decoded content matches the latest repository documentation before continuing development.
+Core Repository Rule
+The repository must always contain enough information for a completely new session to understand:
+Current project goals.
+Completed work.
+Unfinished work.
+Repository structure.
+Branch purposes.
+Next development priorities.
+No future session should depend on chat history to understand project status.
+Continuity Requirement
+Never leave completed work uncommitted. Always save progress before the free message limit is reached. Every session must end with the repository in a documented, recoverable, resumable, and synchronized state so future sessions can immediately continue development without losing context, repeating work, or recreating previously completed files. Oh yeah and add linking login and sign up with Google!!! but tell me how to set up the OAuth without downloading a program. Also add  code runner make sure it works offline don't make a button for it though just leave it somewhere so when some try's to do open with it shows WorkStudy and it works if they downloaded the pwa and make the website viewer kinda like Google chrome on a Windows PC and make it load the websites by getting its html/css/js and run it there add stuff like devtools but if it cant then run it through a proxy or vpn or iframe or fetch or whatever and let them be able to add a proxy themselves if they don't trust one or add a VPN like NordVPN  also the website is meant for privacy reasons not malisous make it warn he user if malisous stuff found if they were doing and if so make a cloud flare worker to ban their ip from ever using the website unless I unban them also I want it because I don't want Bell to know I was on tiktok.com at 3am then sell my data to Donald Trump anyways please make that after push to root the website and code runner. Thanks a lot and if you need please make and use the claude directory on the GitHub reposotorie also check it for latest change and if no change then you make code but I'f so then read changed code and contenue.
