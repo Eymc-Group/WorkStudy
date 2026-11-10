@@ -1,9 +1,9 @@
-// WorkStudy Service Worker — v2.8.42
+// WorkStudy Service Worker — v3.21.83
 // Stale-while-revalidate for assets, network-first for pages,
 // offline fallback, background sync, periodic sync, push notifications,
 // and widget support.
 
-const CACHE_NAME    = "workstudy-v2.8.42";
+const CACHE_NAME    = "workstudy-v3.21.83";
 const OFFLINE_PAGE  = "/WorkStudy/offline.html";
 
 const PRECACHE_URLS = [
@@ -34,6 +34,8 @@ const PRECACHE_URLS = [
     "/WorkStudy/pages/iframe.html",
     "/WorkStudy/pages/devtools.html",
     "/WorkStudy/pages/movies.html",
+    "/WorkStudy/pages/shorts.html",
+    "/WorkStudy/pages/music.html",
 ];
 
 // ── Install ───────────────────────────────────────────────────────────────────

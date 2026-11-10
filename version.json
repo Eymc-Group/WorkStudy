@@ -1,6 +1,6 @@
 {
-  "version": "2.8.42",
-  "releasedAt": "2026-11-08",
-  "changelog": "Final public release: movies & shows page (maple.fun iframes + ad warning), homepage redesign with hero section and feature cards, app store support (itch.io, Amazon Appstore, Google Play TWA), all branches synced.",
+  "version": "3.21.83",
+  "releasedAt": "2026-11-09",
+  "changelog": "v3.21.83: Movies multi-provider streaming, YouTube Shorts page, Music Player, game download buttons, leaderboard multi-stat, website viewer bookmarks+history+proxy, customTab on all pages, gn-math.dev added.",
   "downloadUrl": "https://github.com/Eymc-Group/WorkStudy/archive/refs/heads/root.zip"
 }
