@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shorts — WorkStudy</title>
+  <meta name="description" content="Watch YouTube Shorts-style vertical videos on WorkStudy. Browse trending, gaming, music, and comedy shorts.">
+  <link rel="canonical" href="https://eymc-group.github.io/WorkStudy/pages/shorts.html">
+  <link rel="icon" href="../img/favicon.png" type="image/png">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#6b21a8">
+  <script src="../js/customTab.js" data-title="Shorts — WorkStudy" data-icon="../img/favicon.png"></script>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg2: #1e293b;
+      --bg3: #334155;
+      --accent: #7c3aed;
+      --accent2: #a855f7;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #334155;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+      z-index: 50;
+    }
+    .topbar a.back {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .topbar a.back:hover { color: var(--text); }
+    .topbar h1 { font-size: 1rem; font-weight: 700; }
+    .topbar .search-btn {
+      margin-left: auto;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .topbar .search-btn:hover { background: var(--accent); border-color: var(--accent); }
+
+    /* ── Tab bar ── */
+    .tabbar {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 4px;
+      padding: 0 12px;
+      overflow-x: auto;
+      flex-shrink: 0;
+    }
+    .tabbar::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      padding: 10px 16px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: all .2s;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--accent2); border-bottom-color: var(--accent2); }
+
+    /* ── Main viewer ── */
+    .viewer {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      background: #000;
+    }
+
+    /* 9:16 container */
+    .video-container {
+      position: relative;
+      height: 100%;
+      aspect-ratio: 9 / 16;
+      max-width: 100%;
+      background: #000;
+    }
+    @media (max-aspect-ratio: 9/16) {
+      .video-container { width: 100%; height: auto; }
+    }
+
+    .video-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* ── Side controls ── */
+    .side-controls {
+      position: absolute;
+      right: calc(50% - min(100vw, calc(100vh * 9 / 16)) / 2 - 56px);
+      bottom: 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+    }
+    @media (max-width: 600px) {
+      .side-controls { right: 8px; }
+    }
+    .ctrl-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      text-shadow: 0 1px 4px rgba(0,0,0,.8);
+    }
+    .ctrl-btn .icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      transition: background .2s;
+    }
+    .ctrl-btn:hover .icon { background: rgba(255,255,255,.25); }
+    .ctrl-btn.liked .icon { background: rgba(239,68,68,.5); }
+    .ctrl-btn span { font-size: 0.7rem; }
+
+    /* ── Nav arrows ── */
+    .nav-arrows {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    @media (min-width: 500px) {
+      .nav-arrows { right: calc(50% - min(100vw, calc(100vh * 9 / 16)) / 2 - 56px); }
+    }
+    .nav-arrow {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(0,0,0,.5);
+      border: 1px solid rgba(255,255,255,.2);
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .2s;
+    }
+    .nav-arrow:hover { background: var(--accent); border-color: var(--accent); }
+    .nav-arrow:disabled { opacity: .3; cursor: default; }
+
+    /* ── Video counter ── */
+    .video-counter {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,.55);
+      color: rgba(255,255,255,.75);
+      font-size: 0.72rem;
+      padding: 3px 12px;
+      border-radius: 20px;
+      pointer-events: none;
+    }
+
+    /* ── Fullscreen btn ── */
+    .fullscreen-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(0,0,0,.55);
+      border: none;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fullscreen-btn:hover { background: var(--accent); }
+
+    /* ── Loading overlay ── */
+    .loading-overlay {
+      position: absolute;
+      inset: 0;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: var(--muted);
+      transition: opacity .3s;
+    }
+    .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+  </style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  <a class="back" href="../index.html">← Back</a>
+  <h1>📺 Shorts</h1>
+  <button class="search-btn" onclick="openYouTube()">🔍 Search on YouTube</button>
+</div>
+
+<!-- Tab bar -->
+<div class="tabbar">
+  <button class="tab-btn active" onclick="switchTab('trending', this)">🔥 Trending</button>
+  <button class="tab-btn" onclick="switchTab('gaming', this)">🎮 Gaming</button>
+  <button class="tab-btn" onclick="switchTab('music', this)">🎵 Music</button>
+  <button class="tab-btn" onclick="switchTab('comedy', this)">😂 Comedy</button>
+</div>
+
+<!-- Viewer -->
+<div class="viewer">
+  <div class="video-container" id="videoContainer">
+    <div class="loading-overlay" id="loadingOverlay">▶</div>
+    <iframe id="shortIframe"
+      allowfullscreen
+      allow="autoplay; fullscreen; accelerometer; gyroscope"
+      sandbox="allow-scripts allow-same-origin allow-popups allow-presentation"
+    ></iframe>
+  </div>
+
+  <!-- Video counter -->
+  <div class="video-counter" id="videoCounter">1 / 15</div>
+
+  <!-- Fullscreen -->
+  <button class="fullscreen-btn" onclick="toggleFullscreen()" title="Fullscreen">⛶</button>
+
+  <!-- Side controls -->
+  <div class="side-controls">
+    <button class="ctrl-btn" id="likeBtn" onclick="toggleLike()">
+      <div class="icon">👍</div>
+      <span id="likeCount">0</span>
+    </button>
+    <button class="ctrl-btn" onclick="shareVideo()">
+      <div class="icon">↗️</div>
+      <span>Share</span>
+    </button>
+    <button class="ctrl-btn" onclick="openOnYouTube()">
+      <div class="icon">▶</div>
+      <span>YouTube</span>
+    </button>
+  </div>
+
+  <!-- Nav arrows -->
+  <div class="nav-arrows">
+    <button class="nav-arrow" id="prevBtn" onclick="navigate(-1)" title="Previous (▲)">▲</button>
+    <button class="nav-arrow" id="nextBtn" onclick="navigate(1)" title="Next (▼)">▼</button>
+  </div>
+</div>
+
+<script>
+// ── Video library ──────────────────────────────────────────────────────────────
+const VIDEOS = {
+  trending: [
+    "dQw4w9WgXcQ","9bZkp7q19f0","kJQP7kiw5Fk","JGwWNGJdvx8","YR5ApYxkU-U",
+    "ZbZSe6N_BXs","7wtfhZwyrcc","3tmd-ClpJxA","450p7goxZqg","Zi_XLOBDo_Y",
+    "tgbNymZ7vqY","OPf0YbXqDm0","e-ORhEE9VVg","hT_nvWreIhg","CevxZvSJLk8"
+  ],
+  gaming: [
+    "GaKZGHOcPbI","rfscVS0vtbw","vTIIMJ9tZcE","j5a0jTc9S10","iik25wqIuFo",
+    "dQw4w9WgXcQ","9bZkp7q19f0","kJQP7kiw5Fk","JGwWNGJdvx8","YR5ApYxkU-U"
+  ],
+  music: [
+    "JGwWNGJdvx8","YR5ApYxkU-U","ZbZSe6N_BXs","7wtfhZwyrcc","3tmd-ClpJxA",
+    "dQw4w9WgXcQ","9bZkp7q19f0","kJQP7kiw5Fk","e-ORhEE9VVg","hT_nvWreIhg"
+  ],
+  comedy: [
+    "CevxZvSJLk8","OPf0YbXqDm0","e-ORhEE9VVg","hT_nvWreIhg","tgbNymZ7vqY",
+    "dQw4w9WgXcQ","9bZkp7q19f0","kJQP7kiw5Fk","JGwWNGJdvx8","YR5ApYxkU-U"
+  ]
+};
+
+let currentTab = "trending";
+let currentIndex = 0;
+let likedVideos = new Set();
+try { likedVideos = new Set(JSON.parse(localStorage.getItem("shorts-liked") || "[]")); } catch {}
+
+function getList() { return VIDEOS[currentTab]; }
+
+function loadVideo(idx) {
+  const list = getList();
+  if (idx < 0 || idx >= list.length) return;
+  currentIndex = idx;
+  const id = list[idx];
+
+  document.getElementById("loadingOverlay").classList.remove("hidden");
+  const iframe = document.getElementById("shortIframe");
+  iframe.src = "";
+  setTimeout(() => {
+    iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&loop=1&playlist=${id}&modestbranding=1&rel=0&controls=1`;
+    document.getElementById("loadingOverlay").classList.add("hidden");
+  }, 150);
+
+  document.getElementById("videoCounter").textContent = `${idx + 1} / ${list.length}`;
+  document.getElementById("prevBtn").disabled = idx === 0;
+  document.getElementById("nextBtn").disabled = idx === list.length - 1;
+
+  // Update like state
+  const likeBtn = document.getElementById("likeBtn");
+  likeBtn.classList.toggle("liked", likedVideos.has(id));
+  document.getElementById("likeCount").textContent = likedVideos.has(id) ? "1" : "0";
+}
+
+function navigate(dir) {
+  loadVideo(currentIndex + dir);
+}
+
+function switchTab(tab, btn) {
+  currentTab = tab;
+  currentIndex = 0;
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  loadVideo(0);
+}
+
+function toggleLike() {
+  const list = getList();
+  const id = list[currentIndex];
+  if (likedVideos.has(id)) {
+    likedVideos.delete(id);
+    document.getElementById("likeBtn").classList.remove("liked");
+    document.getElementById("likeCount").textContent = "0";
+  } else {
+    likedVideos.add(id);
+    document.getElementById("likeBtn").classList.add("liked");
+    document.getElementById("likeCount").textContent = "1";
+  }
+  try { localStorage.setItem("shorts-liked", JSON.stringify([...likedVideos])); } catch {}
+}
+
+function shareVideo() {
+  const id = getList()[currentIndex];
+  const url = `https://www.youtube.com/shorts/${id}`;
+  if (navigator.share) {
+    navigator.share({ title: "WorkStudy Shorts", url }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(url).then(() => alert("Link copied!")).catch(() => prompt("Copy link:", url));
+  }
+}
+
+function openOnYouTube() {
+  const id = getList()[currentIndex];
+  window.open(`https://www.youtube.com/shorts/${id}`, "_blank");
+}
+
+function openYouTube() {
+  window.open("https://www.youtube.com/shorts", "_blank");
+}
+
+function toggleFullscreen() {
+  const el = document.getElementById("videoContainer");
+  if (!document.fullscreenElement) {
+    (el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen).call(el).catch(() => {});
+  } else {
+    (document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen).call(document).catch(() => {});
+  }
+}
+
+// Keyboard nav
+document.addEventListener("keydown", function(e) {
+  if (e.key === "ArrowUp")   navigate(-1);
+  if (e.key === "ArrowDown") navigate(1);
+});
+
+// Init
+loadVideo(0);
+</script>
+</body>
+</html>
