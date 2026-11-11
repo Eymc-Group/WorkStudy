@@ -220,59 +220,45 @@ const games = [
     { name: "Bad Parenting 1",             author: "Unknown",                  path: "https://eymc-group.github.io/WorkStudy/games/imported/Bad-Parenting-1.html" },
 
     // =========================================================================
-    // web-port2 — games ported by rocket226/genizy, hosted at gn-math.github.io
-    // Source: https://gitea.com/rocket226/web-port2
-    // =========================================================================
-
-    { name: "Amanda the Adventurer",       author: "MANGOStudios",             path: "https://gn-math.github.io/amanda-the-adventurer/",         external: true },
-    { name: "Andy's Apple Farm",           author: "Masan",                    path: "https://gn-math.github.io/andys-apple-farm/",              external: true },
-    { name: "Baldi's Basics Plus",         author: "Mystman12",                path: "https://gn-math.github.io/baldi-plus/",                    external: true },
-    { name: "Baldi's Basics Remaster",     author: "Mystman12",                path: "https://gn-math.github.io/baldi-remaster/",                external: true },
-    { name: "Bendy and the Ink Machine",   author: "Joey Drew Studios",        path: "https://gn-math.github.io/bendy/",                         external: true },
-    { name: "Bergen Truck Simulator",      author: "Dagoy Games",              path: "https://gn-math.github.io/bergentruck/",                   external: true },
-    { name: "Blood Money",                 author: "DMA Design",               path: "https://gn-math.github.io/bloodmoney/",                    external: true },
-    { name: "Buckshot Roulette",           author: "Mike Klubnika",            path: "https://gn-math.github.io/buckshot-roulette/",             external: true },
-    { name: "Class of '09",               author: "Wolf Games",               path: "https://gn-math.github.io/class-of-09/",                   external: true },
-    { name: "Cuphead",                     author: "Studio MDHR",              path: "https://gn-math.github.io/cuphead/",                       external: true },
-    { name: "Dead Plate",                  author: "Roro",                     path: "https://gn-math.github.io/dead-plate/",                    external: true },
-    { name: "Dead Seat",                   author: "Unknown",                  path: "https://gn-math.github.io/deadseat/",                      external: true },
-    { name: "Deltarune Traveler",          author: "Toby Fox / Fan",           path: "https://gn-math.github.io/deltatraveler/",                 external: true },
-    { name: "Do Not Take This Cat Home",   author: "lamedeveloper",            path: "https://gn-math.github.io/donottakethiscathome/",          external: true },
-    { name: "Fears to Fathom: Home Alone", author: "Rayll",                   path: "https://gn-math.github.io/fears-to-fathom/home-alone/",    external: true },
-    { name: "Getting Over It",             author: "Bennett Foddy",            path: "https://gn-math.github.io/getting-over-it/",               external: true },
-    { name: "Happy Sheepies",              author: "Unknown",                  path: "https://gn-math.github.io/happy-sheepies/",                external: true },
-    { name: "Hotline Miami",               author: "Dennaton Games",           path: "https://gn-math.github.io/hotline-miami/",                 external: true },
-    { name: "Human Expenditure Program",   author: "Unknown",                  path: "https://gn-math.github.io/human-expenditure-program/",     external: true },
-    { name: "Jelly Drift",                 author: "Unknown",                  path: "https://gn-math.github.io/jelly-drift/",                   external: true },
-    { name: "Karlson",                     author: "Dani",                     path: "https://gn-math.github.io/karlson/",                       external: true },
-    { name: "Kindergarten",                author: "Spooky Doorway",           path: "https://gn-math.github.io/kindergarten/",                  external: true },
-    { name: "Lacy's Flash Games",          author: "Lacy",                     path: "https://gn-math.github.io/lacysflashgames/",               external: true },
-    { name: "Milkman Karlson",             author: "Dani",                     path: "https://gn-math.github.io/milkman-karlson/",               external: true },
-    { name: "Minesweeper Plus",            author: "Unknown",                  path: "https://gn-math.github.io/minesweeperplus/",               external: true },
-    { name: "OMORI",                       author: "OMOCAT",                   path: "https://gn-math.github.io/omori-fixed/",                   external: true },
-    { name: "People Playground",           author: "mestiez",                  path: "https://gn-math.github.io/people-playground/",             external: true },
-    { name: "Pizza Tower",                 author: "Tour De Pizza",            path: "https://gn-math.github.io/pizza-tower/",                   external: true },
-    { name: "Raft",                        author: "Redbeet Interactive",      path: "https://gn-math.github.io/raft/",                          external: true },
-    { name: "REPO",                        author: "semiwork",                 path: "https://gn-math.github.io/repo/",                          external: true },
-    { name: "Schoolboy Runaway",           author: "Unknown",                  path: "https://gn-math.github.io/schoolboy-runaway/",             external: true },
-    { name: "Slender: The Eight Pages",    author: "Parsec Productions",       path: "https://gn-math.github.io/slender/",                       external: true },
-    { name: "Sonic.EXE",                   author: "JC the Hyena",             path: "https://gn-math.github.io/sonic.exe/",                     external: true },
-    { name: "Speed Stars",                 author: "Unknown",                  path: "https://gn-math.github.io/speed-stars/",                   external: true },
-    { name: "Tattletail",                  author: "Waygetter Electronics",    path: "https://gn-math.github.io/tattletail/",                    external: true },
-    { name: "That's Not My Neighbor",      author: "Nacho Sama",               path: "https://gn-math.github.io/thats-not-my-neighbor/",         external: true },
-    { name: "The Man in the Window",       author: "Unknown",                  path: "https://gn-math.github.io/the-man-in-the-window/",         external: true },
-    { name: "ULTRAKILL",                   author: "Arsi \"Hakita\" Patala",   path: "https://gn-math.github.io/ultrakill/",                     external: true },
-    { name: "Undertale Yellow",            author: "Undertale Yellow Team",    path: "https://gn-math.github.io/undertale-yellow/",              external: true },
-    { name: "WebFishing (gn-math)",        author: "lamedeveloper",            path: "https://gn-math.github.io/web-fishing/",                   external: true },
-    { name: "Witch Heart",                 author: "Unknown",                  path: "https://gn-math.github.io/witch-heart/",                   external: true },
-    { name: "Yandere Simulator",           author: "YandereDev",               path: "https://gn-math.github.io/yandere-simulator/",             external: true },
-    { name: "Yume Nikki",                  author: "Kikiyama",                 path: "https://gn-math.github.io/yume-nikki/",                    external: true },
-
-    // =========================================================================
     // Other — miscellaneous entries
     // =========================================================================
 
-    { name: "gn-math.dev",                 author: "gn-math",                  path: "https://eymc-group.github.io/WorkStudy/pages/gn-math.dev.html" },
     { name: "The Simpsons: Hit & Run",     author: "Radical Entertainment",    path: "https://vheissu.github.io/hit-and-run-web/" },
+
+    // =========================================================================
+    // Extra — additional HTML5 games from other public hosts
+    // =========================================================================
+
+    { name: "Tic Tac Toe",                 author: "Various",                  path: "https://www.gamescrush.com/games/tic-tac-toe/" },
+    { name: "Sudoku",                      author: "Various",                  path: "https://sudoku.com/easy/" },
+    { name: "Wordle",                      author: "Josh Wardle",              path: "https://www.nytimes.com/games/wordle/index.html" },
+    { name: "2048 (Extra)",                author: "Gabriele Cirulli",         path: "https://play2048.co/" },
+    { name: "Flappy Bird (Extra)",         author: "Dong Nguyen",              path: "https://flappybird.io/" },
+    { name: "Snake (Extra)",               author: "Various",                  path: "https://playsnake.org/" },
+    { name: "Tetris (Extra)",              author: "Tetris Online",            path: "https://tetris.com/play-tetris/" },
+    { name: "Pac-Man (Extra)",             author: "Namco",                    path: "https://www.google.com/logos/2010/pacman10-i.html" },
+    { name: "Minesweeper (Extra)",         author: "Various",                  path: "https://minesweeper.online/" },
+    { name: "Solitaire (Extra)",           author: "Various",                  path: "https://www.solitr.com/" },
+    { name: "Chess (Extra)",               author: "Lichess",                  path: "https://lichess.org/analysis" },
+    { name: "Checkers",                    author: "Various",                  path: "https://www.247checkers.com/" },
+    { name: "Backgammon",                  author: "Various",                  path: "https://www.247backgammon.com/" },
+    { name: "Mahjong",                     author: "Various",                  path: "https://mahjong.gg/" },
+    { name: "Bubble Shooter",              author: "Various",                  path: "https://www.bubbleshooter.net/" },
+    { name: "Connect Four",                author: "Various",                  path: "https://www.mathsisfun.com/games/connect4.html" },
+    { name: "Battleship",                  author: "Various",                  path: "https://www.mathsisfun.com/games/battleship.html" },
+    { name: "Memory Match",                author: "Various",                  path: "https://www.mathsisfun.com/games/memory/index.html" },
+    { name: "Pong",                        author: "Various",                  path: "https://www.ponggame.org/" },
+    { name: "Frogger",                     author: "Konami",                   path: "https://www.froggerclassic.com/" },
+    { name: "Asteroids (Extra)",           author: "Atari",                    path: "https://www.echalk.co.uk/amusements/Games/asteroidsClassic/ateroids.html" },
+    { name: "Space Invaders (Extra)",      author: "Taito",                    path: "https://freeinvaders.org/" },
+    { name: "Breakout (Extra)",            author: "Atari",                    path: "https://www.brickgame.info/" },
+    { name: "Galaga",                      author: "Namco",                    path: "https://www.arcadeprehacks.com/game/2697/Galaga.html" },
+    { name: "Donkey Kong",                 author: "Nintendo",                 path: "https://www.arcadegames.com/game/donkeykong" },
+    { name: "Centipede",                   author: "Atari",                    path: "https://www.arcadegames.com/game/centipede" },
+    { name: "Defender",                    author: "Williams Electronics",     path: "https://www.arcadegames.com/game/defender" },
+    { name: "Dig Dug",                     author: "Namco",                    path: "https://www.arcadegames.com/game/digdug" },
+    { name: "Burger Time",                 author: "Data East",                path: "https://www.arcadegames.com/game/burgertime" },
+    { name: "Q*bert",                      author: "Gottlieb",                 path: "https://www.arcadegames.com/game/qbert" },
+    { name: "Zaxxon",                      author: "Sega",                     path: "https://www.arcadegames.com/game/zaxxon" },
 
 ];
