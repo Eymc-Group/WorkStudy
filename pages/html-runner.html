@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zip Runner – WorkStudy</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  body { margin:0; display:flex; flex-direction:column; height:100vh; background:var(--bg,#0f0f1a); color:var(--text,#e2e8f0); font-family:'Pusab',system-ui,sans-serif; overflow:hidden; }
+  #topbar { display:flex; align-items:center; gap:8px; padding:8px 12px; background:rgba(0,0,0,0.4); border-bottom:1px solid rgba(255,255,255,0.08); flex-wrap:wrap; }
+  #topbar h1 { font-size:14px; margin:0; font-weight:700; }
+  .tb-btn { background:rgba(255,255,255,0.08); color:var(--text,#e2e8f0); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:6px 12px; font-size:12px; cursor:pointer; font-family:inherit; }
+  .tb-btn:hover { background:var(--c1,#6366f1); }
+  #dropZone { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:30px; text-align:center; transition:background .2s; }
+  #dropZone.drag { background:rgba(99,102,241,0.15); }
+  #dropZone h2 { font-size:22px; margin:0; }
+  #dropZone p { opacity:.6; font-size:13px; margin:0; }
+  .format-pill { display:inline-block; background:rgba(255,255,255,0.08); border-radius:20px; padding:4px 10px; font-size:11px; margin:3px; border:1px solid rgba(255,255,255,0.1); }
+  #runner { display:none; flex:1; flex-direction:column; }
+  #runnerBar { display:flex; align-items:center; gap:8px; padding:6px 12px; background:rgba(0,0,0,0.3); border-bottom:1px solid rgba(255,255,255,0.05); }
+  #runnerTitle { flex:1; font-size:12px; opacity:.7; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #runnerFrame { flex:1; border:none; background:#fff; }
+  #fileInput { display:none; }
+  #folderInput { display:none; }
+  #fileList { max-width:500px; width:100%; text-align:left; max-height:200px; overflow-y:auto; }
+  .file-item { display:flex; align-items:center; gap:8px; padding:6px 10px; border-radius:8px; cursor:pointer; font-size:12px; }
+  .file-item:hover { background:rgba(255,255,255,0.08); }
+  .file-icon { font-size:16px; }
+  #codeEditor { display:none; flex:1; flex-direction:column; }
+  #codeEditorBar { display:flex; align-items:center; gap:8px; padding:6px 12px; background:rgba(0,0,0,0.3); flex-wrap:wrap; }
+  #codeTextarea { flex:1; background:#0d0d1a; color:#e2e8f0; border:none; outline:none; font-family:'Courier New',monospace; font-size:13px; padding:16px; resize:none; }
+</style>
+</head>
+<body>
+<div id="topbar">
+  <h1>🗜️ Zip Runner</h1>
+  <button class="tb-btn" onclick="document.getElementById('fileInput').click()">📂 Open File</button>
+  <button class="tb-btn" onclick="document.getElementById('folderInput').click()">📁 Open Folder</button>
+  <button class="tb-btn" onclick="showDropZone()">🏠 Home</button>
+  <input id="fileInput" type="file" multiple
+    accept=".html,.htm,.css,.js,.json,.xml,.md,.txt,.zip,.svg,.png,.jpg,.jpeg,.gif,.webp,.ico,.woff,.woff2,.ttf,.otf,.csv,.yaml,.yml,.ts,.tsx,.jsx,.vue,.php,.py,.rb,.go,.rs,.cpp,.c,.h,.java,.sh,.bat,.env,.toml,.ini,.conf"
+    onchange="handleFiles(this.files)">
+  <input id="folderInput" type="file" webkitdirectory multiple onchange="handleFiles(this.files)">
+  <a class="tb-btn" href="../index.html">← Back</a>
+</div>
+
+<div id="dropZone">
+  <div style="font-size:48px">📂</div>
+  <h2>Open any web project</h2>
+  <p>Drag & drop a ZIP, folder, or individual files</p>
+  <div>
+    <span class="format-pill">HTML</span><span class="format-pill">CSS</span><span class="format-pill">JS</span>
+    <span class="format-pill">ZIP</span><span class="format-pill">JSON</span><span class="format-pill">XML</span>
+    <span class="format-pill">MD</span><span class="format-pill">SVG</span><span class="format-pill">PNG/JPG</span>
+    <span class="format-pill">Fonts</span><span class="format-pill">YAML</span><span class="format-pill">TypeScript</span>
+    <span class="format-pill">Vue/JSX</span><span class="format-pill">CSV</span><span class="format-pill">and more…</span>
+  </div>
+  <div id="fileList"></div>
+  <button class="tb-btn" onclick="document.getElementById('fileInput').click()" style="margin-top:12px;padding:10px 24px;font-size:14px;">Choose Files</button>
+</div>
+
+<div id="runner">
+  <div id="runnerBar">
+    <span id="runnerTitle">—</span>
+    <button class="tb-btn" onclick="reloadRunner()">🔄</button>
+    <button class="tb-btn" onclick="toggleFullscreen()">⛶</button>
+    <button class="tb-btn" onclick="showDropZone()">✕</button>
+  </div>
+  <iframe id="runnerFrame" sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups allow-modals" allowfullscreen></iframe>
+</div>
+
+<div id="codeEditor">
+  <div id="codeEditorBar">
+    <span id="ceTitle" style="font-size:12px;opacity:.7;"></span>
+    <button class="tb-btn" onclick="runCodeEditor()">▶ Run</button>
+    <button class="tb-btn" onclick="showDropZone()">✕</button>
+  </div>
+  <textarea id="codeTextarea" spellcheck="false"></textarea>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+var vfsFiles = {}; // virtual filesystem: {path: Blob/text}
+var currentEntryPoint = null;
+
+// Drag & drop
+var dz = document.getElementById('dropZone');
+dz.addEventListener('dragover', function(e){ e.preventDefault(); dz.classList.add('drag'); });
+dz.addEventListener('dragleave', function(){ dz.classList.remove('drag'); });
+dz.addEventListener('drop', function(e){ e.preventDefault(); dz.classList.remove('drag'); handleFiles(e.dataTransfer.files); });
+
+function showDropZone() {
+  document.getElementById('dropZone').style.display = 'flex';
+  document.getElementById('runner').style.display = 'none';
+  document.getElementById('codeEditor').style.display = 'none';
+  document.getElementById('runnerFrame').src = 'about:blank';
+}
+
+async function handleFiles(fileList) {
+  var files = Array.from(fileList);
+  if (!files.length) return;
+
+  // Single ZIP file
+  if (files.length === 1 && files[0].name.endsWith('.zip')) {
+    await loadZip(files[0]);
+    return;
+  }
+
+  // Single HTML file — run directly
+  if (files.length === 1 && (files[0].name.endsWith('.html') || files[0].name.endsWith('.htm'))) {
+    runSingleFile(files[0]);
+    return;
+  }
+
+  // Single media/text file — show viewer
+  if (files.length === 1) {
+    var ext = files[0].name.split('.').pop().toLowerCase();
+    if (['png','jpg','jpeg','gif','webp','svg','ico'].includes(ext)) { showImage(files[0]); return; }
+    if (['json','xml','md','txt','csv','yaml','yml','ts','tsx','jsx','vue','php','py','rb','go','rs','cpp','c','h','java','sh','css','js'].includes(ext)) { showCodeEditor(files[0]); return; }
+  }
+
+  // Multiple files — build VFS and find entry point
+  vfsFiles = {};
+  var list = document.getElementById('fileList');
+  list.innerHTML = '<p style="margin:8px 0;opacity:.6;font-size:12px;">Loading '+files.length+' files…</p>';
+
+  for (var f of files) {
+    var rel = f.webkitRelativePath || f.name;
+    vfsFiles[rel] = f;
+  }
+
+  // Find entry point
+  var entries = Object.keys(vfsFiles);
+  var html = entries.find(p => p.endsWith('index.html')) ||
+             entries.find(p => p.endsWith('.html') || p.endsWith('.htm'));
+
+  if (html) {
+    runVFS(html);
+  } else {
+    // Show file list picker
+    list.innerHTML = '<p style="margin:8px 0;font-size:12px;opacity:.6;">Choose a file to open:</p>' +
+      entries.slice(0,30).map(function(p){
+        return '<div class="file-item" onclick="pickFile(\''+p.replace(/'/g,"\\'")+'\')">'+
+          '<span class="file-icon">'+iconFor(p)+'</span><span>'+p+'</span></div>';
+      }).join('');
+    document.getElementById('dropZone').style.display = 'flex';
+  }
+}
+
+async function loadZip(file) {
+  vfsFiles = {};
+  document.getElementById('fileList').innerHTML = '<p style="opacity:.6;font-size:12px;">Extracting ZIP…</p>';
+
+  try {
+    var zip = await JSZip.loadAsync(file);
+    var proms = [];
+    zip.forEach(function(rel, entry) {
+      if (!entry.dir) {
+        proms.push(entry.async('blob').then(function(b){ vfsFiles[rel] = b; }));
+      }
+    });
+    await Promise.all(proms);
+
+    var entries = Object.keys(vfsFiles);
+    var html = entries.find(p => p.match(/(^|\/)index\.html?$/i)) ||
+               entries.find(p => p.endsWith('.html') || p.endsWith('.htm'));
+    if (html) { runVFS(html); }
+    else {
+      document.getElementById('fileList').innerHTML =
+        '<p style="font-size:12px;opacity:.6;">Pick entry:</p>' +
+        entries.slice(0,30).map(function(p){
+          return '<div class="file-item" onclick="pickFile(\''+p.replace(/'/g,"\\'")+'\')">'+
+            '<span class="file-icon">'+iconFor(p)+'</span><span>'+p+'</span></div>';
+        }).join('');
+    }
+  } catch(e) { alert('Could not read ZIP: ' + e.message); }
+}
+
+async function runVFS(entryPath) {
+  // Build an object URL map for all assets, inject into HTML
+  var urlMap = {};
+  for (var [path, blob] of Object.entries(vfsFiles)) {
+    if (blob instanceof Blob) urlMap[path] = URL.createObjectURL(blob);
+  }
+
+  // Read entry HTML
+  var entryBlob = vfsFiles[entryPath];
+  var html;
+  if (typeof entryBlob === 'string') { html = entryBlob; }
+  else { html = await entryBlob.text(); }
+
+  // Rewrite relative URLs
+  var entryDir = entryPath.includes('/') ? entryPath.substring(0, entryPath.lastIndexOf('/')+1) : '';
+  html = html.replace(/(src|href|url)\s*=\s*["']([^"'#?]+)["']/g, function(m, attr, val) {
+    if (val.startsWith('http') || val.startsWith('data:') || val.startsWith('blob:') || val.startsWith('//')) return m;
+    var resolved = entryDir + val;
+    // Normalize ../
+    resolved = resolved.replace(/[^/]+\/\.\.\//g, '').replace(/^\.\//,'');
+    if (urlMap[resolved]) return attr + '="' + urlMap[resolved] + '"';
+    if (urlMap[val]) return attr + '="' + urlMap[val] + '"';
+    return m;
+  });
+
+  var blob = new Blob([html], {type:'text/html'});
+  var url = URL.createObjectURL(blob);
+  document.getElementById('runnerTitle').textContent = entryPath;
+  document.getElementById('runnerFrame').src = url;
+  document.getElementById('dropZone').style.display = 'none';
+  document.getElementById('runner').style.display = 'flex';
+  document.getElementById('codeEditor').style.display = 'none';
+  currentEntryPoint = entryPath;
+}
+
+function runSingleFile(file) {
+  var url = URL.createObjectURL(file);
+  document.getElementById('runnerTitle').textContent = file.name;
+  document.getElementById('runnerFrame').src = url;
+  document.getElementById('dropZone').style.display = 'none';
+  document.getElementById('runner').style.display = 'flex';
+  document.getElementById('codeEditor').style.display = 'none';
+}
+
+function showImage(file) {
+  var url = URL.createObjectURL(file);
+  var html = '<!DOCTYPE html><html><body style="margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh;">' +
+    '<img src="'+url+'" style="max-width:100%;max-height:100vh;"></body></html>';
+  var blob = new Blob([html], {type:'text/html'});
+  document.getElementById('runnerTitle').textContent = file.name;
+  document.getElementById('runnerFrame').src = URL.createObjectURL(blob);
+  document.getElementById('dropZone').style.display = 'none';
+  document.getElementById('runner').style.display = 'flex';
+}
+
+function showCodeEditor(file) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById('codeTextarea').value = e.target.result;
+    document.getElementById('ceTitle').textContent = file.name;
+    document.getElementById('dropZone').style.display = 'none';
+    document.getElementById('runner').style.display = 'none';
+    document.getElementById('codeEditor').style.display = 'flex';
+  };
+  reader.readAsText(file);
+}
+
+function runCodeEditor() {
+  var code = document.getElementById('codeTextarea').value;
+  var title = document.getElementById('ceTitle').textContent || '';
+  var ext = title.split('.').pop().toLowerCase();
+  var html;
+  if (ext === 'html' || ext === 'htm') {
+    html = code;
+  } else if (ext === 'css') {
+    html = '<!DOCTYPE html><html><head><style>'+code+'</style></head><body><p>CSS preview</p></body></html>';
+  } else if (ext === 'js') {
+    html = '<!DOCTYPE html><html><body><script>'+code+'<\/script></body></html>';
+  } else if (ext === 'json') {
+    html = '<!DOCTYPE html><html><body><pre style="font-family:monospace;white-space:pre-wrap;">'+
+      JSON.stringify(JSON.parse(code),null,2)+'</pre></body></html>';
+  } else if (ext === 'md') {
+    // Simple markdown to HTML
+    html = '<!DOCTYPE html><html><head><style>body{font-family:system-ui;max-width:800px;margin:40px auto;padding:0 20px;line-height:1.6;}</style></head><body>'+
+      code.replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^# (.+)$/gm,'<h1>$1</h1>')
+          .replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\*(.+?)\*/g,'<em>$1</em>')
+          .replace(/`(.+?)`/g,'<code>$1</code>').replace(/\n/g,'<br>')+'</body></html>';
+  } else {
+    html = '<!DOCTYPE html><html><body><pre style="font-family:monospace;white-space:pre-wrap;">'+code.replace(/</g,'&lt;')+'</pre></body></html>';
+  }
+  var blob = new Blob([html], {type:'text/html'});
+  document.getElementById('runnerTitle').textContent = title;
+  document.getElementById('runnerFrame').src = URL.createObjectURL(blob);
+  document.getElementById('runner').style.display = 'flex';
+  document.getElementById('codeEditor').style.display = 'none';
+  document.getElementById('dropZone').style.display = 'none';
+}
+
+function pickFile(path) {
+  var blob = vfsFiles[path];
+  if (!blob) return;
+  var ext = path.split('.').pop().toLowerCase();
+  if (ext === 'html' || ext === 'htm') { runVFS(path); }
+  else if (blob instanceof Blob) { showImage({name:path, createObjectURL: ()=>URL.createObjectURL(blob)}); }
+  else if (typeof blob === 'string') {
+    document.getElementById('codeTextarea').value = blob;
+    document.getElementById('ceTitle').textContent = path;
+    document.getElementById('dropZone').style.display = 'none';
+    document.getElementById('codeEditor').style.display = 'flex';
+  }
+}
+
+function reloadRunner() { var f = document.getElementById('runnerFrame'); var s=f.src; f.src='about:blank'; setTimeout(()=>f.src=s,50); }
+
+function toggleFullscreen() {
+  var frame = document.getElementById('runnerFrame');
+  if (document.fullscreenElement) document.exitFullscreen();
+  else frame.requestFullscreen();
+}
+
+function iconFor(path) {
+  var ext = path.split('.').pop().toLowerCase();
+  var map = {html:'🌐',htm:'🌐',css:'🎨',js:'📜',ts:'📜',json:'📋',xml:'📋',md:'📝',txt:'📄',
+             png:'🖼️',jpg:'🖼️',jpeg:'🖼️',gif:'🖼️',svg:'🖼️',webp:'🖼️',
+             zip:'📦',woff:'🔤',woff2:'🔤',ttf:'🔤',otf:'🔤',csv:'📊',yaml:'⚙️',yml:'⚙️'};
+  return map[ext] || '📄';
+}
+</script>
+</body>
+</html>

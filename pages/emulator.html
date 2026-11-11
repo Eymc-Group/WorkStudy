@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Emulators – WorkStudy</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  body { margin:0; background:var(--bg,#0f0f1a); color:var(--text,#e2e8f0); font-family:'Pusab',system-ui,sans-serif; min-height:100vh; }
+  .back-btn { position:fixed; top:12px; left:12px; z-index:999; background:rgba(0,0,0,0.6); color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:6px 12px; font-size:12px; cursor:pointer; text-decoration:none; }
+  .header { padding:20px 20px 10px; text-align:center; }
+  .header h1 { font-size:22px; margin:0 0 6px; }
+  .header p { opacity:.6; font-size:13px; margin:0; }
+  .system-tabs { display:flex; gap:8px; padding:12px 20px; flex-wrap:wrap; justify-content:center; }
+  .sys-tab { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:8px 16px; cursor:pointer; font-size:13px; font-family:inherit; color:var(--text,#e2e8f0); transition:background .15s; }
+  .sys-tab.active { background:var(--c1,#6366f1); border-color:var(--c1,#6366f1); }
+  .sys-tab:hover { background:rgba(255,255,255,0.15); }
+  .sys-tab.active:hover { background:var(--c1,#6366f1); }
+  .content { padding:16px 20px; max-width:900px; margin:0 auto; }
+  .rom-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px; margin-top:12px; }
+  .rom-card { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:14px 10px; text-align:center; cursor:pointer; transition:background .15s; }
+  .rom-card:hover { background:rgba(255,255,255,0.1); }
+  .rom-card .rom-icon { font-size:32px; margin-bottom:8px; }
+  .rom-card .rom-name { font-size:11px; line-height:1.3; opacity:.85; }
+  .upload-area { border:2px dashed rgba(255,255,255,0.2); border-radius:14px; padding:28px; text-align:center; margin-top:16px; cursor:pointer; }
+  .upload-area:hover { border-color:var(--c1,#6366f1); background:rgba(99,102,241,0.08); }
+  #romInput { display:none; }
+  #emuContainer { display:none; position:fixed; inset:0; z-index:9999; background:#000; flex-direction:column; }
+  #emuTopBar { display:flex; align-items:center; gap:10px; padding:8px 14px; background:rgba(0,0,0,0.8); flex-shrink:0; }
+  #emuTitle { flex:1; font-size:13px; opacity:.8; }
+  #emuClose { background:rgba(255,255,255,0.1); color:#fff; border:none; border-radius:8px; padding:6px 14px; cursor:pointer; font-family:inherit; font-size:12px; }
+  #emuWrapper { flex:1; display:flex; align-items:center; justify-content:center; }
+  .info-box { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:14px 16px; font-size:12px; opacity:.8; line-height:1.6; margin-top:14px; }
+  .info-box b { opacity:1; }
+</style>
+</head>
+<body>
+<a class="back-btn" href="../index.html">← Back</a>
+
+<div class="header">
+  <h1>🕹️ Emulators</h1>
+  <p>Play classic console games in your browser</p>
+</div>
+
+<div class="system-tabs">
+  <button class="sys-tab active" onclick="setSystem('nes')">🟥 NES</button>
+  <button class="sys-tab" onclick="setSystem('gba')">🔵 GBA</button>
+  <button class="sys-tab" onclick="setSystem('gbc')">🟩 GBC</button>
+  <button class="sys-tab" onclick="setSystem('gb')">⬜ GB</button>
+  <button class="sys-tab" onclick="setSystem('snes')">🟪 SNES</button>
+  <button class="sys-tab" onclick="setSystem('n64')">🟡 N64</button>
+  <button class="sys-tab" onclick="setSystem('ps1')">⚫ PS1</button>
+  <button class="sys-tab" onclick="setSystem('segaMD')">🔴 Sega MD</button>
+  <button class="sys-tab" onclick="setSystem('arcade')">🕹️ Arcade</button>
+</div>
+
+<div class="content">
+  <div id="preloaded-roms" class="rom-grid"></div>
+
+  <div class="upload-area" onclick="document.getElementById('romInput').click()">
+    <div style="font-size:36px;margin-bottom:10px;">📂</div>
+    <p style="margin:0 0 6px;font-size:14px;font-weight:bold;">Load your own ROM</p>
+    <p style="margin:0;font-size:12px;opacity:.6;">Drop a .nes, .gba, .gbc, .gb, .sfc, .smc, .n64, .z64, .psx, .bin, .md, .gen file here</p>
+  </div>
+  <input id="romInput" type="file" accept=".nes,.gba,.gbc,.gb,.sfc,.smc,.n64,.z64,.v64,.psx,.bin,.iso,.md,.gen,.smd,.rom,.zip" onchange="loadROM(this.files[0])">
+
+  <div class="info-box">
+    <b>How to use:</b> Click a pre-installed game above, or load your own ROM file from your device.<br>
+    <b>Controls:</b> Keyboard or on-screen gamepad. Z=A, X=B, Enter=Start, Shift=Select, Arrow keys=D-pad.<br>
+    <b>Save states:</b> Use the emulator menu (F1) to save/load states.<br>
+    <b>Offline:</b> Pre-installed games and the emulator work fully offline once loaded.
+  </div>
+</div>
+
+<!-- Emulator overlay -->
+<div id="emuContainer">
+  <div id="emuTopBar">
+    <span id="emuTitle">Game</span>
+    <button id="emuClose" onclick="closeEmu()">✕ Close</button>
+    <button id="emuFullscreen" style="background:rgba(255,255,255,0.1);color:#fff;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-family:inherit;font-size:12px;" onclick="goFullscreen()">⛶ Fullscreen</button>
+  </div>
+  <div id="emuWrapper">
+    <div id="game"></div>
+  </div>
+</div>
+
+<script>
+var currentSystem = 'nes';
+var emuLoaded = false;
+
+// Pre-installed ROMs (open-source/homebrew only)
+var prebuiltRoms = {
+  nes: [
+    { name: "Alter Ego", file: "https://www.nesworld.com/files/homebrew/alterego.nes", icon: "🎮" },
+    { name: "Flappy Bird NES", file: "https://raw.githubusercontent.com/mwenge/iridisalpha/master/data/iridis_alpha.rom", icon: "🐦" },
+  ],
+  gba: [],
+  gbc: [],
+  gb: [],
+  snes: [],
+  n64: [],
+  ps1: [],
+  segaMD: [],
+  arcade: []
+};
+
+var systemMap = {
+  nes: 'nes', gba: 'gba', gbc: 'gbc', gb: 'gb',
+  snes: 'snes', n64: 'n64', ps1: 'psx', segaMD: 'segaMD', arcade: 'arcade'
+};
+
+function setSystem(sys) {
+  currentSystem = sys;
+  document.querySelectorAll('.sys-tab').forEach(function(t) { t.classList.remove('active'); });
+  event.target.classList.add('active');
+  renderRoms();
+}
+
+function renderRoms() {
+  var grid = document.getElementById('preloaded-roms');
+  var roms = prebuiltRoms[currentSystem] || [];
+  if (!roms.length) {
+    grid.innerHTML = '<p style="opacity:.5;font-size:13px;grid-column:1/-1;">No pre-installed games for this system. Load your own ROM below.</p>';
+    return;
+  }
+  grid.innerHTML = roms.map(function(r,i) {
+    return '<div class="rom-card" onclick="launchPrebuilt('+i+')">' +
+      '<div class="rom-icon">'+r.icon+'</div>' +
+      '<div class="rom-name">'+r.name+'</div></div>';
+  }).join('');
+}
+
+function launchPrebuilt(idx) {
+  var rom = (prebuiltRoms[currentSystem] || [])[idx];
+  if (!rom) return;
+  launchEmu(rom.file, rom.name, systemMap[currentSystem]);
+}
+
+function loadROM(file) {
+  if (!file) return;
+  var ext = file.name.split('.').pop().toLowerCase();
+  var sysGuess = {nes:'nes',gba:'gba',gbc:'gbc',gb:'gb',sfc:'snes',smc:'snes',n64:'n64',z64:'n64',v64:'n64',psx:'psx',bin:'psx',md:'segaMD',gen:'segaMD',smd:'segaMD'}[ext] || currentSystem;
+  var url = URL.createObjectURL(file);
+  launchEmu(url, file.name, sysGuess);
+}
+
+function launchEmu(romUrl, name, system) {
+  document.getElementById('emuTitle').textContent = '🕹️ ' + name;
+  document.getElementById('emuContainer').style.display = 'flex';
+  document.getElementById('game').innerHTML = '';
+
+  if (!emuLoaded) {
+    var script = document.createElement('script');
+    script.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
+    script.onload = function() { startEmu(romUrl, system); };
+    script.onerror = function() {
+      document.getElementById('game').innerHTML =
+        '<p style="color:#fff;padding:30px;text-align:center;">Could not load EmulatorJS. Check your connection.<br><br>' +
+        '<small style="opacity:.6">EmulatorJS requires internet for first load, then works offline.</small></p>';
+    };
+    document.head.appendChild(script);
+    emuLoaded = true;
+  } else {
+    startEmu(romUrl, system);
+  }
+}
+
+function startEmu(romUrl, system) {
+  window.EJS_player = '#game';
+  window.EJS_gameUrl = romUrl;
+  window.EJS_core = system;
+  window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
+  window.EJS_gameID = 1;
+  window.EJS_color = getComputedStyle(document.documentElement).getPropertyValue('--c1') || '#6366f1';
+  window.EJS_onGameStart = function() { console.log('Game started'); };
+  // Reload the loader to reinit
+  var loader = document.querySelector('script[src*="emulatorjs"]');
+  if (loader) {
+    var newLoader = document.createElement('script');
+    newLoader.src = loader.src + '?t=' + Date.now();
+    document.head.appendChild(newLoader);
+  }
+}
+
+function closeEmu() {
+  document.getElementById('emuContainer').style.display = 'none';
+  document.getElementById('game').innerHTML = '';
+  if (document.fullscreenElement) document.exitFullscreen();
+}
+
+function goFullscreen() {
+  var wrapper = document.getElementById('emuWrapper');
+  if (document.fullscreenElement) document.exitFullscreen();
+  else wrapper.requestFullscreen();
+}
+
+renderRoms();
+</script>
+</body>
+</html>

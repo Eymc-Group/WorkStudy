@@ -1,6 +1,6 @@
 {
-  "version": "3.21.83",
-  "releasedAt": "2026-11-09",
-  "changelog": "v3.21.83: Movies multi-provider streaming, YouTube Shorts page, Music Player, game download buttons, leaderboard multi-stat, website viewer bookmarks+history+proxy, customTab on all pages, gn-math.dev added.",
+  "version": "3.2.9.51",
+  "releasedAt": "2026-11-11",
+  "changelog": "v3.2.9.51: Big search bar, offline toggle in settings, YouTube Emulator, Emulator page, Notepad, Zip Runner, version ping every 30s, removed gn-math web-port2 games, added 30+ extra games, real game posters via RAWG.",
   "downloadUrl": "https://github.com/Eymc-Group/WorkStudy/archive/refs/heads/root.zip"
 }

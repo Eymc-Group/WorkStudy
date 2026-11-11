@@ -13,15 +13,14 @@
     "use strict";
 
     // ── Bundled version (update this when packaging a new offline zip) ──────
-    const BUNDLED_VERSION = "3.21.83";
+    const BUNDLED_VERSION = "3.2.9.51";
 
     // Only run when offline (file://) or on a custom non-GitHub domain
     const host = location.hostname;
     const isOffline = location.protocol === "file:" ||
         (host && host !== "eymc-group.github.io" && !host.endsWith(".github.io"));
 
-    if (!isOffline) return; // Live GitHub Pages users get updates automatically
-
+    // ── Live version ping every 30s for online GitHub Pages users ───────────
     const LIVE_VERSION_URL =
         "https://eymc-group.github.io/WorkStudy/version.json";
 
@@ -60,9 +59,64 @@
         }
     }
 
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", checkVersion);
+    function showLiveBanner(liveVersion, downloadUrl) {
+        // Show the version badge as "update available"
+        const badge = document.getElementById("versionBadge");
+        if (badge) {
+            badge.style.background = "linear-gradient(135deg,#f59e0b,#ef4444)";
+            badge.title = "Update available: v" + liveVersion + " — click to reload";
+            badge.style.cursor = "pointer";
+            badge.onclick = () => location.reload(true);
+            badge.textContent = "⬆ v" + liveVersion;
+        }
+        // Also post to SW so update banner can fire
+        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({ type: "VERSION_UPDATE", version: liveVersion });
+        }
+    }
+
+    async function checkVersionLive() {
+        try {
+            const res = await fetch(LIVE_VERSION_URL + "?t=" + Date.now(), { cache: "no-store" });
+            if (!res.ok) return;
+            const data = await res.json();
+            if (data && data.version) {
+                const lv = data.version;
+                // Compare 4-part version
+                function parsev(v) { return v.split(".").map(Number); }
+                const pLive = parsev(lv), pCur = parsev(BUNDLED_VERSION);
+                for (let i = 0; i < 4; i++) {
+                    if ((pLive[i]||0) > (pCur[i]||0)) { showLiveBanner(lv, data.downloadUrl || ""); return; }
+                    if ((pLive[i]||0) < (pCur[i]||0)) return;
+                }
+            }
+        } catch { /* silent */ }
+    }
+
+    if (isOffline) {
+        // Offline zip — show banner if behind
+        async function checkVersion() {
+            try {
+                const res = await fetch(LIVE_VERSION_URL, { cache: "no-store" });
+                if (!res.ok) return;
+                const data = await res.json();
+                if (data && data.version && semverGreater(BUNDLED_VERSION, data.version)) {
+                    showBanner(data.version, data.downloadUrl || LIVE_VERSION_URL.replace("version.json", ""));
+                }
+            } catch { }
+        }
+        if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", checkVersion);
+        else checkVersion();
     } else {
-        checkVersion();
+        // Live GitHub Pages — ping every 30s
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", () => {
+                checkVersionLive();
+                setInterval(checkVersionLive, 30000);
+            });
+        } else {
+            checkVersionLive();
+            setInterval(checkVersionLive, 30000);
+        }
     }
 })();
