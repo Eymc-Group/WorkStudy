@@ -274,16 +274,88 @@ utilities. Explore content, save progress, and discover
 new experiences from one place.
 </p>
 
-    <div class="sidebar">
+    <!-- Offline Mode Toggle -->
+    <div id="offlineToggleBar" style="
+        display:flex; align-items:center; justify-content:space-between;
+        padding: 10px 16px;
+        background: rgba(0,0,0,0.25);
+        border-radius: 14px;
+        margin: 8px 0;
+        font-family: 'Pusab', system-ui, sans-serif;
+        font-size: 13px;
+        color: var(--text, #e2e8f0);
+        border: 1px solid rgba(255,255,255,0.08);
+    ">
+        <span>✈️ Offline Mode</span>
+        <label style="position:relative;display:inline-block;width:46px;height:26px;cursor:pointer;">
+            <input type="checkbox" id="offlineToggle" style="opacity:0;width:0;height:0;position:absolute;" onchange="applyOfflineMode(this.checked)">
+            <span id="offlineSlider" style="
+                position:absolute; inset:0;
+                background: rgba(255,255,255,0.15);
+                border-radius:26px;
+                transition: background .3s;
+            "></span>
+            <span id="offlineKnob" style="
+                position:absolute; top:3px; left:3px;
+                width:20px; height:20px;
+                background:#fff;
+                border-radius:50%;
+                transition: transform .3s;
+                box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+            "></span>
+        </label>
+    </div>
+
+    <div class="sidebar" id="mainSidebar">
         <button type="button" onclick="location.href='games/index.html'">🎮 Games</button>
-        <button type="button" onclick="location.href='pages/movies.html'">🎬 Movies &amp; Shows</button>
-        <button type="button" onclick="location.href='pages/music.html'">🎵 Music Player</button>
-        <button type="button" onclick="location.href='pages/shorts.html'">📺 Shorts</button>
-        <button type="button" onclick="location.href='pages/chat/index.html'">💬 Chat</button>
-        <button type="button" onclick="location.href='pages/soundboard.html'">🎵 Soundboard</button>
-        <button type="button" onclick="location.href='pages/iframe.html'">🌐 Website Viewer</button>
-        <button type="button" onclick="location.href='pages/proxy.html'">🫥 Proxies</button>
-        <button type="button" onclick="location.href='pages/boardofcolor.html'">🎨 Coloring Board</button>
+        <button type="button" onclick="location.href='pages/apps.html'">🗂️ Apps</button>
+        <button type="button" class="online-only" onclick="location.href='pages/movies.html'">🎬 Movies &amp; Shows</button>
+        <button type="button" class="online-only" onclick="location.href='pages/music.html'">🎵 Music Player</button>
+        <button type="button" class="online-only" onclick="location.href='pages/shorts.html'">📺 Shorts</button>
+        <button type="button" class="online-only" onclick="location.href='pages/chat/index.html'">💬 Chat</button>
+        <button type="button" onclick="location.href='pages/soundboard.html'">🔊 Soundboard</button>
+        <button type="button" class="online-only" onclick="location.href='pages/website.html'">🌐 Website Viewer</button>
+        <button type="button" class="online-only" onclick="location.href='pages/proxy.html'">🫥 Proxies</button>
+        <button type="button" onclick="location.href='pages/coloringboard.html'">🎨 Coloring Board</button>
+    </div>
+
+    <script>
+    // ── Offline Mode Toggle ───────────────────────────────────────────────
+    (function() {
+        var isOffline = localStorage.getItem("ws-offline-mode") === "1";
+        if (isOffline) {
+            document.getElementById("offlineToggle").checked = true;
+            applyOfflineMode(true);
+        }
+    })();
+
+    function applyOfflineMode(on) {
+        localStorage.setItem("ws-offline-mode", on ? "1" : "0");
+        // Update toggle visual
+        var slider = document.getElementById("offlineSlider");
+        var knob   = document.getElementById("offlineKnob");
+        if (slider) slider.style.background = on ? "var(--c1, #6366f1)" : "rgba(255,255,255,0.15)";
+        if (knob)   knob.style.transform    = on ? "translateX(20px)"  : "translateX(0)";
+        // Hide/show online-only buttons
+        var onlineEls = document.querySelectorAll(".online-only");
+        onlineEls.forEach(function(el) {
+            el.style.opacity  = on ? "0.3" : "1";
+            el.style.pointerEvents = on ? "none" : "";
+            el.style.filter   = on ? "grayscale(1)" : "";
+        });
+        // Show banner
+        var banner = document.getElementById("offlineBanner");
+        if (banner) banner.style.display = on ? "flex" : "none";
+    }
+    </script>
+
+    <!-- Offline Mode Banner -->
+    <div id="offlineBanner" style="display:none;align-items:center;gap:10px;
+        padding:10px 16px; margin:4px 0;
+        background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(139,92,246,0.15));
+        border:1px solid rgba(99,102,241,0.3); border-radius:12px;
+        font-size:12px; color: var(--text,#e2e8f0); font-family:'Pusab',system-ui,sans-serif;">
+        ✈️ <span>Offline mode: showing locally installed games only. Online features are disabled.</span>
     </div>
 
     <button id="legacyBtn" type="button" onclick="legacyConfirm()">🏛️ Legacy</button>
