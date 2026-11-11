@@ -31,7 +31,7 @@ const PRECACHE_URLS = [
     "/WorkStudy/pages/support.html",
     "/WorkStudy/pages/updates.html",
     "/WorkStudy/pages/mirrors.html",
-    "/WorkStudy/pages/iframe.html",
+    "/WorkStudy/pages/website.html",
     "/WorkStudy/pages/devtools.html",
     "/WorkStudy/pages/movies.html",
     "/WorkStudy/pages/shorts.html",

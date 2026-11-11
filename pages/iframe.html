@@ -3,217 +3,730 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Viewer – WorkStudy | Browse Any Site in an iFrame</title>
-    <meta name="description" content="Browse any website inside WorkStudy's built-in website viewer. Bypass restrictions and access sites through the iFrame viewer.">
+    <title>Website Viewer – WorkStudy</title>
+    <meta name="description" content="Browse any website inside WorkStudy's built-in browser. Supports iFrame, Fetch, Proxy, and VPN routing.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://eymc-group.github.io/WorkStudy/pages/iframe.html">
-
     <link rel="icon" href="../img/website.png">
-
     <script src="../js/color.js" defer></script>
-    <script src="../js/iframe.js" defer></script>
-    <script src="../js/website.js" defer></script>
-    <script src="../js/customTab.js" defer></script>
-    <script>
-function getUrl() {
-    let url = (document.getElementById("urlInput").value || "").trim();
+    <script src="../js/customTab.js" data-title="Browser — WorkStudy" data-icon="../img/website.png" defer></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            background: var(--bg, #0f172a);
+            color: var(--text, #e2e8f0);
+            font-family: system-ui, sans-serif;
+        }
+
+        /* ── Chrome-like toolbar ── */
+        #browser-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            background: var(--card, #1e293b);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            flex-shrink: 0;
+        }
+
+        .nav-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 50%;
+            background: transparent;
+            color: var(--text, #e2e8f0);
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s;
+            flex-shrink: 0;
+        }
+        .nav-btn:hover { background: rgba(255,255,255,0.1); }
+        .nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+        #url-bar-wrap {
+            flex: 1;
+            position: relative;
+        }
+
+        #urlInput {
+            width: 100%;
+            padding: 6px 36px 6px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(0,0,0,0.3);
+            color: var(--text, #e2e8f0);
+            font-size: 14px;
+            outline: none;
+            transition: border 0.2s;
+        }
+        #urlInput:focus { border-color: #7c3aed; }
+
+        #lock-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 13px;
+            pointer-events: none;
+        }
+
+        #history-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--card, #1e293b);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 8px;
+            max-height: 220px;
+            overflow-y: auto;
+            z-index: 999;
+            display: none;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            margin-top: 4px;
+        }
+        #history-dropdown.open { display: block; }
+        .history-item {
+            padding: 8px 14px;
+            cursor: pointer;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text, #e2e8f0);
+        }
+        .history-item:hover { background: rgba(255,255,255,0.08); }
+        .history-item .hist-url { opacity: 0.6; font-size: 11px; }
+        .history-sep { font-size: 10px; padding: 4px 14px 2px; opacity: 0.4; text-transform: uppercase; letter-spacing: 0.08em; }
+        .history-clear { padding: 6px 14px; font-size: 12px; opacity: 0.5; cursor: pointer; text-align: right; }
+        .history-clear:hover { opacity: 0.9; }
+
+        /* Method + proxy controls */
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        #method-select {
+            padding: 5px 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(0,0,0,0.3);
+            color: var(--text, #e2e8f0);
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        #proxy-btn {
+            padding: 5px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(0,0,0,0.3);
+            color: var(--text, #e2e8f0);
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s, border 0.2s;
+            white-space: nowrap;
+        }
+        #proxy-btn.active { background: rgba(124,58,237,0.3); border-color: #7c3aed; color: #c4b5fd; }
+
+        #go-btn {
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: none;
+            background: #7c3aed;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        #go-btn:hover { background: #6d28d9; }
+
+        /* ── Bookmarks bar ── */
+        #bookmarks-bar {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: var(--card, #1e293b);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            overflow-x: auto;
+            flex-shrink: 0;
+            scrollbar-width: none;
+        }
+        #bookmarks-bar::-webkit-scrollbar { display: none; }
+
+        .bm-btn {
+            padding: 3px 10px;
+            border: none;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.07);
+            color: var(--text, #e2e8f0);
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .bm-btn:hover { background: rgba(124,58,237,0.25); }
+
+        .bm-add {
+            margin-left: auto;
+            opacity: 0.5;
+            font-size: 16px;
+            line-height: 1;
+            padding: 2px 6px;
+        }
+        .bm-add:hover { opacity: 1; }
+
+        /* ── Status bar ── */
+        #status-bar {
+            padding: 5px 12px;
+            font-size: 12px;
+            background: var(--card, #1e293b);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            min-height: 26px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        #status-bar.error { color: #f87171; }
+        #status-bar.ok { color: #34d399; }
+
+        /* ── Frames ── */
+        #frame-wrap {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #websiteFrame, #fetchFrame {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: none;
+        }
+
+        #placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        #placeholder .ph-icon { font-size: 56px; }
+        #placeholder p { font-size: 14px; margin-top: 8px; }
+
+        /* ── Custom proxy modal ── */
+        #proxy-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        #proxy-modal.open { display: flex; }
+        #proxy-modal-box {
+            background: var(--card, #1e293b);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 12px;
+            padding: 24px;
+            width: min(400px, 90vw);
+        }
+        #proxy-modal-box h3 { margin: 0 0 12px; font-size: 16px; }
+        #proxy-modal-box input {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(0,0,0,0.3);
+            color: var(--text, #e2e8f0);
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+        .modal-row { display: flex; gap: 8px; }
+        .modal-btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .modal-btn.primary { background: #7c3aed; color: #fff; }
+        .modal-btn.secondary { background: rgba(255,255,255,0.1); color: var(--text, #e2e8f0); }
+        .proxy-presets { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+        .proxy-preset-btn {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: var(--text, #e2e8f0);
+            cursor: pointer;
+            font-size: 12px;
+            text-align: left;
+        }
+        .proxy-preset-btn:hover { background: rgba(124,58,237,0.2); }
+        .proxy-preset-btn small { opacity: 0.5; display: block; }
+    </style>
+</head>
+<body>
+
+<!-- Chrome-like toolbar -->
+<div id="browser-toolbar">
+    <button class="nav-btn" id="btn-back" title="Back" onclick="navBack()" disabled>&#8592;</button>
+    <button class="nav-btn" id="btn-fwd" title="Forward" onclick="navFwd()" disabled>&#8594;</button>
+    <button class="nav-btn" id="btn-refresh" title="Refresh" onclick="navRefresh()">&#8635;</button>
+    <button class="nav-btn" title="Home" onclick="location.href='../index.html'">&#127968;</button>
+
+    <div id="url-bar-wrap">
+        <input type="text" id="urlInput" placeholder="Search or enter website URL…"
+               autocomplete="off" spellcheck="false"
+               onfocus="showHistory()" onblur="setTimeout(hideHistory,200)"
+               onkeydown="if(event.key==='Enter')go()">
+        <span id="lock-icon">🔓</span>
+        <div id="history-dropdown"></div>
+    </div>
+
+    <div class="toolbar-group">
+        <select id="method-select" title="Load method">
+            <option value="iframe">🖼️ iFrame</option>
+            <option value="fetch">📥 Fetch</option>
+            <option value="corsproxy">🛡️ Proxy</option>
+            <option value="allorigins">🌐 AllOrigins</option>
+        </select>
+
+        <button id="proxy-btn" title="Toggle privacy proxy / set custom proxy" onclick="toggleProxyMenu()">🔒 None</button>
+
+        <button id="go-btn" onclick="go()">Go</button>
+    </div>
+
+    <button class="nav-btn" title="Bookmarks" onclick="toggleBookmarks()">⭐</button>
+    <button class="nav-btn" title="Open in new tab" onclick="openNewTab()">&#10697;</button>
+</div>
+
+<!-- Bookmarks bar -->
+<div id="bookmarks-bar">
+    <button class="bm-btn" onclick="navigate('https://www.google.com')">🔍 Google</button>
+    <button class="bm-btn" onclick="navigate('https://www.youtube.com')">▶️ YouTube</button>
+    <button class="bm-btn" onclick="navigate('https://www.wikipedia.org')">📖 Wikipedia</button>
+    <button class="bm-btn" onclick="navigate('https://www.reddit.com')">🤖 Reddit</button>
+    <button class="bm-btn" onclick="navigate('https://github.com')">🐙 GitHub</button>
+    <button class="bm-btn" onclick="navigate('https://coolmathgames.com')">🧮 CoolMath</button>
+    <span id="saved-bookmarks"></span>
+    <button class="bm-btn bm-add" title="Bookmark current page" onclick="bookmarkCurrent()">+</button>
+</div>
+
+<!-- Status bar -->
+<div id="status-bar">Ready</div>
+
+<!-- Frame area -->
+<div id="frame-wrap">
+    <div id="placeholder">
+        <div class="ph-icon">🌐</div>
+        <p>Enter a URL and press Go</p>
+    </div>
+
+    <iframe id="websiteFrame" title="Website Preview" style="display:none;"
+            allowfullscreen allow="autoplay; fullscreen"></iframe>
+
+    <iframe id="fetchFrame" title="Fetched Content"
+            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"
+            style="display:none;"></iframe>
+</div>
+
+<!-- Custom proxy modal -->
+<div id="proxy-modal">
+    <div id="proxy-modal-box">
+        <h3>🔒 Privacy / Proxy Settings</h3>
+        <p style="font-size:13px;opacity:0.6;margin:0 0 12px;">Choose a preset or enter your own CORS proxy URL.<br>Your custom proxy must accept <code>?url=ENCODED_URL</code></p>
+
+        <div class="proxy-presets">
+            <button class="proxy-preset-btn" onclick="setProxy('none')">
+                🔓 None — direct connection (fastest)
+                <small>No proxy. Sites may block iFrames.</small>
+            </button>
+            <button class="proxy-preset-btn" onclick="setProxy('corsproxy')">
+                🛡️ corsproxy.io — strips X-Frame-Options
+                <small>https://corsproxy.io/?URL</small>
+            </button>
+            <button class="proxy-preset-btn" onclick="setProxy('allorigins')">
+                🌐 AllOrigins — CORS anywhere
+                <small>https://api.allorigins.win/raw?url=URL</small>
+            </button>
+            <button class="proxy-preset-btn" onclick="setProxy('thingproxy')">
+                🔁 Thingproxy — another CORS proxy
+                <small>https://thingproxy.freeboard.io/fetch/URL</small>
+            </button>
+        </div>
+
+        <p style="font-size:12px;opacity:0.5;margin:0 0 6px;">Custom proxy URL (use {url} as placeholder):</p>
+        <input type="text" id="custom-proxy-input" placeholder="https://myproxy.example.com/?url={url}">
+
+        <div class="modal-row">
+            <button class="modal-btn primary" onclick="applyCustomProxy()">Apply</button>
+            <button class="modal-btn secondary" onclick="closeProxyModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+const HISTORY_KEY  = "ws_browser_history";
+const BOOKMARKS_KEY = "ws_browser_bookmarks";
+const PROXY_KEY     = "ws_browser_proxy";
+
+let navStack  = [];
+let navIndex  = -1;
+let proxyMode = "none"; // "none" | "corsproxy" | "allorigins" | "thingproxy" | custom URL
+
+const PROXIES = {
+    none:        url => url,
+    corsproxy:   url => "https://corsproxy.io/?" + encodeURIComponent(url),
+    allorigins:  url => "https://api.allorigins.win/raw?url=" + encodeURIComponent(url),
+    thingproxy:  url => "https://thingproxy.freeboard.io/fetch/" + url,
+};
+
+// Restore saved proxy
+try {
+    const saved = localStorage.getItem(PROXY_KEY);
+    if (saved) proxyMode = saved;
+} catch(e){}
+
+// ── URL helpers ───────────────────────────────────────────────────────────
+function sanitizeUrl(raw) {
+    let url = (raw || "").trim();
     if (!url) return null;
-    if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+    // If it looks like a search term, go to Google
+    if (!/^https?:\/\//i.test(url) && !url.includes(".")) {
+        url = "https://www.google.com/search?q=" + encodeURIComponent(url);
+    } else if (!/^https?:\/\//i.test(url)) {
+        url = "https://" + url;
+    }
     return url;
 }
 
-function setStatus(msg, type) {
-    const el = document.getElementById("fetchStatus");
-    el.style.display = msg ? "" : "none";
-    el.textContent = msg || "";
-    el.style.background = type === "error" ? "rgba(239,68,68,0.15)" :
-                          type === "ok"    ? "rgba(16,185,129,0.15)" :
-                                             "rgba(255,255,255,0.08)";
+function proxyUrl(url) {
+    if (proxyMode === "none") return url;
+    if (PROXIES[proxyMode]) return PROXIES[proxyMode](url);
+    // custom proxy with {url} placeholder
+    return proxyMode.replace("{url}", encodeURIComponent(url));
 }
 
-function loadIframe() {
-    const url = getUrl();
-    if (!url) return setStatus("Please enter a URL.", "error");
+// ── Status ────────────────────────────────────────────────────────────────
+function setStatus(msg, type) {
+    const el = document.getElementById("status-bar");
+    el.textContent = msg;
+    el.className = type || "";
+}
+
+// ── Lock icon ─────────────────────────────────────────────────────────────
+function updateLock(url) {
+    document.getElementById("lock-icon").textContent = url && url.startsWith("https://") ? "🔒" : "🔓";
+}
+
+// ── Navigation stack ──────────────────────────────────────────────────────
+function pushNav(url) {
+    if (navStack[navIndex] === url) return;
+    navStack = navStack.slice(0, navIndex + 1);
+    navStack.push(url);
+    navIndex = navStack.length - 1;
+    updateNavBtns();
+}
+
+function updateNavBtns() {
+    document.getElementById("btn-back").disabled = navIndex <= 0;
+    document.getElementById("btn-fwd").disabled  = navIndex >= navStack.length - 1;
+}
+
+function navBack() {
+    if (navIndex <= 0) return;
+    navIndex--;
+    loadUrl(navStack[navIndex], false);
+    updateNavBtns();
+}
+
+function navFwd() {
+    if (navIndex >= navStack.length - 1) return;
+    navIndex++;
+    loadUrl(navStack[navIndex], false);
+    updateNavBtns();
+}
+
+function navRefresh() {
+    const url = sanitizeUrl(document.getElementById("urlInput").value);
+    if (url) loadUrl(url, false);
+}
+
+// ── History ───────────────────────────────────────────────────────────────
+function getHistory() {
+    try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]"); } catch(e) { return []; }
+}
+
+function addHistory(url) {
+    try {
+        let h = getHistory().filter(x => x.url !== url);
+        h.unshift({ url, time: Date.now() });
+        h = h.slice(0, 30);
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(h));
+    } catch(e){}
+}
+
+function showHistory() {
+    const q   = document.getElementById("urlInput").value.trim().toLowerCase();
+    const h   = getHistory();
+    const bmk = getSavedBookmarks();
+    const dd  = document.getElementById("history-dropdown");
+
+    const matches = q
+        ? h.filter(x => x.url.toLowerCase().includes(q))
+        : h;
+
+    if (!matches.length && !bmk.length) { dd.classList.remove("open"); return; }
+
+    let html = "";
+
+    if (bmk.length) {
+        html += `<div class="history-sep">⭐ Bookmarks</div>`;
+        bmk.forEach(b => {
+            html += `<div class="history-item" onmousedown="navigate('${b.url.replace(/'/g,"\\'")}')">
+                <span>⭐</span><span>${b.title || b.url}</span>
+            </div>`;
+        });
+    }
+
+    if (matches.length) {
+        html += `<div class="history-sep">🕒 Recent</div>`;
+        matches.slice(0, 8).forEach(x => {
+            html += `<div class="history-item" onmousedown="navigate('${x.url.replace(/'/g,"\\'")}')">
+                <span>🌐</span><span>${x.url}</span>
+            </div>`;
+        });
+        html += `<div class="history-clear" onmousedown="clearHistory()">Clear history</div>`;
+    }
+
+    dd.innerHTML = html;
+    dd.classList.add("open");
+}
+
+function hideHistory() {
+    document.getElementById("history-dropdown").classList.remove("open");
+}
+
+function clearHistory() {
+    try { localStorage.removeItem(HISTORY_KEY); } catch(e){}
+    hideHistory();
+}
+
+// ── Bookmarks ─────────────────────────────────────────────────────────────
+function getSavedBookmarks() {
+    try { return JSON.parse(localStorage.getItem(BOOKMARKS_KEY) || "[]"); } catch(e) { return []; }
+}
+
+function bookmarkCurrent() {
+    const url = sanitizeUrl(document.getElementById("urlInput").value);
+    if (!url) return;
+    try {
+        let bmk = getSavedBookmarks().filter(x => x.url !== url);
+        const title = url.replace(/^https?:\/\/(www\.)?/, "").split("/")[0];
+        bmk.push({ url, title });
+        localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(bmk));
+        renderSavedBookmarks();
+        setStatus("⭐ Bookmarked: " + url, "ok");
+    } catch(e){}
+}
+
+function renderSavedBookmarks() {
+    const container = document.getElementById("saved-bookmarks");
+    const bmk = getSavedBookmarks();
+    container.innerHTML = bmk.map(b =>
+        `<button class="bm-btn" onclick="navigate('${b.url.replace(/'/g,"\\'")}')">🔖 ${b.title}</button>`
+    ).join("");
+}
+
+// ── Main navigate / load ──────────────────────────────────────────────────
+function go() {
+    const raw = document.getElementById("urlInput").value;
+    const url = sanitizeUrl(raw);
+    if (!url) return setStatus("Enter a URL.", "error");
+    navigate(url);
+}
+
+function navigate(url) {
+    document.getElementById("urlInput").value = url;
+    hideHistory();
+    loadUrl(url, true);
+}
+
+function loadUrl(url, addToNav) {
+    updateLock(url);
+    addHistory(url);
+    if (addToNav) pushNav(url);
+
+    const method = document.getElementById("method-select").value;
+
+    if (method === "iframe") {
+        doIframe(url);
+    } else if (method === "corsproxy" || method === "allorigins") {
+        doFetch(url, method);
+    } else {
+        doFetch(url, method === "fetch" ? null : method);
+    }
+}
+
+function doIframe(url) {
+    document.getElementById("placeholder").style.display = "none";
+    document.getElementById("fetchFrame").style.display  = "none";
     const frame = document.getElementById("websiteFrame");
     frame.style.display = "";
-    document.getElementById("fetchFrame").style.display = "none";
-    frame.src = url;
-    setStatus("🖼️ Embedding: " + url, "ok");
+
+    const proxied = proxyUrl(url);
+    frame.src = proxied;
+    setStatus("🖼️ Loading: " + url);
+
+    frame.onload = () => setStatus("✅ " + url, "ok");
+    frame.onerror = () => setStatus("❌ Blocked by X-Frame-Options — try Fetch or Proxy mode", "error");
 }
 
-// Keep old name for compatibility with website.js
-function loadWebsite() { loadIframe(); }
-
-async function fetchAndEmbed() {
-    const url = getUrl();
-    if (!url) return setStatus("Please enter a URL.", "error");
-
+async function doFetch(url, overrideProxy) {
     setStatus("⏳ Fetching…");
+    document.getElementById("placeholder").style.display = "none";
     document.getElementById("websiteFrame").style.display = "none";
     const ff = document.getElementById("fetchFrame");
     ff.style.display = "none";
 
+    // Determine proxy to use
+    let fetchUrl;
+    if (overrideProxy && PROXIES[overrideProxy]) {
+        fetchUrl = PROXIES[overrideProxy](url);
+    } else {
+        fetchUrl = proxyUrl(url);
+        if (fetchUrl === url) {
+            // No proxy set, use allorigins as fallback for fetch mode
+            fetchUrl = PROXIES.allorigins(url);
+        }
+    }
+
     try {
-        // Use a CORS proxy since direct fetch of external sites is blocked by CORS
-        const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
-        const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(10000) });
+        const res  = await fetch(fetchUrl, { signal: AbortSignal.timeout(12000) });
         if (!res.ok) throw new Error("HTTP " + res.status);
         const html = await res.text();
 
-        // Inject base tag so relative URLs resolve correctly
-        const injected = html.replace(/<head([^>]*)>/i,
-            `<head$1><base href="${url}"><meta name="referrer" content="no-referrer">`);
+        // Inject base tag + CSP removal + relative asset fix
+        const injected = html
+            .replace(/<head([^>]*)>/i, `<head$1><base href="${url}"><meta name="referrer" content="no-referrer">`)
+            .replace(/<meta[^>]+Content-Security-Policy[^>]+>/gi, "");
 
-        const blob = new Blob([injected], { type: "text/html" });
+        const blob    = new Blob([injected], { type: "text/html" });
         const blobUrl = URL.createObjectURL(blob);
 
         ff.src = blobUrl;
         ff.style.display = "";
         setStatus("✅ Fetched: " + url, "ok");
     } catch (e) {
-        setStatus("❌ Fetch failed: " + (e.message || "network error") + ". Try iFrame instead.", "error");
-        document.getElementById("websiteFrame").style.display = "";
+        setStatus("❌ " + (e.message || "network error") + " — trying iFrame fallback…", "error");
+        setTimeout(() => doIframe(url), 300);
     }
 }
 
-function openWebsiteNewTab() {
-    const frame = document.getElementById("websiteFrame");
-
-    if (!frame || !frame.src) {
-        alert("No website is currently loaded.");
-        return;
-    }
-
-    const title =
-        document.title ||
-        "Website Viewer";
-
-    const favicon =
-        document.querySelector("link[rel*='icon']")?.href ||
-        "";
-
-    const w = window.open("about:blank", "_blank");
-
-    if (!w) {
-        alert("Popup blocked.");
-        return;
-    }
-
-    w.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>${title}</title>
-            ${favicon ? `<link rel="icon" href="${favicon}">` : ""}
-            <style>
-                html, body {
-                    margin: 0;
-                    width: 100%;
-                    height: 100%;
-                    overflow: hidden;
-                    background: #000;
-                }
-
-                iframe {
-                    width: 100%;
-                    height: 100%;
-                    border: 0;
-                }
-            </style>
-        </head>
-        <body>
-            <iframe
-                src="${frame.src}"
-                allowfullscreen>
-            </iframe>
-        </body>
-        </html>
-    `);
-
-    w.document.close();
+// ── New tab ───────────────────────────────────────────────────────────────
+function openNewTab() {
+    const url = sanitizeUrl(document.getElementById("urlInput").value);
+    if (!url) return;
+    const w = window.open(url, "_blank");
+    if (!w) setStatus("❌ Popup blocked — allow popups for this site.", "error");
 }
+
+// ── Proxy menu ────────────────────────────────────────────────────────────
+function toggleProxyMenu() {
+    document.getElementById("proxy-modal").classList.toggle("open");
+}
+
+function closeProxyModal() {
+    document.getElementById("proxy-modal").classList.remove("open");
+}
+
+function setProxy(mode) {
+    proxyMode = mode;
+    try { localStorage.setItem(PROXY_KEY, mode); } catch(e){}
+    updateProxyBtn();
+    closeProxyModal();
+    setStatus("🔒 Proxy set to: " + mode);
+}
+
+function applyCustomProxy() {
+    const val = document.getElementById("custom-proxy-input").value.trim();
+    if (!val) return;
+    setProxy(val);
+}
+
+function updateProxyBtn() {
+    const btn = document.getElementById("proxy-btn");
+    if (proxyMode === "none") {
+        btn.textContent = "🔓 None";
+        btn.classList.remove("active");
+    } else if (proxyMode === "corsproxy") {
+        btn.textContent = "🛡️ corsproxy";
+        btn.classList.add("active");
+    } else if (proxyMode === "allorigins") {
+        btn.textContent = "🌐 AllOrigins";
+        btn.classList.add("active");
+    } else if (proxyMode === "thingproxy") {
+        btn.textContent = "🔁 Thingproxy";
+        btn.classList.add("active");
+    } else {
+        btn.textContent = "⚙️ Custom";
+        btn.classList.add("active");
+    }
+}
+
+// ── Bookmarks bar toggle (from toolbar ⭐ btn) ────────────────────────────
+let bmBarVisible = true;
+function toggleBookmarks() {
+    const bar = document.getElementById("bookmarks-bar");
+    bmBarVisible = !bmBarVisible;
+    bar.style.display = bmBarVisible ? "" : "none";
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+updateProxyBtn();
+renderSavedBookmarks();
+
+// Handle PWA file handler / share target url param
+try {
+    const sp  = new URLSearchParams(location.search);
+    const pUrl = sp.get("url");
+    if (pUrl) {
+        document.getElementById("urlInput").value = pUrl;
+        navigate(sanitizeUrl(pUrl));
+    }
+} catch(e){}
 </script>
-    <link rel="stylesheet" href="../css/style.css">
-
-    <style>
-        #savedSites {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            padding: 10px;
-            justify-content: center;
-        }
-
-        .website-item {
-            padding: 8px 14px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .website-item:hover {
-            opacity: 0.9;
-        }
-
-        #websiteFrame,
-        #fetchFrame {
-            width: 100%;
-            height: calc(100vh - 240px);
-            border: none;
-        }
-    </style>
-</head>
-<body>
-
-    <div id="fetchStatus" style="display:none;padding:8px 16px;text-align:center;font-size:13px;border-radius:8px;margin:8px 10px 0;background:rgba(255,255,255,0.08);color:var(--text,#e2e8f0);"></div>
-
-    <div class="welcome">
-        <h1>Website Viewer</h1>
-        <p>🖼️ <strong>iFrame</strong> — embed the site directly &nbsp;|&nbsp; 📥 <strong>Fetch</strong> — fetch &amp; display the HTML source</p>
-    </div>
-
-    <div class="topbar">
-        <input
-            type="text"
-            id="urlInput"
-            placeholder="https://example.com">
-
-        <button type="button" onclick="loadIframe()">
-            🖼️ iFrame
-        </button>
-
-        <button type="button" onclick="fetchAndEmbed()">
-            📥 Fetch
-        </button>
-
-        <button type="button" onclick="saveCurrentWebsite()">
-            ⭐ Save
-        </button>
-
-        <button type="button" onclick="location.href='../index.html'">
-            🏠 Home
-        </button>
-
-        <button type="button" onclick="openWebsiteNewTab()">
-            🗔 New Tab
-        </button>
-        
-    </div>
-    
-    <div id="savedSites"></div>
-
-    <iframe
-        id="websiteFrame"
-        title="Website Preview">
-    </iframe>
-
-    <iframe
-        id="fetchFrame"
-        title="Fetched Content"
-        sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
-        style="display:none;">
-    </iframe>
-
 </body>
 </html>

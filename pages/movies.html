@@ -390,15 +390,20 @@
     <span class="player-title" id="player-title"></span>
     <button class="player-close" onclick="closePlayer()">✕ Close</button>
   </div>
-  <div id="provider-switcher" style="display:flex;gap:8px;padding:0 0 8px;flex-wrap:wrap;">
+  <div id="provider-switcher" style="display:flex;gap:8px;padding:0 0 8px;flex-wrap:wrap;align-items:center;">
     <span style="font-size:0.8rem;color:#94a3b8;line-height:2;margin-right:4px;">Provider:</span>
     <button onclick="switchProvider(0)" id="pvbtn0" class="pvbtn active-pvbtn">vidsrc.to</button>
     <button onclick="switchProvider(1)" id="pvbtn1" class="pvbtn">2embed.cc</button>
     <button onclick="switchProvider(2)" id="pvbtn2" class="pvbtn">vidsrc.me</button>
     <button onclick="switchProvider(3)" id="pvbtn3" class="pvbtn">autoembed</button>
+    <button onclick="switchProvider(4)" id="pvbtn4" class="pvbtn">multiembed</button>
+    <button onclick="switchProvider(5)" id="pvbtn5" class="pvbtn">embedsu</button>
+    <button onclick="switchProvider(6)" id="pvbtn6" class="pvbtn">nontongo</button>
+    <span style="font-size:0.75rem;color:#64748b;margin-left:auto;">⚠️ Ad blockers recommended</span>
   </div>
   <div class="player-wrap">
-    <iframe id="player-iframe" allowfullscreen allow="autoplay; fullscreen" sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation"></iframe>
+    <!-- NO sandbox — providers like YouTube/vidsrc require unrestricted iframe -->
+    <iframe id="player-iframe" allowfullscreen allow="autoplay; fullscreen; picture-in-picture; encrypted-media"></iframe>
   </div>
 </div>
 
@@ -641,10 +646,24 @@ function showAdInfo() {
 }
 
 const PROVIDERS = [
-  { name: "vidsrc.to",  url: (type, id) => `https://vidsrc.to/embed/${type}/${id}` },
-  { name: "2embed.cc",  url: (type, id) => `https://www.2embed.cc/embed/${type === "movie" ? "" : "tv/"}${id}` },
-  { name: "vidsrc.me",  url: (type, id) => `https://vidsrc.me/embed/${type}/${id}` },
-  { name: "autoembed",  url: (type, id) => `https://player.autoembed.cc/embed/${type}/${id}` },
+  // vidsrc.to — most reliable, supports TMDB IDs directly
+  { name: "vidsrc.to",   url: (type, id, s, e) => s ? `https://vidsrc.to/embed/${type}/${id}/${s}/${e||1}` : `https://vidsrc.to/embed/${type}/${id}` },
+  // 2embed.cc — IMDB/TMDB, movie: /embed/{id}, tv: /embedtv/{id}&s={s}&e={e}
+  { name: "2embed.cc",   url: (type, id, s, e) => type === "movie"
+      ? `https://www.2embed.cc/embed/${id}`
+      : `https://www.2embed.cc/embedtv/${id}&s=${s||1}&e=${e||1}` },
+  // vidsrc.me
+  { name: "vidsrc.me",   url: (type, id, s, e) => s ? `https://vidsrc.me/embed/${type}/${id}/${s}/${e||1}` : `https://vidsrc.me/embed/${type}/${id}` },
+  // autoembed
+  { name: "autoembed",   url: (type, id, s, e) => s ? `https://player.autoembed.cc/embed/${type}/${id}/${s}/${e||1}` : `https://player.autoembed.cc/embed/${type}/${id}` },
+  // multiembed.mov
+  { name: "multiembed",  url: (type, id, s, e) => type === "movie"
+      ? `https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1`
+      : `https://multiembed.mov/directstream.php?video_id=${id}&tmdb=1&s=${s||1}&e=${e||1}` },
+  // embed.su
+  { name: "embedsu",     url: (type, id, s, e) => s ? `https://embed.su/embed/${type}/${id}/${s}/${e||1}` : `https://embed.su/embed/${type}/${id}` },
+  // nontongo (free, no signup)
+  { name: "nontongo",    url: (type, id) => `https://www.nontongo.win/embed/${type === "movie" ? "movie" : "tv"}/${id}` },
 ];
 let activeProvider = 0;
 let currentItem = null;
@@ -655,16 +674,17 @@ function switchProvider(idx) {
     b.classList.toggle("active-pvbtn", i === idx);
   });
   if (currentItem) {
+    const { type, id, season, episode } = currentItem;
     document.getElementById("player-iframe").src =
-      PROVIDERS[activeProvider].url(currentItem.type, currentItem.id);
+      PROVIDERS[activeProvider].url(type, id, season, episode);
   }
 }
 
-function launchPlayer(id, type, title) {
-  currentItem = { id, type, title };
-  document.getElementById("player-title").textContent = title;
+function launchPlayer(id, type, title, season, episode) {
+  currentItem = { id, type, title, season: season || null, episode: episode || null };
+  document.getElementById("player-title").textContent = title + (season ? ` S${season}E${episode||1}` : "");
   document.getElementById("player-iframe").src =
-    PROVIDERS[activeProvider].url(type, id);
+    PROVIDERS[activeProvider].url(type, id, season, episode);
   document.getElementById("player-modal").classList.add("open");
 }
 
