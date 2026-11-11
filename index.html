@@ -274,52 +274,99 @@ utilities. Explore content, save progress, and discover
 new experiences from one place.
 </p>
 
-    <!-- Offline Mode Toggle -->
-    <div id="offlineToggleBar" style="
-        display:flex; align-items:center; justify-content:space-between;
-        padding: 10px 16px;
-        background: rgba(0,0,0,0.25);
-        border-radius: 14px;
-        margin: 8px 0;
-        font-family: 'Pusab', system-ui, sans-serif;
-        font-size: 13px;
-        color: var(--text, #e2e8f0);
-        border: 1px solid rgba(255,255,255,0.08);
+    <!-- Big Search Bar -->
+    <div id="bigSearchBar" style="
+        display:flex; align-items:center; gap:10px;
+        margin:14px 0 10px;
+        background: rgba(0,0,0,0.3);
+        border-radius: 20px;
+        padding: 10px 18px;
+        border: 1.5px solid rgba(255,255,255,0.12);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+        transition: border-color .2s;
     ">
-        <span>✈️ Offline Mode</span>
-        <label style="position:relative;display:inline-block;width:46px;height:26px;cursor:pointer;">
-            <input type="checkbox" id="offlineToggle" style="opacity:0;width:0;height:0;position:absolute;" onchange="applyOfflineMode(this.checked)">
-            <span id="offlineSlider" style="
-                position:absolute; inset:0;
-                background: rgba(255,255,255,0.15);
-                border-radius:26px;
-                transition: background .3s;
-            "></span>
-            <span id="offlineKnob" style="
-                position:absolute; top:3px; left:3px;
-                width:20px; height:20px;
-                background:#fff;
-                border-radius:50%;
-                transition: transform .3s;
-                box-shadow: 0 1px 4px rgba(0,0,0,0.4);
-            "></span>
-        </label>
+        <span style="font-size:18px;flex-shrink:0">🔍</span>
+        <input id="bigSearchInput" type="text" placeholder="Search games, apps, movies, tools…"
+            autocomplete="off" spellcheck="false"
+            style="flex:1;background:none;border:none;outline:none;color:var(--text,#e2e8f0);
+                font-size:15px;font-family:'Pusab',system-ui,sans-serif;caret-color:var(--c1,#6366f1);">
+        <button id="bigSearchClear" onclick="document.getElementById('bigSearchInput').value='';document.getElementById('bigSearchResults').innerHTML='';document.getElementById('bigSearchResults').style.display='none';"
+            style="background:none;border:none;color:rgba(255,255,255,0.4);cursor:pointer;font-size:16px;padding:0 4px;display:none;">✕</button>
+    </div>
+    <div id="bigSearchResults" style="display:none;background:rgba(0,0,0,0.5);border-radius:14px;padding:8px 4px;margin-bottom:8px;max-height:280px;overflow-y:auto;border:1px solid rgba(255,255,255,0.1);">
     </div>
 
     <div class="sidebar" id="mainSidebar">
         <button type="button" onclick="location.href='games/index.html'">🎮 Games</button>
         <button type="button" onclick="location.href='pages/apps.html'">🗂️ Apps</button>
         <button type="button" class="online-only" onclick="location.href='pages/movies.html'">🎬 Movies &amp; Shows</button>
-        <button type="button" class="online-only" onclick="location.href='pages/music.html'">🎵 Music Player</button>
-        <button type="button" class="online-only" onclick="location.href='pages/shorts.html'">📺 Shorts</button>
+        <button type="button" onclick="location.href='pages/music.html'">🎵 Music Player</button>
+        <button type="button" class="online-only" onclick="location.href='pages/yt-emulator.html'">📺 YouTube Emulator</button>
         <button type="button" class="online-only" onclick="location.href='pages/chat/index.html'">💬 Chat</button>
         <button type="button" onclick="location.href='pages/soundboard.html'">🔊 Soundboard</button>
         <button type="button" class="online-only" onclick="location.href='pages/website.html'">🌐 Website Viewer</button>
         <button type="button" class="online-only" onclick="location.href='pages/proxy.html'">🫥 Proxies</button>
         <button type="button" onclick="location.href='pages/coloringboard.html'">🎨 Coloring Board</button>
+        <button type="button" onclick="location.href='pages/emulator.html'">🕹️ Emulators</button>
+        <button type="button" onclick="location.href='pages/notepad.html'">📝 Notepad</button>
+        <button type="button" onclick="location.href='pages/html-runner.html'">🗜️ Zip Runner</button>
     </div>
 
     <script>
+    // ── Big Search Bar ─────────────────────────────────────────────────────
+    (function() {
+        var input = document.getElementById('bigSearchInput');
+        var results = document.getElementById('bigSearchResults');
+        var clearBtn = document.getElementById('bigSearchClear');
+        if (!input) return;
+        var searchIndex = [
+            {label:'🎮 Games', url:'games/index.html'},
+            {label:'🗂️ Apps', url:'pages/apps.html'},
+            {label:'🎬 Movies & Shows', url:'pages/movies.html'},
+            {label:'🎵 Music Player', url:'pages/music.html'},
+            {label:'📺 YouTube Emulator', url:'pages/yt-emulator.html'},
+            {label:'💬 Chat', url:'pages/chat/index.html'},
+            {label:'🔊 Soundboard', url:'pages/soundboard.html'},
+            {label:'🌐 Website Viewer', url:'pages/website.html'},
+            {label:'🫥 Proxies', url:'pages/proxy.html'},
+            {label:'🎨 Coloring Board', url:'pages/coloringboard.html'},
+            {label:'🕹️ Emulators', url:'pages/emulator.html'},
+            {label:'📝 Notepad', url:'pages/notepad.html'},
+            {label:'🗜️ Zip Runner', url:'pages/html-runner.html'},
+            {label:'🏆 Leaderboard', url:'pages/leaderboard.html'},
+            {label:'📋 Updates', url:'pages/updates.html'},
+            {label:'🌐 Mirrors', url:'pages/mirrors.html'},
+            {label:'💜 Support', url:'pages/support.html'},
+            {label:'🛠️ DevTools', url:'pages/devtools.html'},
+            {label:'📊 Device Info', url:'pages/deviceinfo.html'},
+        ];
+        // Add games from gamelist
+        if (window.games) {
+            games.forEach(function(g) {
+                searchIndex.push({label:'🎮 '+g.name, url:'pages/game.html?name='+encodeURIComponent(g.name)});
+            });
+        }
+        input.addEventListener('input', function() {
+            var q = this.value.trim().toLowerCase();
+            clearBtn.style.display = q ? 'block' : 'none';
+            if (!q) { results.style.display='none'; results.innerHTML=''; return; }
+            var matches = searchIndex.filter(function(x){return x.label.toLowerCase().includes(q);}).slice(0,12);
+            if (!matches.length) {
+                results.innerHTML='<div style="padding:10px 14px;opacity:0.5;font-size:13px;">No results</div>';
+                results.style.display='block'; return;
+            }
+            results.innerHTML = matches.map(function(m){
+                return '<a href="'+m.url+'" style="display:flex;align-items:center;gap:10px;padding:8px 14px;text-decoration:none;color:var(--text,#e2e8f0);border-radius:8px;font-size:13px;font-family:\'Pusab\',system-ui,sans-serif;" onmouseover="this.style.background=\'rgba(255,255,255,0.08)\'" onmouseout="this.style.background=\'\'">'+m.label+'</a>';
+            }).join('');
+            results.style.display='block';
+        });
+        document.addEventListener('click', function(e){
+            if (!input.contains(e.target) && !results.contains(e.target)) {
+                results.style.display='none';
+            }
+        });
+    })();
+
     // ── Offline Mode Toggle ───────────────────────────────────────────────
     (function() {
         var isOffline = localStorage.getItem("ws-offline-mode") === "1";
@@ -391,7 +438,7 @@ new experiences from one place.
         border: 1px solid rgba(255,255,255,0.1);
         pointer-events: none;
         letter-spacing: 0.3px;
-    ">v3.21.83</div>
+    ">v2.0.0.0</div>
 
     <button id="settingsBtn" type="button" aria-controls="customizePanel" aria-expanded="false">⚙️ Settings</button>
 
@@ -400,6 +447,18 @@ new experiences from one place.
             <h2>Settings</h2>
             <button id="closeBtn" class="closeBtn" type="button" aria-label="Close settings">✖</button>
         </div>
+
+        <!-- Offline Toggle in Settings -->
+        <div class="dropdownHeader" style="cursor:default;user-select:none;">
+            <span>✈️ Offline Mode</span>
+            <label style="position:relative;display:inline-block;width:36px;height:20px;cursor:pointer;flex-shrink:0;">
+                <input type="checkbox" id="offlineToggle" style="opacity:0;width:0;height:0;position:absolute;" onchange="applyOfflineMode(this.checked)">
+                <span id="offlineSlider" style="position:absolute;inset:0;background:rgba(255,255,255,0.15);border-radius:20px;transition:background .3s;"></span>
+                <span id="offlineKnob" style="position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .3s;box-shadow:0 1px 3px rgba(0,0,0,0.4);"></span>
+            </label>
+        </div>
+        <p style="font-size:11px;opacity:0.5;margin:2px 0 10px;padding:0 4px;">Hides online features, shows only installed games.</p>
+        <hr>
 
         <div class="dropdownHeader">
             <span>🎨 Themes</span>
