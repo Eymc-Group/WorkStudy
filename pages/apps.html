@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apps — WorkStudy</title>
+  <meta name="description" content="All WorkStudy apps in one place — Games, Movies, Music, Shorts, Browser, and more.">
+  <link rel="icon" href="../img/favicon.png">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/customTab.js" data-title="Apps — WorkStudy" data-icon="../img/favicon.png" defer></script>
+  <style>
+    body { background: var(--bg,#0f172a); color: var(--text,#e2e8f0); font-family: system-ui,sans-serif; margin: 0; min-height: 100vh; }
+
+    .topbar {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 20px;
+      background: var(--card,#1e293b);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .topbar h1 { font-size: 1.1rem; font-weight: 700; margin: 0; flex: 1; }
+    .back-btn {
+      background: none; border: none; color: var(--muted,#94a3b8);
+      font-size: 18px; cursor: pointer; padding: 4px 8px;
+      border-radius: 8px;
+    }
+    .back-btn:hover { background: rgba(255,255,255,0.08); }
+
+    .section {
+      padding: 20px 20px 0;
+    }
+    .section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted,#94a3b8);
+      margin-bottom: 12px;
+    }
+
+    /* iOS-style icon grid */
+    .apps-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px 10px;
+      padding: 4px 2px 24px;
+    }
+
+    /* Each app = icon + label below (like iOS home screen) */
+    .app-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      width: 76px;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      background: none;
+      border: none;
+      padding: 4px 2px;
+      border-radius: 4px;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.12s, opacity 0.12s;
+      font-family: system-ui, sans-serif;
+    }
+    .app-card:hover { transform: scale(1.07); }
+    .app-card:active { transform: scale(0.9); opacity: 0.7; }
+
+    /* The square icon */
+    .app-icon {
+      width: 64px; height: 64px;
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 30px;
+      flex-shrink: 0;
+      position: relative;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.1);
+    }
+    /* gloss overlay */
+    .app-icon::after {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: 16px;
+      background: linear-gradient(160deg, rgba(255,255,255,0.22) 0%, transparent 55%);
+      pointer-events: none;
+    }
+
+    .app-name {
+      font-size: 11px;
+      font-weight: 500;
+      text-align: center;
+      color: var(--text,#e2e8f0);
+      line-height: 1.25;
+      max-width: 72px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      word-break: break-word;
+    }
+
+    /* badge sits on top-right of icon */
+    .badge {
+      position: absolute;
+      top: -4px; right: -4px;
+      background: #ef4444;
+      color: #fff;
+      font-size: 8px;
+      font-weight: 800;
+      padding: 2px 5px;
+      border-radius: 20px;
+      border: 2px solid var(--bg,#0f172a);
+      z-index: 2;
+    }
+    .badge.new { background: #10b981; }
+    .badge.hot { background: #ef4444; }
+
+    .app-desc { display: none; } /* hidden in icon mode */
+
+    @media (max-width: 400px) {
+      .apps-grid { gap: 16px 6px; }
+      .app-icon { width: 56px; height: 56px; font-size: 26px; border-radius: 14px; }
+      .app-card { width: 66px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="back-btn" onclick="history.back()">←</button>
+  <h1>🗂️ Apps</h1>
+  <button class="back-btn" onclick="location.href='../index.html'" title="Home">⌂</button>
+</div>
+
+<!-- Entertainment -->
+<div class="section">
+  <div class="section-title">🎬 Entertainment</div>
+  <div class="apps-grid">
+
+    <a class="app-card" href="movies.html">
+      <div class="app-icon" style="background:linear-gradient(135deg,#1e1b4b,#4c1d95)">🎬</div>
+      <div class="app-name">Movies &amp; Shows</div>
+      <div class="app-desc">Stream free movies and TV</div>
+      <span class="badge hot">HOT</span>
+    </a>
+
+    <a class="app-card" href="shorts.html">
+      <div class="app-icon" style="background:linear-gradient(135deg,#7f1d1d,#991b1b)">📺</div>
+      <div class="app-name">Shorts</div>
+      <div class="app-desc">YouTube-style short videos</div>
+      <span class="badge new">NEW</span>
+    </a>
+
+    <a class="app-card" href="music.html">
+      <div class="app-icon" style="background:linear-gradient(135deg,#064e3b,#065f46)">🎵</div>
+      <div class="app-name">Music Player</div>
+      <div class="app-desc">Lo-fi, Hip-Hop, Pop &amp; more</div>
+      <span class="badge new">NEW</span>
+    </a>
+
+    <a class="app-card" href="soundboard.html">
+      <div class="app-icon" style="background:linear-gradient(135deg,#1e3a5f,#1e40af)">🔊</div>
+      <div class="app-name">Soundboard</div>
+      <div class="app-desc">Sound effects &amp; clips</div>
+    </a>
+
+  </div>
+</div>
+
+<!-- Games -->
+<div class="section">
+  <div class="section-title">🎮 Games</div>
+  <div class="apps-grid">
+
+    <a class="app-card" href="../games/index.html">
+      <div class="app-icon" style="background:linear-gradient(135deg,#312e81,#4f46e5)">🕹️</div>
+      <div class="app-name">Game Library</div>
+      <div class="app-desc">150+ unblocked games</div>
+      <span class="badge hot">150+</span>
+    </a>
+
+    <a class="app-card" href="gn-math.dev.html">
+      <div class="app-icon" style="background:linear-gradient(135deg,#14532d,#15803d)">➕</div>
+      <div class="app-name">GN Math Games</div>
+      <div class="app-desc">Math &amp; educational games</div>
+    </a>
+
+  </div>
+</div>
+
+<!-- Browsing & Tools -->
+<div class="section">
+  <div class="section-title">🌐 Browsing &amp; Tools</div>
+  <div class="apps-grid">
+
+    <a class="app-card" href="website.html">
+      <div class="app-icon" style="background:linear-gradient(135deg,#0c4a6e,#0369a1)">🌐</div>
+      <div class="app-name">Web Browser</div>
+      <div class="app-desc">Browse sites privately</div>
+      <span class="badge new">NEW</span>
+    </a>
+
+    <a class="app-card" href="proxy.html">
+      <div class="app-icon" style="background:linear-gradient(135deg,#431407,#9a3412)">🔒</div>
+      <div class="app-name">Proxies</div>
+      <div class="app-desc">Ultraviolet &amp; more</div>
+    </a>
+
+    <a class="app-card" href="devtools.html">
+      <div class="app-icon" style="background:linear-gradient(135deg,#1a1a2e,#16213e)">⚙️</div>
+      <div class="app-name">Dev Tools</div>
+      <div class="app-desc">Code &amp; debug utilities</div>
+    </a>
+
+    <a class="app-card" href="mirrors.html">
+      <div class="app-icon" style="background:linear-gradient(135deg,#2d1b69,#4c1d95)">🪞</div>
+      <div class="app-name">Mirrors</div>
+      <div class="app-desc">Alternative site links</div>
+    </a>
+
+  </div>
+</div>
+
+<!-- Social & Communication -->
+<div class="section">
+  <div class="section-title">💬 Social</div>
+  <div class="apps-grid">
+
+    <a class="app-card" href="chat">
+      <div class="app-icon" style="background:linear-gradient(135deg,#064e3b,#047857)">💬</div>
+      <div class="app-name">Chat</div>
+      <div class="app-desc">Live group chat</div>
+    </a>
+
+    <a class="app-card" href="leaderboard.html">
+      <div class="app-icon" style="background:linear-gradient(135deg,#78350f,#b45309)">🏆</div>
+      <div class="app-name">Leaderboard</div>
+      <div class="app-desc">Top players &amp; stats</div>
+    </a>
+
+  </div>
+</div>
+
+<!-- Creative -->
+<div class="section" style="padding-bottom:30px;">
+  <div class="section-title">🎨 Creative</div>
+  <div class="apps-grid">
+
+    <a class="app-card" href="coloringboard.html">
+      <div class="app-icon" style="background:linear-gradient(135deg,#4a1942,#7e22ce)">🎨</div>
+      <div class="app-name">Coloring Board</div>
+      <div class="app-desc">Draw &amp; paint</div>
+    </a>
+
+  </div>
+</div>
+
+</body>
+</html>
