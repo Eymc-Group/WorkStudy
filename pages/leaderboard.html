@@ -288,7 +288,8 @@
 
     <div class="lb-tabs" id="tabsRow">
         <button class="lb-tab active" data-tab="score">🏆 Top Score</button>
-        <button class="lb-tab" data-tab="time">⏱️ Most Time</button>
+        <button class="lb-tab" data-tab="time">⏱️ Site Time</button>
+        <button class="lb-tab" data-tab="gameTime">🕹️ Game Time</button>
         <button class="lb-tab" data-tab="games">🎮 Most Games</button>
         <button class="lb-tab" data-tab="visits">👁️ Most Visits</button>
     </div>
@@ -324,7 +325,7 @@
 
 function sortedData(data, tab) {
         const copy = [...data];
-        const key = { score: "score", time: "minutesOnSite", games: "gamesPlayed", visits: "visits" }[tab];
+        const key = { score: "score", time: "minutesOnSite", gameTime: "minutesOnGames", games: "gamesPlayed", visits: "visits" }[tab];
         copy.sort((a, b) => (Number(b[key]) || 0) - (Number(a[key]) || 0));
         return copy;
     }
@@ -371,13 +372,12 @@ function sortedData(data, tab) {
                 : "";
 
             const mins = Number(entry.minutesOnSite) || 0;
+            const gameMins = Number(entry.minutesOnGames) || 0;
             const gamesP = Number(entry.gamesPlayed) || 0;
             const visitsN = Number(entry.visits) || 0;
             const scoreN = Number(entry.score) || 0;
 
             const hl = (tab) => currentTab === tab ? " lb-stat-highlight" : "";
-
-            const total   = allData.length;
 
             return `<div class="lb-entry${rankClass}">
                 ${rankDisplay}
@@ -388,9 +388,10 @@ function sortedData(data, tab) {
                         ${ghLink}
                     </div>
                     <div class="lb-stats">
-                        <div class="lb-stat${hl("time")}">⏱️ <span class="stat-val">${fmtTime(mins)}</span></div>
-                        <div class="lb-stat${hl("games")}">🎮 <span class="stat-val">${gamesP.toLocaleString()}</span></div>
-                        <div class="lb-stat${hl("visits")}">👁️ <span class="stat-val">${visitsN.toLocaleString()}</span></div>
+                        <div class="lb-stat${hl("time")}">⏱️ <span class="stat-val">${fmtTime(mins)}</span> <span style="font-size:10px;opacity:0.5">on site</span></div>
+                        <div class="lb-stat${hl("gameTime")}">🕹️ <span class="stat-val">${fmtTime(gameMins)}</span> <span style="font-size:10px;opacity:0.5">on games</span></div>
+                        <div class="lb-stat${hl("games")}">🎮 <span class="stat-val">${gamesP.toLocaleString()}</span> <span style="font-size:10px;opacity:0.5">played</span></div>
+                        <div class="lb-stat${hl("visits")}">👁️ <span class="stat-val">${visitsN.toLocaleString()}</span> <span style="font-size:10px;opacity:0.5">visits</span></div>
                     </div>
                 </div>
                 <div class="lb-score">
