@@ -24,6 +24,10 @@
         try { return parseInt(localStorage.getItem("ws-games-played"), 10) || 0; } catch { return 0; }
     }
 
+    function getMinutesOnGames() {
+        try { return parseInt(localStorage.getItem("ws-minutes-on-games"), 10) || 0; } catch { return 0; }
+    }
+
     function setOnlineCount(count) {
         const el = document.getElementById("onlineUsers");
         if (el) el.textContent = "🟢 " + count + " online";
@@ -45,7 +49,7 @@
             const res = await fetch(API + "/stats/ping", {
                 method: "POST",
                 headers,
-                body: JSON.stringify({ sessionId, minutesOnSite, gamesPlayed: getGamesPlayed() })
+                body: JSON.stringify({ sessionId, minutesOnSite, gamesPlayed: getGamesPlayed(), minutesOnGames: getMinutesOnGames() })
             });
             if (res.ok) {
                 const data = await res.json();

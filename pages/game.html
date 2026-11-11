@@ -18,6 +18,28 @@
 <body>
 
 <script>
+// Track game launch: increment gamesPlayed + start timing session
+(function() {
+  try {
+    const played = parseInt(localStorage.getItem("ws-games-played") || "0", 10) + 1;
+    localStorage.setItem("ws-games-played", played);
+    // Record start time for this game session
+    sessionStorage.setItem("ws-game-start", Date.now().toString());
+  } catch(e) {}
+})();
+
+// On page unload: add time spent to minutesOnGames
+window.addEventListener("beforeunload", function() {
+  try {
+    const start = parseInt(sessionStorage.getItem("ws-game-start") || "0", 10);
+    if (!start) return;
+    const mins = Math.floor((Date.now() - start) / 60000);
+    if (mins > 0) {
+      const prev = parseInt(localStorage.getItem("ws-minutes-on-games") || "0", 10);
+      localStorage.setItem("ws-minutes-on-games", prev + mins);
+    }
+  } catch(e) {}
+});
 
 document.getElementById(
     "gameTitle"
