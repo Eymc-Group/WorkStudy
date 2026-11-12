@@ -1,34 +1,75 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soundboard</title>
-    <link rel="icon" href="../img/sound.png">
-    
-       <script src="../js/color.js"> </script>
-       <link rel="stylesheet" href="../css/style.css">
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Soundboard – WorkStudy</title>
+<link rel="icon" href="../img/sound.png">
+<script src="../js/color.js"></script>
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/customTab.js" defer></script>
+<style>
+  body { margin:0; display:flex; flex-direction:column; height:100vh; overflow:hidden; background:var(--bg,#0f0f1a); }
+  #topbar { display:flex; align-items:center; gap:8px; padding:8px 12px; background:rgba(0,0,0,0.4); border-bottom:1px solid rgba(255,255,255,0.08); flex-shrink:0; }
+  #topbar h1 { font-size:14px; margin:0; font-weight:700; color:var(--text,#e2e8f0); font-family:inherit; }
+  .tb-btn { background:rgba(255,255,255,0.08); color:var(--text,#e2e8f0); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:6px 12px; font-size:12px; cursor:pointer; font-family:inherit; text-decoration:none; display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }
+  .tb-btn:hover { background:var(--c1,#6366f1); }
+  #frame { flex:1; border:none; width:100%; min-height:0; }
+  #offlineBanner { display:none; flex:1; align-items:center; justify-content:center; flex-direction:column; gap:16px; padding:30px; text-align:center; color:var(--text,#e2e8f0); font-family:inherit; }
+  #offlineBanner h2 { font-size:22px; margin:0; }
+  #offlineBanner p { opacity:.6; font-size:13px; margin:0; max-width:400px; }
+</style>
+</head>
+<body>
+<div id="topbar">
+  <h1>🔊 Soundboard</h1>
+  <button class="tb-btn" onclick="reload()">🔄 Reload</button>
+  <a class="tb-btn" href="https://github.com/Eymc-Group/soundboard/archive/refs/heads/main.zip" target="_blank">⬇ Download for Offline</a>
+  <a class="tb-btn" href="../index.html">← Back</a>
+</div>
 
-    <script src="../js/customTab.js" defer></script>
-       
-       
-<button
-    id="homeBtn"
-    onclick="location.href='../index.html'">
+<iframe id="frame" src="https://eymc-group.github.io/soundboard/" allow="autoplay" allowfullscreen></iframe>
 
-    🏠 Home
+<div id="offlineBanner">
+  <div style="font-size:48px">🔊</div>
+  <h2>Soundboard is offline-only via download</h2>
+  <p>The soundboard has 5,700+ sounds (623MB) — too large to bundle here. Download it once to use fully offline:</p>
+  <a class="tb-btn" href="https://github.com/Eymc-Group/soundboard/archive/refs/heads/main.zip" style="padding:12px 24px;font-size:14px;">⬇ Download Soundboard ZIP</a>
+  <p style="margin-top:8px;">Or <a href="../pages/html-runner.html" style="color:var(--c1,#6366f1);">open the ZIP in Zip Runner</a> once downloaded.</p>
+</div>
 
-</button>
+<script>
+function reload() {
+  var f = document.getElementById('frame');
+  f.src = f.src;
+}
 
-<iframe
-    src="https://eymc-group.github.io/soundboard/"
-    id="websiteFrame">
-</iframe>
+// If frame fails to load (offline), show banner
+var frame = document.getElementById('frame');
+var banner = document.getElementById('offlineBanner');
+var loaded = false;
 
+frame.onload = function() { loaded = true; };
+frame.onerror = function() { showOffline(); };
 
-  </head>
-  
-  <body>
-    
-  </body>
+// Check after 8 seconds if still not loaded and we're offline
+setTimeout(function() {
+  if (!loaded && !navigator.onLine) showOffline();
+}, 8000);
+
+window.addEventListener('offline', showOffline);
+window.addEventListener('online', function() {
+  if (banner.style.display !== 'none') {
+    banner.style.display = 'none';
+    frame.style.display = '';
+    frame.src = 'https://eymc-group.github.io/soundboard/';
+  }
+});
+
+function showOffline() {
+  frame.style.display = 'none';
+  banner.style.display = 'flex';
+}
+</script>
+</body>
 </html>
