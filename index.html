@@ -309,7 +309,6 @@ new experiences from one place.
         <button type="button" onclick="location.href='pages/coloringboard.html'">🎨 Coloring Board</button>
         <button type="button" onclick="location.href='pages/emulator.html'">🕹️ Emulators</button>
         <button type="button" onclick="location.href='pages/notepad.html'">📝 Notepad</button>
-        <button type="button" onclick="location.href='pages/html-runner.html'">🗜️ Zip Runner</button>
     </div>
 
     <script>
@@ -332,7 +331,6 @@ new experiences from one place.
             {label:'🎨 Coloring Board', url:'pages/coloringboard.html'},
             {label:'🕹️ Emulators', url:'pages/emulator.html'},
             {label:'📝 Notepad', url:'pages/notepad.html'},
-            {label:'🗜️ Zip Runner', url:'pages/html-runner.html'},
             {label:'🏆 Leaderboard', url:'pages/leaderboard.html'},
             {label:'📋 Updates', url:'pages/updates.html'},
             {label:'🌐 Mirrors', url:'pages/mirrors.html'},
@@ -382,13 +380,29 @@ new experiences from one place.
         var slider = document.getElementById("offlineSlider");
         var knob   = document.getElementById("offlineKnob");
         if (slider) slider.style.background = on ? "var(--c1, #6366f1)" : "rgba(255,255,255,0.15)";
-        if (knob)   knob.style.transform    = on ? "translateX(20px)"  : "translateX(0)";
-        // Hide/show online-only buttons
+        if (knob)   knob.style.transform    = on ? "translateX(14px)"  : "translateX(0)";
+        // Swipe online-only elements out of existence
         var onlineEls = document.querySelectorAll(".online-only");
         onlineEls.forEach(function(el) {
-            el.style.opacity  = on ? "0.3" : "1";
-            el.style.pointerEvents = on ? "none" : "";
-            el.style.filter   = on ? "grayscale(1)" : "";
+            if (on) {
+                el.style.maxHeight = "0";
+                el.style.overflow = "hidden";
+                el.style.marginTop = "0";
+                el.style.marginBottom = "0";
+                el.style.padding = "0";
+                el.style.opacity = "0";
+                el.style.pointerEvents = "none";
+                el.style.transition = "max-height .35s ease, opacity .2s ease, padding .2s, margin .2s";
+            } else {
+                el.style.maxHeight = "200px";
+                el.style.overflow = "";
+                el.style.marginTop = "";
+                el.style.marginBottom = "";
+                el.style.padding = "";
+                el.style.opacity = "1";
+                el.style.pointerEvents = "";
+                el.style.transition = "max-height .35s ease, opacity .2s ease .1s, padding .2s, margin .2s";
+            }
         });
         // Show banner
         var banner = document.getElementById("offlineBanner");
