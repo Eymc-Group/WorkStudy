@@ -44,7 +44,96 @@
         >
     </div>
 
+    <!-- Import Game Button -->
+    <div style="text-align:center;margin:12px 0;">
+      <button onclick="document.getElementById('importGameInput').click()" style="
+        background:linear-gradient(135deg,var(--c1,#6366f1),var(--c2,#8b5cf6));
+        color:#fff;border:none;border-radius:12px;padding:10px 22px;
+        font-size:13px;font-family:inherit;cursor:pointer;box-shadow:0 4px 12px rgba(99,102,241,0.3);">
+        📂 Import Game (HTML/ZIP)
+      </button>
+      <input id="importGameInput" type="file" accept=".html,.htm,.zip" style="display:none" onchange="importGame(this)">
+    </div>
+
     <div id="gamesGrid" class="gamesGrid"></div>
+    <!-- Imported games section -->
+    <div id="importedGamesGrid" class="gamesGrid" style="margin-top:0;"></div>
+
+<script>
+function importGame(input) {
+  var file = input.files[0];
+  if (!file) return;
+  var saved = JSON.parse(localStorage.getItem('ws-imported-games') || '[]');
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var game = { name: file.name.replace(/\.(html?|zip)$/i,''), file: file.name, data: e.target.result, type: file.type || 'text/html' };
+    // Check duplicate
+    if (saved.find(function(g){return g.name===game.name;})) {
+      if (!confirm('A game named "'+game.name+'" already exists. Replace it?')) return;
+      saved = saved.filter(function(g){return g.name!==game.name;});
+    }
+    saved.push(game);
+    try { localStorage.setItem('ws-imported-games', JSON.stringify(saved)); } catch(e) {
+      alert('Storage full. Try removing some imported games.');
+      return;
+    }
+    renderImported();
+    alert('✅ Imported "'+game.name+'"!');
+  };
+  if (file.name.endsWith('.zip')) {
+    alert('ZIP import: open this game via Zip Runner instead (📂 Zip Runner from home).');
+    input.value = '';
+    return;
+  }
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+
+function renderImported() {
+  var saved = JSON.parse(localStorage.getItem('ws-imported-games') || '[]');
+  var grid = document.getElementById('importedGamesGrid');
+  if (!saved.length) { grid.innerHTML=''; return; }
+  grid.innerHTML = '<h3 style="text-align:center;opacity:.7;font-size:14px;margin:16px 0 8px;">📂 Imported Games</h3>' +
+    saved.map(function(g,i) {
+      return '<div style="display:inline-flex;flex-direction:column;align-items:center;gap:5px;margin:6px;cursor:pointer;position:relative;" onclick="launchImported('+i+')">' +
+        '<div style="width:72px;height:72px;border-radius:18px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 4px 12px rgba(0,0,0,0.5);">🎮</div>' +
+        '<span style="font-size:11px;max-width:72px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + g.name + '</span>' +
+        '<button onclick="event.stopPropagation();removeImported('+i+')" style="position:absolute;top:-4px;right:-4px;background:rgba(239,68,68,0.9);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:10px;cursor:pointer;line-height:1;">✕</button>' +
+      '</div>';
+    }).join('');
+}
+
+function launchImported(idx) {
+  var saved = JSON.parse(localStorage.getItem('ws-imported-games') || '[]');
+  var g = saved[idx];
+  if (!g) return;
+  var w = window.open('', '_blank');
+  if (!w) { alert('Popup blocked. Allow popups for this site.'); return; }
+  w.document.write('<iframe src="'+g.data+'" style="border:none;width:100vw;height:100vh;position:fixed;inset:0;"></iframe>');
+  w.document.close();
+}
+
+function removeImported(idx) {
+  var saved = JSON.parse(localStorage.getItem('ws-imported-games') || '[]');
+  saved.splice(idx, 1);
+  localStorage.setItem('ws-imported-games', JSON.stringify(saved));
+  renderImported();
+}
+
+// Also filter games by offline mode
+(function() {
+  if (localStorage.getItem('ws-offline-mode') === '1') {
+    // Hide the main games grid, show only imported games
+    var grid = document.getElementById('gamesGrid');
+    if (grid) { grid.style.display = 'none'; }
+    var notice = document.createElement('p');
+    notice.style.cssText = 'text-align:center;opacity:.6;font-size:13px;margin:20px 0;';
+    notice.textContent = '✈️ Offline mode: showing only imported games below.';
+    document.querySelector('.searchContainer').after(notice);
+  }
+  renderImported();
+})();
+</script>
 
 </body>
 </html>
