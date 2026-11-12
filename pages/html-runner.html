@@ -7,28 +7,33 @@
 <link rel="stylesheet" href="../css/style.css">
 <style>
   body { margin:0; display:flex; flex-direction:column; height:100vh; background:var(--bg,#0f0f1a); color:var(--text,#e2e8f0); font-family:'Pusab',system-ui,sans-serif; overflow:hidden; }
-  #topbar { display:flex; align-items:center; gap:8px; padding:8px 12px; background:rgba(0,0,0,0.4); border-bottom:1px solid rgba(255,255,255,0.08); flex-wrap:wrap; }
+  #topbar { display:flex; align-items:center; gap:8px; padding:8px 12px; background:rgba(0,0,0,0.4); border-bottom:1px solid rgba(255,255,255,0.08); flex-wrap:wrap; flex-shrink:0; }
   #topbar h1 { font-size:14px; margin:0; font-weight:700; }
-  .tb-btn { background:rgba(255,255,255,0.08); color:var(--text,#e2e8f0); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:6px 12px; font-size:12px; cursor:pointer; font-family:inherit; }
+  .tb-btn { background:rgba(255,255,255,0.08); color:var(--text,#e2e8f0); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:6px 12px; font-size:12px; cursor:pointer; font-family:inherit; white-space:nowrap; }
   .tb-btn:hover { background:var(--c1,#6366f1); }
-  #dropZone { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:30px; text-align:center; transition:background .2s; }
+  #dropZone { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:30px; text-align:center; transition:background .2s; overflow-y:auto; }
   #dropZone.drag { background:rgba(99,102,241,0.15); }
   #dropZone h2 { font-size:22px; margin:0; }
   #dropZone p { opacity:.6; font-size:13px; margin:0; }
   .format-pill { display:inline-block; background:rgba(255,255,255,0.08); border-radius:20px; padding:4px 10px; font-size:11px; margin:3px; border:1px solid rgba(255,255,255,0.1); }
-  #runner { display:none; flex:1; flex-direction:column; }
-  #runnerBar { display:flex; align-items:center; gap:8px; padding:6px 12px; background:rgba(0,0,0,0.3); border-bottom:1px solid rgba(255,255,255,0.05); }
+  #runner { display:none; flex:1; flex-direction:column; min-height:0; }
+  #runnerBar { display:flex; align-items:center; gap:8px; padding:6px 12px; background:rgba(0,0,0,0.3); border-bottom:1px solid rgba(255,255,255,0.05); flex-shrink:0; }
   #runnerTitle { flex:1; font-size:12px; opacity:.7; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  #runnerFrame { flex:1; border:none; background:#fff; }
+  #runnerFrame { flex:1; border:none; background:#fff; min-height:0; }
+  #mediaViewer { display:none; flex:1; align-items:center; justify-content:center; flex-direction:column; gap:16px; padding:20px; min-height:0; background:#000; }
+  #mediaViewer video, #mediaViewer audio { max-width:100%; max-height:70vh; border-radius:10px; }
+  #mediaViewer audio { width:min(500px,90vw); }
+  #mediaViewer img { max-width:100%; max-height:80vh; border-radius:8px; object-fit:contain; }
+  #mediaLabel { font-size:14px; opacity:.7; }
   #fileInput { display:none; }
   #folderInput { display:none; }
-  #fileList { max-width:500px; width:100%; text-align:left; max-height:200px; overflow-y:auto; }
+  #fileList { max-width:520px; width:100%; text-align:left; max-height:220px; overflow-y:auto; }
   .file-item { display:flex; align-items:center; gap:8px; padding:6px 10px; border-radius:8px; cursor:pointer; font-size:12px; }
   .file-item:hover { background:rgba(255,255,255,0.08); }
-  .file-icon { font-size:16px; }
-  #codeEditor { display:none; flex:1; flex-direction:column; }
-  #codeEditorBar { display:flex; align-items:center; gap:8px; padding:6px 12px; background:rgba(0,0,0,0.3); flex-wrap:wrap; }
-  #codeTextarea { flex:1; background:#0d0d1a; color:#e2e8f0; border:none; outline:none; font-family:'Courier New',monospace; font-size:13px; padding:16px; resize:none; }
+  #codeView { display:none; flex:1; flex-direction:column; min-height:0; }
+  #codeBar { display:flex; align-items:center; gap:8px; padding:6px 12px; background:rgba(0,0,0,0.3); flex-wrap:wrap; flex-shrink:0; }
+  #codePre { flex:1; overflow:auto; padding:16px 20px; font-family:'Courier New',monospace; font-size:13px; line-height:1.6; white-space:pre-wrap; word-break:break-all; min-height:0; }
+  #codeEditArea { flex:1; background:#0d0d1a; color:#e2e8f0; border:none; outline:none; font-family:'Courier New',monospace; font-size:13px; padding:16px; resize:none; min-height:0; }
 </style>
 </head>
 <body>
@@ -36,9 +41,9 @@
   <h1>🗜️ Zip Runner</h1>
   <button class="tb-btn" onclick="document.getElementById('fileInput').click()">📂 Open File</button>
   <button class="tb-btn" onclick="document.getElementById('folderInput').click()">📁 Open Folder</button>
-  <button class="tb-btn" onclick="showDropZone()">🏠 Home</button>
+  <button class="tb-btn" id="homeBtn" onclick="showDrop()">🏠</button>
   <input id="fileInput" type="file" multiple
-    accept=".html,.htm,.css,.js,.json,.xml,.md,.txt,.zip,.svg,.png,.jpg,.jpeg,.gif,.webp,.ico,.woff,.woff2,.ttf,.otf,.csv,.yaml,.yml,.ts,.tsx,.jsx,.vue,.php,.py,.rb,.go,.rs,.cpp,.c,.h,.java,.sh,.bat,.env,.toml,.ini,.conf"
+    accept=".html,.htm,.css,.js,.ts,.tsx,.jsx,.vue,.json,.xml,.md,.txt,.zip,.svg,.png,.jpg,.jpeg,.gif,.webp,.ico,.woff,.woff2,.ttf,.otf,.csv,.yaml,.yml,.sh,.bat,.env,.toml,.ini,.conf,.mp4,.webm,.mp3,.ogg,.wav,.flac,.aac,.ogv,.m4v,.m4a,.opus,.mov"
     onchange="handleFiles(this.files)">
   <input id="folderInput" type="file" webkitdirectory multiple onchange="handleFiles(this.files)">
   <a class="tb-btn" href="../index.html">← Back</a>
@@ -46,14 +51,15 @@
 
 <div id="dropZone">
   <div style="font-size:48px">📂</div>
-  <h2>Open any web project</h2>
-  <p>Drag & drop a ZIP, folder, or individual files</p>
+  <h2>Open any file or project</h2>
+  <p>Drag & drop, or use Open File / Open Folder above</p>
   <div>
-    <span class="format-pill">HTML</span><span class="format-pill">CSS</span><span class="format-pill">JS</span>
+    <span class="format-pill">HTML</span><span class="format-pill">CSS</span><span class="format-pill">JS/TS</span>
     <span class="format-pill">ZIP</span><span class="format-pill">JSON</span><span class="format-pill">XML</span>
-    <span class="format-pill">MD</span><span class="format-pill">SVG</span><span class="format-pill">PNG/JPG</span>
-    <span class="format-pill">Fonts</span><span class="format-pill">YAML</span><span class="format-pill">TypeScript</span>
-    <span class="format-pill">Vue/JSX</span><span class="format-pill">CSV</span><span class="format-pill">and more…</span>
+    <span class="format-pill">MD</span><span class="format-pill">SVG</span><span class="format-pill">PNG/JPG/GIF/WebP</span>
+    <span class="format-pill">MP4/WebM/MOV</span><span class="format-pill">MP3/OGG/WAV/FLAC/AAC</span>
+    <span class="format-pill">Fonts (TTF/WOFF)</span><span class="format-pill">YAML/CSV/TXT</span>
+    <span class="format-pill">Vue/JSX/TSX</span><span class="format-pill">and more…</span>
   </div>
   <div id="fileList"></div>
   <button class="tb-btn" onclick="document.getElementById('fileInput').click()" style="margin-top:12px;padding:10px 24px;font-size:14px;">Choose Files</button>
@@ -63,245 +69,326 @@
   <div id="runnerBar">
     <span id="runnerTitle">—</span>
     <button class="tb-btn" onclick="reloadRunner()">🔄</button>
-    <button class="tb-btn" onclick="toggleFullscreen()">⛶</button>
-    <button class="tb-btn" onclick="showDropZone()">✕</button>
+    <button class="tb-btn" onclick="toggleFs('runnerFrame')">⛶</button>
+    <button class="tb-btn" onclick="showDrop()">✕</button>
   </div>
-  <iframe id="runnerFrame" sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups allow-modals" allowfullscreen></iframe>
+  <iframe id="runnerFrame" sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups allow-modals allow-downloads" allowfullscreen></iframe>
 </div>
 
-<div id="codeEditor">
-  <div id="codeEditorBar">
-    <span id="ceTitle" style="font-size:12px;opacity:.7;"></span>
-    <button class="tb-btn" onclick="runCodeEditor()">▶ Run</button>
-    <button class="tb-btn" onclick="showDropZone()">✕</button>
+<div id="mediaViewer">
+  <span id="mediaLabel">—</span>
+  <div id="mediaEl"></div>
+  <button class="tb-btn" onclick="showDrop()">✕ Close</button>
+</div>
+
+<div id="codeView">
+  <div id="codeBar">
+    <span id="codeTitle" style="font-size:12px;opacity:.7;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+    <button class="tb-btn" id="runCodeBtn" onclick="runCode()">▶ Run</button>
+    <button class="tb-btn" onclick="toggleCodeEdit()">✏️ Edit</button>
+    <button class="tb-btn" onclick="downloadCurrent()">⬇ Download</button>
+    <button class="tb-btn" onclick="showDrop()">✕</button>
   </div>
-  <textarea id="codeTextarea" spellcheck="false"></textarea>
+  <pre id="codePre"></pre>
+  <textarea id="codeEditArea" style="display:none;" spellcheck="false"></textarea>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
-var vfsFiles = {}; // virtual filesystem: {path: Blob/text}
-var currentEntryPoint = null;
+var vfsFiles = {};
+var currentFile = null;
+var codeEditing = false;
 
-// Drag & drop
+// ── Media type detection ──────────────────────────────────────────────────
+var EXT_VIDEO = new Set(['mp4','webm','ogv','m4v','mov']);
+var EXT_AUDIO = new Set(['mp3','ogg','wav','flac','aac','m4a','opus']);
+var EXT_IMAGE = new Set(['png','jpg','jpeg','gif','webp','svg','ico','bmp','avif']);
+var EXT_HTML  = new Set(['html','htm']);
+var EXT_CODE  = new Set(['css','js','ts','tsx','jsx','vue','json','xml','md','txt','csv','yaml','yml','sh','bat','env','toml','ini','conf','php','py','rb','go','rs','cpp','c','h','java','swift','kt']);
+var EXT_FONT  = new Set(['woff','woff2','ttf','otf']);
+
+function extOf(name) { return (name.split('.').pop()||'').toLowerCase(); }
+
+// ── Drag & drop ───────────────────────────────────────────────────────────
 var dz = document.getElementById('dropZone');
 dz.addEventListener('dragover', function(e){ e.preventDefault(); dz.classList.add('drag'); });
 dz.addEventListener('dragleave', function(){ dz.classList.remove('drag'); });
 dz.addEventListener('drop', function(e){ e.preventDefault(); dz.classList.remove('drag'); handleFiles(e.dataTransfer.files); });
 
-function showDropZone() {
-  document.getElementById('dropZone').style.display = 'flex';
-  document.getElementById('runner').style.display = 'none';
-  document.getElementById('codeEditor').style.display = 'none';
-  document.getElementById('runnerFrame').src = 'about:blank';
+// ── PWA File Handler (launchQueue) ────────────────────────────────────────
+if ('launchQueue' in window) {
+  window.launchQueue.setConsumer(async function(launchParams) {
+    if (!launchParams.files || !launchParams.files.length) return;
+    var fileHandles = launchParams.files;
+    var files = [];
+    for (var fh of fileHandles) {
+      try { files.push(await fh.getFile()); } catch(e) {}
+    }
+    if (files.length) handleFiles(files);
+  });
 }
 
+// ── Handle files ──────────────────────────────────────────────────────────
 async function handleFiles(fileList) {
   var files = Array.from(fileList);
   if (!files.length) return;
 
-  // Single ZIP file
-  if (files.length === 1 && files[0].name.endsWith('.zip')) {
-    await loadZip(files[0]);
-    return;
+  // Single ZIP
+  if (files.length === 1 && extOf(files[0].name) === 'zip') {
+    await loadZip(files[0]); return;
   }
 
-  // Single HTML file — run directly
-  if (files.length === 1 && (files[0].name.endsWith('.html') || files[0].name.endsWith('.htm'))) {
-    runSingleFile(files[0]);
-    return;
-  }
-
-  // Single media/text file — show viewer
+  // Single file — dispatch by type
   if (files.length === 1) {
-    var ext = files[0].name.split('.').pop().toLowerCase();
-    if (['png','jpg','jpeg','gif','webp','svg','ico'].includes(ext)) { showImage(files[0]); return; }
-    if (['json','xml','md','txt','csv','yaml','yml','ts','tsx','jsx','vue','php','py','rb','go','rs','cpp','c','h','java','sh','css','js'].includes(ext)) { showCodeEditor(files[0]); return; }
+    return handleSingle(files[0]);
   }
 
-  // Multiple files — build VFS and find entry point
+  // Multiple files — build VFS
   vfsFiles = {};
-  var list = document.getElementById('fileList');
-  list.innerHTML = '<p style="margin:8px 0;opacity:.6;font-size:12px;">Loading '+files.length+' files…</p>';
+  document.getElementById('fileList').innerHTML = '<p style="opacity:.6;font-size:12px;padding:8px 0;">Loading ' + files.length + ' files…</p>';
 
   for (var f of files) {
     var rel = f.webkitRelativePath || f.name;
     vfsFiles[rel] = f;
   }
 
-  // Find entry point
   var entries = Object.keys(vfsFiles);
-  var html = entries.find(p => p.endsWith('index.html')) ||
-             entries.find(p => p.endsWith('.html') || p.endsWith('.htm'));
+  var html = entries.find(function(p){ return /index\.html?$/i.test(p); }) ||
+             entries.find(function(p){ return /\.html?$/i.test(p); });
+  if (html) { runVFS(html); return; }
 
-  if (html) {
-    runVFS(html);
-  } else {
-    // Show file list picker
-    list.innerHTML = '<p style="margin:8px 0;font-size:12px;opacity:.6;">Choose a file to open:</p>' +
-      entries.slice(0,30).map(function(p){
-        return '<div class="file-item" onclick="pickFile(\''+p.replace(/'/g,"\\'")+'\')">'+
-          '<span class="file-icon">'+iconFor(p)+'</span><span>'+p+'</span></div>';
-      }).join('');
-    document.getElementById('dropZone').style.display = 'flex';
-  }
+  // Show picker
+  document.getElementById('fileList').innerHTML =
+    '<p style="margin:8px 0;font-size:12px;opacity:.6;">Pick a file to open:</p>' +
+    entries.slice(0,40).map(function(p){
+      return '<div class="file-item" onclick="pickEntry(\'' + p.replace(/\\/g,'\\\\').replace(/'/g,"\\'") + '\')">' +
+             iconFor(p) + ' ' + p + '</div>';
+    }).join('');
 }
 
+function handleSingle(file) {
+  var ext = extOf(file.name);
+  currentFile = file;
+  if (EXT_HTML.has(ext))  { runSingleHTML(file); return; }
+  if (EXT_VIDEO.has(ext)) { showMedia('video', file); return; }
+  if (EXT_AUDIO.has(ext)) { showMedia('audio', file); return; }
+  if (EXT_IMAGE.has(ext)) { showMedia('img', file); return; }
+  if (EXT_CODE.has(ext))  { showCode(file); return; }
+  if (EXT_FONT.has(ext))  { showFontPreview(file); return; }
+  // Unknown — try as text
+  showCode(file);
+}
+
+// ── ZIP loader ────────────────────────────────────────────────────────────
 async function loadZip(file) {
   vfsFiles = {};
   document.getElementById('fileList').innerHTML = '<p style="opacity:.6;font-size:12px;">Extracting ZIP…</p>';
-
   try {
     var zip = await JSZip.loadAsync(file);
     var proms = [];
     zip.forEach(function(rel, entry) {
-      if (!entry.dir) {
-        proms.push(entry.async('blob').then(function(b){ vfsFiles[rel] = b; }));
-      }
+      if (!entry.dir) proms.push(entry.async('blob').then(function(b){ vfsFiles[rel] = b; }));
     });
     await Promise.all(proms);
 
     var entries = Object.keys(vfsFiles);
-    var html = entries.find(p => p.match(/(^|\/)index\.html?$/i)) ||
-               entries.find(p => p.endsWith('.html') || p.endsWith('.htm'));
-    if (html) { runVFS(html); }
-    else {
-      document.getElementById('fileList').innerHTML =
-        '<p style="font-size:12px;opacity:.6;">Pick entry:</p>' +
-        entries.slice(0,30).map(function(p){
-          return '<div class="file-item" onclick="pickFile(\''+p.replace(/'/g,"\\'")+'\')">'+
-            '<span class="file-icon">'+iconFor(p)+'</span><span>'+p+'</span></div>';
-        }).join('');
-    }
+    var html = entries.find(function(p){ return /index\.html?$/i.test(p); }) ||
+               entries.find(function(p){ return /\.html?$/i.test(p); });
+    if (html) { runVFS(html); return; }
+
+    document.getElementById('fileList').innerHTML =
+      '<p style="font-size:12px;opacity:.6;margin-bottom:8px;">Pick entry point:</p>' +
+      entries.slice(0,40).map(function(p){
+        return '<div class="file-item" onclick="pickEntry(\'' + p.replace(/\\/g,'\\\\').replace(/'/g,"\\'") + '\')">' + iconFor(p) + ' ' + p + '</div>';
+      }).join('');
   } catch(e) { alert('Could not read ZIP: ' + e.message); }
 }
 
+// ── VFS runner (multi-file / zip) ─────────────────────────────────────────
 async function runVFS(entryPath) {
-  // Build an object URL map for all assets, inject into HTML
   var urlMap = {};
   for (var [path, blob] of Object.entries(vfsFiles)) {
     if (blob instanceof Blob) urlMap[path] = URL.createObjectURL(blob);
   }
 
-  // Read entry HTML
   var entryBlob = vfsFiles[entryPath];
-  var html;
-  if (typeof entryBlob === 'string') { html = entryBlob; }
-  else { html = await entryBlob.text(); }
-
-  // Rewrite relative URLs
+  var html = typeof entryBlob === 'string' ? entryBlob : await entryBlob.text();
   var entryDir = entryPath.includes('/') ? entryPath.substring(0, entryPath.lastIndexOf('/')+1) : '';
-  html = html.replace(/(src|href|url)\s*=\s*["']([^"'#?]+)["']/g, function(m, attr, val) {
-    if (val.startsWith('http') || val.startsWith('data:') || val.startsWith('blob:') || val.startsWith('//')) return m;
-    var resolved = entryDir + val;
-    // Normalize ../
-    resolved = resolved.replace(/[^/]+\/\.\.\//g, '').replace(/^\.\//,'');
-    if (urlMap[resolved]) return attr + '="' + urlMap[resolved] + '"';
-    if (urlMap[val]) return attr + '="' + urlMap[val] + '"';
-    return m;
+
+  // Rewrite relative asset refs
+  html = html.replace(/((?:src|href|url\s*\()\s*["']?)([^"'>)\s#?]+)/g, function(m, prefix, val) {
+    if (/^(https?:|data:|blob:|\/\/|#|\/)/.test(val)) return m;
+    var resolved = normPath(entryDir + val);
+    var u = urlMap[resolved] || urlMap[val];
+    return u ? prefix + u : m;
   });
 
   var blob = new Blob([html], {type:'text/html'});
-  var url = URL.createObjectURL(blob);
-  document.getElementById('runnerTitle').textContent = entryPath;
-  document.getElementById('runnerFrame').src = url;
-  document.getElementById('dropZone').style.display = 'none';
-  document.getElementById('runner').style.display = 'flex';
-  document.getElementById('codeEditor').style.display = 'none';
-  currentEntryPoint = entryPath;
+  loadInFrame(URL.createObjectURL(blob), entryPath);
 }
 
-function runSingleFile(file) {
-  var url = URL.createObjectURL(file);
-  document.getElementById('runnerTitle').textContent = file.name;
-  document.getElementById('runnerFrame').src = url;
-  document.getElementById('dropZone').style.display = 'none';
-  document.getElementById('runner').style.display = 'flex';
-  document.getElementById('codeEditor').style.display = 'none';
+function normPath(p) {
+  var parts = p.split('/'), res = [];
+  for (var seg of parts) {
+    if (seg === '..') res.pop();
+    else if (seg && seg !== '.') res.push(seg);
+  }
+  return res.join('/');
 }
 
-function showImage(file) {
-  var url = URL.createObjectURL(file);
-  var html = '<!DOCTYPE html><html><body style="margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh;">' +
-    '<img src="'+url+'" style="max-width:100%;max-height:100vh;"></body></html>';
-  var blob = new Blob([html], {type:'text/html'});
-  document.getElementById('runnerTitle').textContent = file.name;
-  document.getElementById('runnerFrame').src = URL.createObjectURL(blob);
-  document.getElementById('dropZone').style.display = 'none';
-  document.getElementById('runner').style.display = 'flex';
+// ── Single HTML ────────────────────────────────────────────────────────────
+function runSingleHTML(file) {
+  loadInFrame(URL.createObjectURL(file), file.name);
 }
 
-function showCodeEditor(file) {
+function loadInFrame(src, title) {
+  document.getElementById('runnerTitle').textContent = title;
+  document.getElementById('runnerFrame').src = src;
+  show('runner');
+}
+
+// ── Media viewer ───────────────────────────────────────────────────────────
+function showMedia(type, file) {
+  var url = file instanceof Blob ? URL.createObjectURL(file) : file;
+  var name = file.name || '';
+  var el;
+  if (type === 'video') {
+    el = '<video controls autoplay src="' + url + '" style="max-width:100%;max-height:70vh;border-radius:10px;"></video>';
+  } else if (type === 'audio') {
+    el = '<audio controls autoplay src="' + url + '" style="width:min(500px,90vw);"></audio>';
+  } else {
+    el = '<img src="' + url + '" style="max-width:100%;max-height:80vh;border-radius:8px;object-fit:contain;" alt="' + name + '">';
+  }
+  document.getElementById('mediaEl').innerHTML = el;
+  document.getElementById('mediaLabel').textContent = name;
+  show('mediaViewer');
+}
+
+// ── Code viewer ────────────────────────────────────────────────────────────
+function showCode(file) {
   var reader = new FileReader();
   reader.onload = function(e) {
-    document.getElementById('codeTextarea').value = e.target.result;
-    document.getElementById('ceTitle').textContent = file.name;
-    document.getElementById('dropZone').style.display = 'none';
-    document.getElementById('runner').style.display = 'none';
-    document.getElementById('codeEditor').style.display = 'flex';
+    var text = e.target.result;
+    document.getElementById('codePre').textContent = text;
+    document.getElementById('codeEditArea').value = text;
+    document.getElementById('codeTitle').textContent = file.name;
+    var canRun = /\.(html?|css|js|ts|jsx|tsx|json|xml|md|svg)$/i.test(file.name);
+    document.getElementById('runCodeBtn').style.display = canRun ? '' : 'none';
+    codeEditing = false;
+    document.getElementById('codePre').style.display = '';
+    document.getElementById('codeEditArea').style.display = 'none';
+    show('codeView');
   };
+  reader.onerror = function() { alert('Could not read file.'); };
   reader.readAsText(file);
 }
 
-function runCodeEditor() {
-  var code = document.getElementById('codeTextarea').value;
-  var title = document.getElementById('ceTitle').textContent || '';
-  var ext = title.split('.').pop().toLowerCase();
+function toggleCodeEdit() {
+  codeEditing = !codeEditing;
+  document.getElementById('codePre').style.display = codeEditing ? 'none' : '';
+  document.getElementById('codeEditArea').style.display = codeEditing ? '' : 'none';
+  if (codeEditing) document.getElementById('codeEditArea').focus();
+}
+
+function runCode() {
+  var title = document.getElementById('codeTitle').textContent;
+  var code = codeEditing ? document.getElementById('codeEditArea').value : document.getElementById('codePre').textContent;
+  var ext = extOf(title);
   var html;
   if (ext === 'html' || ext === 'htm') {
     html = code;
   } else if (ext === 'css') {
-    html = '<!DOCTYPE html><html><head><style>'+code+'</style></head><body><p>CSS preview</p></body></html>';
-  } else if (ext === 'js') {
-    html = '<!DOCTYPE html><html><body><script>'+code+'<\/script></body></html>';
+    html = '<!DOCTYPE html><html><head><style>' + code + '</style></head><body style="margin:20px;font-family:system-ui;"></body></html>';
+  } else if (ext === 'js' || ext === 'ts') {
+    html = '<!DOCTYPE html><html><body><pre id="o" style="font-family:monospace;"></pre><script>var _log=console.log;console.log=function(){document.getElementById("o").textContent+=Array.from(arguments).join(" ")+"\\n";_log.apply(console,arguments);};\n' + code + '\n<\/script></body></html>';
   } else if (ext === 'json') {
-    html = '<!DOCTYPE html><html><body><pre style="font-family:monospace;white-space:pre-wrap;">'+
-      JSON.stringify(JSON.parse(code),null,2)+'</pre></body></html>';
+    try { html = '<!DOCTYPE html><html><body><pre style="font-family:monospace;padding:16px;">' + JSON.stringify(JSON.parse(code),null,2).replace(/</g,'&lt;') + '</pre></body></html>'; }
+    catch(e) { html = '<!DOCTYPE html><html><body><pre style="color:red">' + e.message + '</pre><pre>' + code.replace(/</g,'&lt;') + '</pre></body></html>'; }
   } else if (ext === 'md') {
-    // Simple markdown to HTML
-    html = '<!DOCTYPE html><html><head><style>body{font-family:system-ui;max-width:800px;margin:40px auto;padding:0 20px;line-height:1.6;}</style></head><body>'+
-      code.replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^# (.+)$/gm,'<h1>$1</h1>')
+    html = '<!DOCTYPE html><html><head><style>body{font-family:system-ui;max-width:800px;margin:40px auto;padding:0 20px;line-height:1.6;}</style></head><body>' +
+      code.replace(/</g,'&lt;').replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^# (.+)$/gm,'<h1>$1</h1>')
           .replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\*(.+?)\*/g,'<em>$1</em>')
-          .replace(/`(.+?)`/g,'<code>$1</code>').replace(/\n/g,'<br>')+'</body></html>';
+          .replace(/`(.+?)`/g,'<code>$1</code>').replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>')+'</body></html>';
+  } else if (ext === 'svg') {
+    html = '<!DOCTYPE html><html><body style="margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh;">' + code + '</body></html>';
+  } else if (ext === 'xml') {
+    html = '<!DOCTYPE html><html><body><pre style="font-family:monospace;padding:16px;white-space:pre-wrap;">' + code.replace(/</g,'&lt;') + '</pre></body></html>';
   } else {
-    html = '<!DOCTYPE html><html><body><pre style="font-family:monospace;white-space:pre-wrap;">'+code.replace(/</g,'&lt;')+'</pre></body></html>';
+    html = '<!DOCTYPE html><html><body><pre style="font-family:monospace;padding:16px;white-space:pre-wrap;">' + code.replace(/</g,'&lt;') + '</pre></body></html>';
   }
   var blob = new Blob([html], {type:'text/html'});
-  document.getElementById('runnerTitle').textContent = title;
-  document.getElementById('runnerFrame').src = URL.createObjectURL(blob);
-  document.getElementById('runner').style.display = 'flex';
-  document.getElementById('codeEditor').style.display = 'none';
-  document.getElementById('dropZone').style.display = 'none';
+  loadInFrame(URL.createObjectURL(blob), title + ' (output)');
 }
 
-function pickFile(path) {
+// ── Font preview ───────────────────────────────────────────────────────────
+function showFontPreview(file) {
+  var url = URL.createObjectURL(file);
+  var html = '<!DOCTYPE html><html><head><style>@font-face{font-family:preview;src:url("' + url + '")}body{font-family:preview,sans-serif;padding:30px;background:#111;color:#eee;}</style></head><body>' +
+    '<h1 style="font-size:48px">' + file.name + '</h1><p style="font-size:24px">The quick brown fox jumps over the lazy dog</p>' +
+    '<p style="font-size:16px">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789</p>' +
+    '<p style="font-size:14px">!@#$%^&*()_+-=[]{}|;\':",./<>?</p></body></html>';
+  var blob = new Blob([html], {type:'text/html'});
+  loadInFrame(URL.createObjectURL(blob), file.name);
+}
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+function pickEntry(path) {
   var blob = vfsFiles[path];
   if (!blob) return;
-  var ext = path.split('.').pop().toLowerCase();
-  if (ext === 'html' || ext === 'htm') { runVFS(path); }
-  else if (blob instanceof Blob) { showImage({name:path, createObjectURL: ()=>URL.createObjectURL(blob)}); }
-  else if (typeof blob === 'string') {
-    document.getElementById('codeTextarea').value = blob;
-    document.getElementById('ceTitle').textContent = path;
-    document.getElementById('dropZone').style.display = 'none';
-    document.getElementById('codeEditor').style.display = 'flex';
+  var ext = extOf(path);
+  if (EXT_HTML.has(ext)) { runVFS(path); return; }
+  if (blob instanceof Blob) {
+    if (EXT_VIDEO.has(ext)) { showMedia('video', {name:path, ...{}}); document.getElementById('mediaEl').innerHTML='<video controls autoplay src="'+URL.createObjectURL(blob)+'" style="max-width:100%;max-height:70vh;"></video>'; document.getElementById('mediaLabel').textContent=path; show('mediaViewer'); return; }
+    if (EXT_AUDIO.has(ext)) { document.getElementById('mediaEl').innerHTML='<audio controls autoplay src="'+URL.createObjectURL(blob)+'" style="width:min(500px,90vw);"></audio>'; document.getElementById('mediaLabel').textContent=path; show('mediaViewer'); return; }
+    if (EXT_IMAGE.has(ext)) { document.getElementById('mediaEl').innerHTML='<img src="'+URL.createObjectURL(blob)+'" style="max-width:100%;max-height:80vh;border-radius:8px;">'; document.getElementById('mediaLabel').textContent=path; show('mediaViewer'); return; }
+    // Text blob
+    blob.text().then(function(txt){
+      document.getElementById('codePre').textContent = txt;
+      document.getElementById('codeEditArea').value = txt;
+      document.getElementById('codeTitle').textContent = path;
+      codeEditing = false;
+      document.getElementById('codePre').style.display='';
+      document.getElementById('codeEditArea').style.display='none';
+      show('codeView');
+    });
   }
 }
 
-function reloadRunner() { var f = document.getElementById('runnerFrame'); var s=f.src; f.src='about:blank'; setTimeout(()=>f.src=s,50); }
-
-function toggleFullscreen() {
-  var frame = document.getElementById('runnerFrame');
-  if (document.fullscreenElement) document.exitFullscreen();
-  else frame.requestFullscreen();
+function downloadCurrent() {
+  var title = document.getElementById('codeTitle').textContent;
+  var code = codeEditing ? document.getElementById('codeEditArea').value : document.getElementById('codePre').textContent;
+  var blob = new Blob([code], {type:'text/plain'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = title;
+  a.click();
 }
 
+function show(id) {
+  var ids = ['dropZone','runner','mediaViewer','codeView'];
+  ids.forEach(function(x){ document.getElementById(x).style.display = x===id ? (x==='runner'||x==='codeView'||x==='mediaViewer' ? 'flex' : 'flex') : 'none'; });
+}
+
+function showDrop() {
+  document.getElementById('dropZone').style.display = 'flex';
+  document.getElementById('runner').style.display = 'none';
+  document.getElementById('mediaViewer').style.display = 'none';
+  document.getElementById('codeView').style.display = 'none';
+  document.getElementById('runnerFrame').src = 'about:blank';
+}
+
+function reloadRunner() { var f = document.getElementById('runnerFrame'); var s=f.src; f.src='about:blank'; setTimeout(function(){f.src=s;},50); }
+function toggleFs(id) { var el=document.getElementById(id); if(document.fullscreenElement) document.exitFullscreen(); else el.requestFullscreen && el.requestFullscreen(); }
+
 function iconFor(path) {
-  var ext = path.split('.').pop().toLowerCase();
-  var map = {html:'🌐',htm:'🌐',css:'🎨',js:'📜',ts:'📜',json:'📋',xml:'📋',md:'📝',txt:'📄',
-             png:'🖼️',jpg:'🖼️',jpeg:'🖼️',gif:'🖼️',svg:'🖼️',webp:'🖼️',
-             zip:'📦',woff:'🔤',woff2:'🔤',ttf:'🔤',otf:'🔤',csv:'📊',yaml:'⚙️',yml:'⚙️'};
-  return map[ext] || '📄';
+  var ext = extOf(path);
+  if (EXT_HTML.has(ext)) return '🌐';
+  if (EXT_VIDEO.has(ext)) return '🎬';
+  if (EXT_AUDIO.has(ext)) return '🎵';
+  if (EXT_IMAGE.has(ext)) return '🖼️';
+  if (EXT_FONT.has(ext)) return '🔤';
+  var m = {css:'🎨',js:'📜',ts:'📜',json:'📋',xml:'📋',md:'📝',txt:'📄',csv:'📊',zip:'📦',yaml:'⚙️',yml:'⚙️',svg:'🖼️'};
+  return m[ext] || '📄';
 }
 </script>
 </body>
