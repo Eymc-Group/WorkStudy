@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YouTube Emulator – WorkStudy</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  :root { --yt-red:#ff0000; --yt-dark:#0f0f0f; --yt-card:#1a1a1a; --yt-border:#272727; --yt-text:#f1f1f1; --yt-sub:#aaa; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--yt-dark); color:var(--yt-text); font-family:Roboto,'Pusab',system-ui,sans-serif; min-height:100vh; }
+
+  /* Header */
+  #yt-header { display:flex; align-items:center; gap:14px; padding:10px 16px; background:rgba(15,15,15,0.95); position:sticky; top:0; z-index:100; border-bottom:1px solid var(--yt-border); backdrop-filter:blur(8px); }
+  #yt-logo { display:flex; align-items:center; gap:6px; font-size:18px; font-weight:700; color:var(--yt-text); text-decoration:none; flex-shrink:0; }
+  #yt-logo span { color:var(--yt-red); }
+  #yt-search-wrap { flex:1; display:flex; gap:8px; max-width:600px; margin:0 auto; }
+  #yt-search { flex:1; background:rgba(255,255,255,0.08); border:1px solid var(--yt-border); border-radius:20px 0 0 20px; padding:8px 16px; color:var(--yt-text); font-size:14px; outline:none; font-family:inherit; }
+  #yt-search:focus { border-color:rgba(255,255,255,0.3); }
+  #yt-search-btn { background:rgba(255,255,255,0.1); border:1px solid var(--yt-border); border-radius:0 20px 20px 0; padding:8px 16px; color:var(--yt-text); cursor:pointer; font-size:16px; }
+  #yt-search-btn:hover { background:rgba(255,255,255,0.18); }
+  .back-btn { background:rgba(255,255,255,0.08); color:var(--yt-text); border:1px solid var(--yt-border); border-radius:8px; padding:6px 12px; font-size:12px; cursor:pointer; text-decoration:none; flex-shrink:0; }
+
+  /* Tabs */
+  #yt-tabs { display:flex; gap:8px; padding:12px 16px; overflow-x:auto; border-bottom:1px solid var(--yt-border); background:var(--yt-dark); position:sticky; top:57px; z-index:99; }
+  .yt-tab { background:rgba(255,255,255,0.08); border:1px solid var(--yt-border); border-radius:20px; padding:6px 14px; font-size:13px; color:var(--yt-text); cursor:pointer; white-space:nowrap; font-family:inherit; flex-shrink:0; }
+  .yt-tab.active, .yt-tab:hover { background:var(--yt-text); color:#000; }
+
+  /* Content area */
+  #yt-content { padding:16px; }
+  .yt-section-title { font-size:16px; font-weight:700; margin:8px 0 14px; }
+
+  /* Video grid */
+  .yt-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; }
+  .yt-card { cursor:pointer; border-radius:10px; overflow:hidden; transition:transform .15s; }
+  .yt-card:hover { transform:scale(1.02); }
+  .yt-thumb { position:relative; aspect-ratio:16/9; background:#222; border-radius:10px; overflow:hidden; }
+  .yt-thumb img { width:100%; height:100%; object-fit:cover; }
+  .yt-thumb .duration { position:absolute; bottom:6px; right:8px; background:rgba(0,0,0,0.85); font-size:11px; padding:2px 5px; border-radius:4px; }
+  .yt-card-info { display:flex; gap:10px; padding:10px 4px 4px; }
+  .yt-avatar { width:36px; height:36px; border-radius:50%; background:#333; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:18px; }
+  .yt-card-meta { flex:1; }
+  .yt-card-title { font-size:14px; font-weight:600; line-height:1.3; margin-bottom:4px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .yt-card-channel { font-size:12px; color:var(--yt-sub); }
+  .yt-card-stats { font-size:12px; color:var(--yt-sub); }
+
+  /* Shorts grid */
+  .yt-shorts-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px; }
+  .yt-short-card { cursor:pointer; border-radius:12px; overflow:hidden; }
+  .yt-short-card:hover .yt-short-thumb { transform:scale(1.04); }
+  .yt-short-thumb { aspect-ratio:9/16; background:#222; border-radius:12px; overflow:hidden; transition:transform .15s; display:flex; align-items:center; justify-content:center; }
+  .yt-short-thumb img { width:100%; height:100%; object-fit:cover; }
+  .yt-short-name { font-size:12px; padding:6px 4px 2px; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+
+  /* Player overlay */
+  #yt-player { display:none; position:fixed; inset:0; z-index:9999; background:var(--yt-dark); overflow-y:auto; }
+  #yt-player-inner { max-width:900px; margin:0 auto; padding:16px; }
+  #yt-player-close { background:none; border:none; color:var(--yt-text); font-size:24px; cursor:pointer; padding:4px 10px; float:right; }
+  #yt-player-frame-wrap { position:relative; padding-bottom:56.25%; height:0; border-radius:12px; overflow:hidden; }
+  #yt-player-frame { position:absolute; inset:0; width:100%; height:100%; border:none; }
+  #yt-player-frame.short { padding-bottom:0; }
+  .yt-player-title { font-size:18px; font-weight:700; margin:14px 0 6px; }
+  .yt-player-channel { font-size:14px; color:var(--yt-sub); margin-bottom:12px; }
+  .yt-player-actions { display:flex; gap:10px; flex-wrap:wrap; }
+  .yt-action-btn { background:rgba(255,255,255,0.1); border:1px solid var(--yt-border); border-radius:20px; padding:8px 16px; color:var(--yt-text); cursor:pointer; font-size:13px; font-family:inherit; }
+  .yt-action-btn:hover { background:rgba(255,255,255,0.18); }
+  #yt-related { margin-top:20px; }
+  #yt-related .yt-section-title { font-size:14px; }
+  .yt-related-list { display:flex; flex-direction:column; gap:12px; }
+  .yt-related-card { display:flex; gap:12px; cursor:pointer; padding:6px; border-radius:8px; }
+  .yt-related-card:hover { background:rgba(255,255,255,0.05); }
+  .yt-related-thumb { width:120px; aspect-ratio:16/9; border-radius:6px; overflow:hidden; flex-shrink:0; background:#222; }
+  .yt-related-thumb img { width:100%; height:100%; object-fit:cover; }
+  .yt-related-meta .yt-card-title { font-size:13px; }
+  .yt-related-meta .yt-card-channel { font-size:11px; }
+
+  /* Search results */
+  #yt-search-results { display:none; padding:16px; }
+</style>
+</head>
+<body>
+<div id="yt-header">
+  <a class="back-btn" href="../index.html">← Back</a>
+  <a id="yt-logo" href="#" onclick="showHome();return false;"><span>▶</span> YouTube</a>
+  <div id="yt-search-wrap">
+    <input id="yt-search" type="text" placeholder="Search" onkeydown="if(event.key==='Enter')doSearch(this.value)">
+    <button id="yt-search-btn" onclick="doSearch(document.getElementById('yt-search').value)">🔍</button>
+  </div>
+</div>
+
+<div id="yt-tabs">
+  <button class="yt-tab active" onclick="setTab('home',this)">🏠 Home</button>
+  <button class="yt-tab" onclick="setTab('trending',this)">🔥 Trending</button>
+  <button class="yt-tab" onclick="setTab('shorts',this)">📱 Shorts</button>
+  <button class="yt-tab" onclick="setTab('music',this)">🎵 Music</button>
+  <button class="yt-tab" onclick="setTab('gaming',this)">🎮 Gaming</button>
+  <button class="yt-tab" onclick="setTab('news',this)">📰 News</button>
+  <button class="yt-tab" onclick="setTab('subscriptions',this)">🔔 Subscriptions</button>
+  <button class="yt-tab" onclick="setTab('saved',this)">🕐 Watch Later</button>
+</div>
+
+<div id="yt-content">
+  <div id="tab-home"></div>
+  <div id="tab-trending" style="display:none"></div>
+  <div id="tab-shorts" style="display:none"></div>
+  <div id="tab-music" style="display:none"></div>
+  <div id="tab-gaming" style="display:none"></div>
+  <div id="tab-news" style="display:none"></div>
+  <div id="tab-subscriptions" style="display:none"></div>
+  <div id="tab-saved" style="display:none"></div>
+</div>
+<div id="yt-search-results"></div>
+
+<!-- Player overlay -->
+<div id="yt-player">
+  <div id="yt-player-inner">
+    <button id="yt-player-close" onclick="closePlayer()">✕</button>
+    <div id="yt-player-frame-wrap">
+      <iframe id="yt-player-frame" allowfullscreen allow="autoplay; fullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    </div>
+    <h2 class="yt-player-title" id="yt-player-title"></h2>
+    <p class="yt-player-channel" id="yt-player-channel"></p>
+    <div class="yt-player-actions">
+      <button class="yt-action-btn" onclick="saveLater()">🕐 Save</button>
+      <button class="yt-action-btn" onclick="shareVideo()">↗ Share</button>
+      <button class="yt-action-btn" id="yt-proxy-btn" onclick="openProxy()">🌐 Proxy</button>
+    </div>
+    <div id="yt-related">
+      <div class="yt-section-title">Up next</div>
+      <div class="yt-related-list" id="yt-related-list"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Video Database ─────────────────────────────────────────────────────────
+var YT_VIDEOS = [
+  // Home/Trending
+  { id:"dQw4w9WgXcQ", title:"Rick Astley - Never Gonna Give You Up", channel:"Rick Astley", views:"1.5B", dur:"3:33", thumb:"https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg", cat:["home","trending","music"], avatar:"🎵" },
+  { id:"9bZkp7q19f0", title:"PSY - GANGNAM STYLE", channel:"officialpsy", views:"5B", dur:"4:12", thumb:"https://i.ytimg.com/vi/9bZkp7q19f0/hqdefault.jpg", cat:["home","trending","music"], avatar:"🎵" },
+  { id:"kJQP7kiw5Fk", title:"Luis Fonsi - Despacito ft. Daddy Yankee", channel:"Luis Fonsi", views:"8.4B", dur:"4:42", thumb:"https://i.ytimg.com/vi/kJQP7kiw5Fk/hqdefault.jpg", cat:["home","trending","music"], avatar:"🎵" },
+  { id:"JGwWNGJdvx8", title:"Ed Sheeran - Shape of You", channel:"Ed Sheeran", views:"6.1B", dur:"4:24", thumb:"https://i.ytimg.com/vi/JGwWNGJdvx8/hqdefault.jpg", cat:["home","trending","music"], avatar:"🎵" },
+  { id:"OPf0YbXqDm0", title:"Mark Ronson - Uptown Funk ft. Bruno Mars", channel:"Mark Ronson", views:"4.9B", dur:"4:30", thumb:"https://i.ytimg.com/vi/OPf0YbXqDm0/hqdefault.jpg", cat:["home","music"], avatar:"🎵" },
+  { id:"YqeW9_5kURI", title:"Justin Bieber - Baby ft. Ludacris", channel:"Justin Bieber", views:"3.2B", dur:"3:36", thumb:"https://i.ytimg.com/vi/YqeW9_5kURI/hqdefault.jpg", cat:["home","music"], avatar:"🎵" },
+  { id:"hT_nvWreIhg", title:"OneRepublic - Counting Stars", channel:"OneRepublic", views:"3.7B", dur:"4:17", thumb:"https://i.ytimg.com/vi/hT_nvWreIhg/hqdefault.jpg", cat:["home","music"], avatar:"🎵" },
+  { id:"CevxZvSJLk8", title:"Katy Perry - Roar", channel:"Katy Perry", views:"4.3B", dur:"4:32", thumb:"https://i.ytimg.com/vi/CevxZvSJLk8/hqdefault.jpg", cat:["home","music"], avatar:"🎵" },
+  { id:"ru0K8uYEZWw", title:"BTS - Butter", channel:"HYBE LABELS", views:"400M", dur:"2:42", thumb:"https://i.ytimg.com/vi/ru0K8uYEZWw/hqdefault.jpg", cat:["home","trending","music"], avatar:"🎵" },
+  { id:"ApXoWvfEYVU", title:"Minecraft but every block is random", channel:"Dream", views:"22M", dur:"16:34", thumb:"https://i.ytimg.com/vi/ApXoWvfEYVU/hqdefault.jpg", cat:["gaming","trending"], avatar:"🎮" },
+  { id:"6StjCBYNE14", title:"I Survived 100 Days in HARDCORE Minecraft", channel:"Forge Labs", views:"17M", dur:"1:00:00", thumb:"https://i.ytimg.com/vi/6StjCBYNE14/hqdefault.jpg", cat:["gaming"], avatar:"🎮" },
+  { id:"dCnJOGIjkMo", title:"The Most Satisfying Video in Existence", channel:"Daily Dose of Internet", views:"50M", dur:"3:12", thumb:"https://i.ytimg.com/vi/dCnJOGIjkMo/hqdefault.jpg", cat:["home","trending"], avatar:"📺" },
+  { id:"P6FORpg0KVo", title:"Gordon Ramsay's perfect burger tutorial", channel:"Gordon Ramsay", views:"12M", dur:"5:33", thumb:"https://i.ytimg.com/vi/P6FORpg0KVo/hqdefault.jpg", cat:["home"], avatar:"👨‍🍳" },
+  { id:"AaMdXZMvT3w", title:"I Spent 30 Days on a Deserted Island", channel:"MrBeast", views:"150M", dur:"21:14", thumb:"https://i.ytimg.com/vi/AaMdXZMvT3w/hqdefault.jpg", cat:["home","trending"], avatar:"🎬" },
+  { id:"XqZsoesa55w", title:"Baby Shark Dance | Sing and Dance!", channel:"Pinkfong Kids Songs", views:"13B", dur:"2:17", thumb:"https://i.ytimg.com/vi/XqZsoesa55w/hqdefault.jpg", cat:["home","trending"], avatar:"🦈" },
+  // News
+  { id:"cOTbVZI_GOs", title:"Breaking: Major World Events 2024", channel:"CNN", views:"2M", dur:"8:00", thumb:"https://i.ytimg.com/vi/cOTbVZI_GOs/hqdefault.jpg", cat:["news"], avatar:"📰" },
+  // Shorts (vertical)
+  { id:"s70yOMNNWPs", title:"Monsteraholic - Quick Tips", channel:"Monsteraholic", views:"1.2M", dur:"0:45", thumb:"https://i.ytimg.com/vi/s70yOMNNWPs/hqdefault.jpg", cat:["shorts","home"], avatar:"🌿", short:true },
+  { id:"GtL1huin9EE", title:"satisfying sand cutting #shorts", channel:"Satisfying Cuts", views:"8M", dur:"0:30", thumb:"https://i.ytimg.com/vi/GtL1huin9EE/hqdefault.jpg", cat:["shorts","trending"], avatar:"✂️", short:true },
+  { id:"Vt_yvzaOlVE", title:"minecraft parkour #shorts", channel:"TikTokMC", views:"5M", dur:"0:15", thumb:"https://i.ytimg.com/vi/Vt_yvzaOlVE/hqdefault.jpg", cat:["shorts","gaming"], avatar:"🎮", short:true },
+  { id:"6KkDUe3UqZ4", title:"cool life hack #shorts", channel:"Life Hacks", views:"3M", dur:"0:50", thumb:"https://i.ytimg.com/vi/6KkDUe3UqZ4/hqdefault.jpg", cat:["shorts"], avatar:"💡", short:true },
+];
+
+var watchLater = JSON.parse(localStorage.getItem('ws-yt-watchlater') || '[]');
+var currentVideo = null;
+var currentTab = 'home';
+
+function setTab(tab, el) {
+  currentTab = tab;
+  document.querySelectorAll('.yt-tab').forEach(function(t){t.classList.remove('active');});
+  if(el) el.classList.add('active');
+  document.querySelectorAll('#yt-content > div').forEach(function(d){d.style.display='none';});
+  var pane = document.getElementById('tab-'+tab);
+  if(pane) { pane.style.display='block'; renderTab(tab, pane); }
+  document.getElementById('yt-search-results').style.display='none';
+}
+
+function renderTab(tab, pane) {
+  if(tab === 'saved') { renderWatchLater(pane); return; }
+  if(tab === 'subscriptions') { pane.innerHTML='<p style="text-align:center;opacity:.5;padding:40px;font-size:14px;">Sign in to see your subscriptions.</p>'; return; }
+  var vids = YT_VIDEOS.filter(function(v){return v.cat.includes(tab==='home'?'home':tab);});
+  if(tab==='shorts') { renderShorts(vids, pane); return; }
+  if(!vids.length) { pane.innerHTML='<p style="text-align:center;opacity:.5;padding:40px;">No videos yet.</p>'; return; }
+  pane.innerHTML = '<div class="yt-section-title">' + tabLabel(tab) + '</div><div class="yt-grid">' +
+    vids.map(videoCard).join('') + '</div>';
+}
+
+function tabLabel(t){return{home:'Recommended',trending:'🔥 Trending Now',music:'🎵 Music',gaming:'🎮 Gaming',news:'📰 News'}[t]||t;}
+
+function renderShorts(vids, pane) {
+  var shorts = vids.filter(function(v){return v.short;});
+  if(!shorts.length) { pane.innerHTML='<p style="text-align:center;opacity:.5;padding:40px;">No Shorts yet.</p>'; return; }
+  pane.innerHTML = '<div class="yt-section-title">📱 Shorts</div><div class="yt-shorts-grid">' +
+    shorts.map(shortCard).join('') + '</div>';
+}
+
+function videoCard(v) {
+  return '<div class="yt-card" onclick="playVideo(\''+v.id+'\')">' +
+    '<div class="yt-thumb"><img src="'+v.thumb+'" onerror="this.style.display=\'none\'" loading="lazy" alt="'+esc(v.title)+'"><span class="duration">'+v.dur+'</span></div>' +
+    '<div class="yt-card-info"><div class="yt-avatar">'+v.avatar+'</div><div class="yt-card-meta">' +
+    '<div class="yt-card-title">'+esc(v.title)+'</div>' +
+    '<div class="yt-card-channel">'+esc(v.channel)+'</div>' +
+    '<div class="yt-card-stats">'+v.views+' views</div>' +
+    '</div></div></div>';
+}
+
+function shortCard(v) {
+  return '<div class="yt-short-card" onclick="playVideo(\''+v.id+'\')">' +
+    '<div class="yt-short-thumb"><img src="'+v.thumb+'" onerror="this.style.display=\'none\'" loading="lazy" alt="'+esc(v.title)+'"></div>' +
+    '<div class="yt-short-name">'+esc(v.title)+'</div></div>';
+}
+
+function playVideo(id) {
+  currentVideo = YT_VIDEOS.find(function(v){return v.id===id;}) || {id:id, title:'Video', channel:'YouTube', short:false};
+  var frame = document.getElementById('yt-player-frame');
+  var wrap = document.getElementById('yt-player-frame-wrap');
+  var src = 'https://www.youtube.com/embed/'+id+'?autoplay=1&rel=0&modestbranding=1';
+  if(currentVideo.short) {
+    wrap.style.paddingBottom='0';
+    frame.style.position='static';
+    frame.style.width='min(360px,100%)';
+    frame.style.height='calc(min(360px,100%) * 16/9)';
+  } else {
+    wrap.style.paddingBottom='56.25%';
+    frame.style.position='absolute';
+    frame.style.width='100%';
+    frame.style.height='100%';
+  }
+  frame.src = src;
+  document.getElementById('yt-player-title').textContent = currentVideo.title;
+  document.getElementById('yt-player-channel').textContent = currentVideo.channel;
+  // Related
+  var related = YT_VIDEOS.filter(function(v){return v.id!==id;}).slice(0,8);
+  document.getElementById('yt-related-list').innerHTML = related.map(function(v){
+    return '<div class="yt-related-card" onclick="playVideo(\''+v.id+'\')">' +
+      '<div class="yt-related-thumb"><img src="'+v.thumb+'" onerror="this.style.display=\'none\'" loading="lazy"></div>' +
+      '<div class="yt-related-meta"><div class="yt-card-title">'+esc(v.title)+'</div><div class="yt-card-channel">'+esc(v.channel)+'</div></div></div>';
+  }).join('');
+  document.getElementById('yt-player').style.display='block';
+  document.getElementById('yt-player').scrollTop=0;
+}
+
+function closePlayer() {
+  document.getElementById('yt-player').style.display='none';
+  document.getElementById('yt-player-frame').src='';
+}
+
+function saveLater() {
+  if(!currentVideo) return;
+  if(!watchLater.find(function(v){return v.id===currentVideo.id;})) {
+    watchLater.push(currentVideo);
+    localStorage.setItem('ws-yt-watchlater', JSON.stringify(watchLater));
+    alert('Saved to Watch Later');
+  } else { alert('Already in Watch Later'); }
+}
+
+function shareVideo() {
+  if(!currentVideo) return;
+  var url = 'https://www.youtube.com/watch?v='+currentVideo.id;
+  navigator.clipboard.writeText(url).then(function(){alert('Link copied: '+url);}).catch(function(){alert('Link: '+url);});
+}
+
+function openProxy() {
+  if(!currentVideo) return;
+  var url = 'https://www.youtube.com/watch?v='+currentVideo.id;
+  location.href = 'website.html?url=' + encodeURIComponent(url);
+}
+
+function renderWatchLater(pane) {
+  if(!watchLater.length) { pane.innerHTML='<p style="text-align:center;opacity:.5;padding:40px;">Nothing saved yet.</p>'; return; }
+  pane.innerHTML = '<div class="yt-section-title">🕐 Watch Later</div><div class="yt-grid">'+watchLater.map(videoCard).join('')+'</div>';
+}
+
+function doSearch(q) {
+  q = (q||'').trim().toLowerCase();
+  if(!q) return;
+  document.querySelectorAll('.yt-tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('#yt-content > div').forEach(function(d){d.style.display='none';});
+  var results = document.getElementById('yt-search-results');
+  results.style.display='block';
+  var matches = YT_VIDEOS.filter(function(v){ return v.title.toLowerCase().includes(q) || v.channel.toLowerCase().includes(q); });
+  if(!matches.length) { results.innerHTML='<p style="text-align:center;opacity:.5;padding:40px;font-size:14px;">No results for "'+esc(q)+'"</p>'; return; }
+  results.innerHTML='<div class="yt-section-title" style="padding:0 0 12px;">Results for "'+esc(q)+'"</div><div class="yt-grid">'+matches.map(videoCard).join('')+'</div>';
+}
+
+function showHome() {
+  setTab('home', document.querySelector('.yt-tab'));
+}
+
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// Init
+showHome();
+</script>
+</body>
+</html>
