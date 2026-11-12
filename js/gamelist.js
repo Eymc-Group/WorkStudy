@@ -224,6 +224,7 @@ const games = [
     // =========================================================================
 
     { name: "The Simpsons: Hit & Run",     author: "Radical Entertainment",    path: "https://vheissu.github.io/hit-and-run-web/" },
+    { name: "Geometry Dash WASM",          author: "Robtop Games",             path: "https://monkeymonkeyohio.github.io/gd-webport/" },
 
     // =========================================================================
     // Extra — additional HTML5 games from other public hosts
