@@ -399,6 +399,12 @@
     <button onclick="switchProvider(4)" id="pvbtn4" class="pvbtn">multiembed</button>
     <button onclick="switchProvider(5)" id="pvbtn5" class="pvbtn">embedsu</button>
     <button onclick="switchProvider(6)" id="pvbtn6" class="pvbtn">nontongo</button>
+    <button onclick="switchProvider(7)" id="pvbtn7" class="pvbtn">smashy</button>
+    <button onclick="switchProvider(8)" id="pvbtn8" class="pvbtn">moviesapi</button>
+    <button onclick="switchProvider(9)" id="pvbtn9" class="pvbtn">frembed</button>
+    <button onclick="switchProvider(10)" id="pvbtn10" class="pvbtn">rive</button>
+    <button onclick="switchProvider(11)" id="pvbtn11" class="pvbtn">vidlink</button>
+    <button onclick="tryNextProvider()" style="background:rgba(255,255,255,0.05);color:var(--text);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;font-family:inherit;">⏭ Try Next</button>
     <span style="font-size:0.75rem;color:#64748b;margin-left:auto;">⚠️ Ad blockers recommended</span>
   </div>
   <div class="player-wrap">
@@ -664,9 +670,30 @@ const PROVIDERS = [
   { name: "embedsu",     url: (type, id, s, e) => s ? `https://embed.su/embed/${type}/${id}/${s}/${e||1}` : `https://embed.su/embed/${type}/${id}` },
   // nontongo (free, no signup)
   { name: "nontongo",    url: (type, id) => `https://www.nontongo.win/embed/${type === "movie" ? "movie" : "tv"}/${id}` },
+  // smashystream
+  { name: "smashy",      url: (type, id, s, e) => s ? `https://player.smashy.stream/tv/${id}?s=${s}&e=${e||1}` : `https://player.smashy.stream/movie/${id}` },
+  // moviesapi.club
+  { name: "moviesapi",   url: (type, id, s, e) => type === "movie"
+      ? `https://moviesapi.club/movie/${id}`
+      : `https://moviesapi.club/tv/${id}-${s||1}-${e||1}` },
+  // frembed
+  { name: "frembed",     url: (type, id, s, e) => s ? `https://frembed.lol/api/serie.php?id=${id}&sa=${s}&epi=${e||1}` : `https://frembed.lol/api/film.php?id=${id}` },
+  // rive
+  { name: "rive",        url: (type, id, s, e) => s ? `https://rivestream.live/embed?type=tv&id=${id}&season=${s}&episode=${e||1}` : `https://rivestream.live/embed?type=movie&id=${id}` },
+  // vidlink (auto cycles if one fails)
+  { name: "vidlink",     url: (type, id, s, e) => s ? `https://vidlink.pro/tv/${id}/${s}/${e||1}` : `https://vidlink.pro/movie/${id}` },
 ];
 let activeProvider = 0;
 let currentItem = null;
+
+function tryNextProvider() {
+  activeProvider = (activeProvider + 1) % PROVIDERS.length;
+  document.querySelectorAll(".pvbtn").forEach((b, i) => b.classList.toggle("active-pvbtn", i === activeProvider));
+  if (currentItem) {
+    const { type, id, season, episode } = currentItem;
+    document.getElementById("player-iframe").src = PROVIDERS[activeProvider].url(type, id, season, episode);
+  }
+}
 
 function switchProvider(idx) {
   activeProvider = idx;
