@@ -3,7 +3,7 @@
 // offline fallback, background sync, periodic sync, push notifications,
 // and widget support.
 
-const CACHE_NAME    = "workstudy-v3.21.83";
+const CACHE_NAME    = "workstudy-v3.2.9.51";
 const OFFLINE_PAGE  = "/WorkStudy/offline.html";
 
 const PRECACHE_URLS = [
