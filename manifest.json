@@ -2,7 +2,7 @@
   "name": "WorkStudy",
   "short_name": "WorkStudy",
   "description": "150+ free unblocked browser games, cloud saves, leaderboard, themes and web utilities — no download required.",
-  "version": "3.21.83",
+  "version": "3.2.9.51",
   "start_url": "/WorkStudy/?source=pwa",
   "scope": "/WorkStudy/",
   "display": "standalone",
@@ -77,11 +77,41 @@
 
   "file_handlers": [
     {
-      "action": "/WorkStudy/pages/iframe.html",
+      "action": "/WorkStudy/pages/html-runner.html",
       "accept": {
         "text/html": [".html", ".htm"],
-        "text/plain": [".txt"],
-        "application/json": [".json"]
+        "text/css": [".css"],
+        "text/javascript": [".js", ".ts", ".jsx", ".tsx"],
+        "application/json": [".json"],
+        "text/xml": [".xml"],
+        "text/markdown": [".md"],
+        "text/plain": [".txt", ".csv", ".yaml", ".yml", ".vue", ".sh", ".bat", ".ini", ".conf", ".toml", ".env"],
+        "application/zip": [".zip"],
+        "image/svg+xml": [".svg"],
+        "image/png": [".png"],
+        "image/jpeg": [".jpg", ".jpeg"],
+        "image/gif": [".gif"],
+        "image/webp": [".webp"],
+        "audio/mpeg": [".mp3"],
+        "audio/ogg": [".ogg"],
+        "audio/wav": [".wav"],
+        "audio/flac": [".flac"],
+        "audio/aac": [".aac"],
+        "video/mp4": [".mp4"],
+        "video/webm": [".webm"],
+        "video/ogg": [".ogv"],
+        "font/woff": [".woff"],
+        "font/woff2": [".woff2"],
+        "font/ttf": [".ttf"],
+        "font/otf": [".otf"]
+      },
+      "icons": [{ "src": "img/icon-96.png", "sizes": "96x96" }],
+      "launch_type": "single-client"
+    },
+    {
+      "action": "/WorkStudy/pages/notepad.html",
+      "accept": {
+        "text/plain": [".txt", ".log"]
       },
       "icons": [{ "src": "img/icon-96.png", "sizes": "96x96" }],
       "launch_type": "single-client"
