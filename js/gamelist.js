@@ -20,7 +20,7 @@ const games = [
     // gfiles — HTML5GameArchive fork hosted at eymc-group.github.io/gfiles
     // =========================================================================
 
-    { name: "1v1.LOL",                    author: "JustPlay.LOL",             path: "https://eymc-group.github.io/gfiles/games/1v1lol/" },
+    { name: "1v1.LOL",                     author: "JustPlay.LOL",             path: "https://eymc-group.github.io/gfiles/games/1v1lol/" },
     { name: "2048",                        author: "Gabriele Cirulli",         path: "https://eymc-group.github.io/gfiles/games/2048/" },
     { name: "A Dark Room",                 author: "Doublespeak Games",        path: "https://eymc-group.github.io/gfiles/games/adarkroom/" },
     { name: "ASCII Space",                 author: "Unknown",                  path: "https://eymc-group.github.io/gfiles/games/asciispace/" },
@@ -185,7 +185,7 @@ const games = [
     // Bennett — games added by Bennett (games/bennett/)
     // =========================================================================
 
-    { name: "BLOODMONEY! (inappropriate 16+)",            author: "Unknown",          path: "https://eymc-group.github.io/WorkStudy/games/bennett/BLOODMONEY!.html" },
+    { name: "BLOODMONEY! (inappropriate 16+)",             author: "Unknown",          path: "https://eymc-group.github.io/WorkStudy/games/bennett/BLOODMONEY!.html" },
     { name: "Bendy and the Ink Machine",                   author: "Kindly Beast",     path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bendy-and-the-Ink-Machine.html" },
     { name: "Bottle Jump 3D",                              author: "Unknown",          path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bottle-Jump-3D.html" },
     { name: "Bowmasters",                                  author: "Playgendary",      path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bowmasters.html" },
@@ -218,6 +218,7 @@ const games = [
 
     { name: "Bad Piggies",                 author: "Rovio Entertainment",      path: "https://eymc-group.github.io/WorkStudy/games/imported/Bad-Piggies.html" },
     { name: "Bad Parenting 1",             author: "Unknown",                  path: "https://eymc-group.github.io/WorkStudy/games/imported/Bad-Parenting-1.html" },
+    { name: "Geometry Dash Web Port",      author: "Robtop Games",             path: "https://eymc-group.github.io/WorkStudy/games/imported/geometrydash.html" },
 
     // =========================================================================
     // Other — miscellaneous entries
