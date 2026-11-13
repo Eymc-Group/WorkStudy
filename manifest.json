@@ -65,7 +65,7 @@
       "name": "🌐 Website Viewer",
       "short_name": "Viewer",
       "description": "Browse websites through the viewer",
-      "url": "/WorkStudy/pages/iframe.html?source=shortcut",
+      "url": "/WorkStudy/pages/websie.html?source=shortcut",
       "icons": [{ "src": "img/icon-96.png", "sizes": "96x96" }]
     }
   ],
@@ -77,7 +77,7 @@
 
   "file_handlers": [
     {
-      "action": "/WorkStudy/pages/html-runner.html",
+      "action": "/WorkStudy/pages/file-runner.html",
       "accept": {
         "text/html": [".html", ".htm"],
         "text/css": [".css"],
@@ -170,7 +170,7 @@
   "prefer_related_applications": false,
 
   "share_target": {
-    "action": "/WorkStudy/pages/iframe.html",
+    "action": "/WorkStudy/pages/website.html",
     "method": "GET",
     "params": {
       "url": "url",
