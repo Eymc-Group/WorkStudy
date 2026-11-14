@@ -227,6 +227,60 @@
     <script src="js/online.js" defer></script>
     <script src="js/version-check.js" defer></script>
     <link rel="stylesheet" href="css/style.css">
+    <!-- ── Offline Detection ─────────────────────────────────────────────── -->
+    <script>
+    (function () {
+        "use strict";
+        var BADGE_ID = "ws-offline-badge";
+
+        function showBadge() {
+            var b = document.getElementById(BADGE_ID);
+            if (!b) {
+                b = document.createElement("div");
+                b.id = BADGE_ID;
+                b.setAttribute("aria-live", "polite");
+                b.style.cssText = [
+                    "position:fixed","top:10px","left:50%","transform:translateX(-50%)",
+                    "z-index:99999","background:#1e1b2e","color:#facc15",
+                    "border:1px solid rgba(250,204,21,.35)","border-radius:20px",
+                    "padding:5px 14px","font-size:12px","font-family:'Pusab',system-ui,sans-serif",
+                    "pointer-events:none","box-shadow:0 4px 16px rgba(0,0,0,.5)",
+                    "transition:opacity .3s"
+                ].join(";");
+                b.textContent = "✈️ Offline — showing cached content";
+                document.body.appendChild(b);
+            }
+            b.style.opacity = "1";
+        }
+
+        function hideBadge() {
+            var b = document.getElementById(BADGE_ID);
+            if (b) b.style.opacity = "0";
+        }
+
+        function applyOfflineUI(offline) {
+            // Show/hide the yellow badge
+            offline ? showBadge() : hideBadge();
+
+            // Hide online-only sidebar buttons when offline
+            document.querySelectorAll(".online-only").forEach(function (el) {
+                el.style.display = offline ? "none" : "";
+            });
+        }
+
+        // Run immediately on page load
+        applyOfflineUI(!navigator.onLine);
+
+        // React to network changes
+        window.addEventListener("online",  function () { applyOfflineUI(false); });
+        window.addEventListener("offline", function () { applyOfflineUI(true); });
+
+        // Double-check after DOM ready (buttons may not exist yet during <head> parse)
+        document.addEventListener("DOMContentLoaded", function () {
+            applyOfflineUI(!navigator.onLine);
+        });
+    })();
+    </script>
 
 <main class="main">
     <div class="welcome">

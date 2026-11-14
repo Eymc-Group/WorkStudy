@@ -168,57 +168,60 @@ const games = [
 
     // =========================================================================
     // Legacy — older embeds hosted inside WorkStudy (games/legacy-games/)
+    // Relative paths work offline via service worker cache.
     // =========================================================================
 
-    { name: "2040 (Legacy)",               author: "Eymc-Group",               path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/2040.html" },
-    { name: "Bad Parenting 1 (Legacy)",    author: "Unknown",                  path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/badparenting.html" },
-    { name: "Cookie Clicker (Legacy)",     author: "Orteil",                   path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/cookieclicker.html" },
-    { name: "Five Nights at Epstein's",    author: "Unknown",                  path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/fnae.html" },
-    { name: "Geometry Dash (Legacy)",      author: "RobTop Games",             path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/gd.html" },
-    { name: "Hollow Knight",               author: "Team Cherry",              path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/hollowknight.html" },
-    { name: "Minecraft",                   author: "Mojang",                   path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/minecraft.html" },
-    { name: "Retro Bowl (Legacy)",         author: "New Star Games",           path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/retrobowl.html" },
-    { name: "Run 3 (Legacy)",              author: "Joseph Cloutier",          path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/run3.html" },
-    { name: "Slope (Legacy)",              author: "Rob Kay",                  path: "https://eymc-group.github.io/WorkStudy/games/legacy-games/slope.html" },
+    { name: "2040 (Legacy)",               author: "Eymc-Group",               path: "../games/legacy-games/2040.html" },
+    { name: "Bad Parenting 1 (Legacy)",    author: "Unknown",                  path: "../games/legacy-games/badparenting.html" },
+    { name: "Cookie Clicker (Legacy)",     author: "Orteil",                   path: "../games/legacy-games/cookieclicker.html" },
+    { name: "Five Nights at Epstein's",    author: "Unknown",                  path: "../games/legacy-games/fnae.html" },
+    { name: "Geometry Dash (Legacy)",      author: "RobTop Games",             path: "../games/legacy-games/gd.html" },
+    { name: "Hollow Knight",               author: "Team Cherry",              path: "../games/legacy-games/hollowknight.html" },
+    { name: "Minecraft",                   author: "Mojang",                   path: "../games/legacy-games/minecraft.html" },
+    { name: "Retro Bowl (Legacy)",         author: "New Star Games",           path: "../games/legacy-games/retrobowl.html" },
+    { name: "Run 3 (Legacy)",              author: "Joseph Cloutier",          path: "../games/legacy-games/run3.html" },
+    { name: "Slope (Legacy)",              author: "Rob Kay",                  path: "../games/legacy-games/slope.html" },
 
     // =========================================================================
     // Bennett — games added by Bennett (games/bennett/)
+    // Relative paths work offline via service worker cache.
     // =========================================================================
 
-    { name: "BLOODMONEY! (inappropriate 16+)",             author: "Unknown",          path: "https://eymc-group.github.io/WorkStudy/games/bennett/BLOODMONEY!.html" },
-    { name: "Bendy and the Ink Machine",                   author: "Kindly Beast",     path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bendy-and-the-Ink-Machine.html" },
-    { name: "Bottle Jump 3D",                              author: "Unknown",          path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bottle-Jump-3D.html" },
-    { name: "Bowmasters",                                  author: "Playgendary",      path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bowmasters.html" },
-    { name: "Bridge Race",                                 author: "Garawell Games",   path: "https://eymc-group.github.io/WorkStudy/games/bennett/Bridge-Race.html" },
-    { name: "CaseOh's Basics in Eating and Fast Food",     author: "ploxfr",           path: "https://eymc-group.github.io/WorkStudy/games/bennett/CaseOh's-Basics-in-Eating-and-Fast-Food.html" },
-    { name: "Cool Cars Run 3D",                            author: "Unknown",          path: "https://eymc-group.github.io/WorkStudy/games/bennett/Cool-Cars-Run-3D.html" },
-    { name: "Count Masters Stickman Games",                author: "Unknown",          path: "https://eymc-group.github.io/WorkStudy/games/bennett/Count-Masters-Stickman-Games.html" },
-    { name: "Crazy Cars",                                  author: "Unknown",          path: "https://eymc-group.github.io/WorkStudy/games/bennett/Crazy-Cars.html" },
-    { name: "Crossy Road (Bennett)",                       author: "Hipster Whale",    path: "https://eymc-group.github.io/WorkStudy/games/bennett/Crossy-Road.html" },
-    { name: "Crush Cars 3D",                               author: "Unknown",          path: "https://eymc-group.github.io/WorkStudy/games/bennett/Crush-Cars-3D.html" },
-    { name: "Drift Boss",                                  author: "Codethislab",      path: "https://eymc-group.github.io/WorkStudy/games/bennett/Drift-Boss.html" },
-    { name: "Drift Hunters (Bennett)",                     author: "Studionum43",      path: "https://eymc-group.github.io/WorkStudy/games/bennett/Drift-Hunters.html" },
-    { name: "Flappy Bird (Bennett)",                       author: "Dong Nguyen",      path: "https://eymc-group.github.io/WorkStudy/games/bennett/Flappy-Bird.html" },
-    { name: "Layers Roll",                                 author: "Unknown",          path: "https://eymc-group.github.io/WorkStudy/games/bennett/Layers-Roll.html" },
-    { name: "Madalin Stunt Cars 2",                        author: "Madalin Stanciu",  path: "https://eymc-group.github.io/WorkStudy/games/bennett/Madalin-Stunt-Cars-2.html" },
-    { name: "Make a SuperBoat",                            author: "petaphaser",       path: "https://eymc-group.github.io/WorkStudy/games/bennett/Make-a-SuperBoat.html" },
-    { name: "Makeover Run",                                author: "Firebyte Games",   path: "https://eymc-group.github.io/WorkStudy/games/bennett/Makeover-Run.html" },
-    { name: "Sprunki",                                     author: "Unknown",          path: "https://eymc-group.github.io/WorkStudy/games/bennett/Sprunki.html" },
-    { name: "Steal A Brainrot",                            author: "bryanrhegoat99",   path: "https://eymc-group.github.io/WorkStudy/games/bennett/Steal-A-Brainrot.html" },
-    { name: "Steal A Brainrot Online",                     author: "Unknown",          path: "https://eymc-group.github.io/WorkStudy/games/bennett/Steal-Brainrot-Online.html" },
-    { name: "Stone Grass Mowing Simulator",                author: "Unknown",          path: "https://eymc-group.github.io/WorkStudy/games/bennett/Stone-Grass-Mowing-Simulator.html" },
-    { name: "Toy Rider",                                   author: "Unknown",          path: "https://eymc-group.github.io/WorkStudy/games/bennett/Toy-Rider.html" },
-    { name: "Traffic Racer",                               author: "Soner Kara",       path: "https://eymc-group.github.io/WorkStudy/games/bennett/Traffic-Racer.html" },
-    { name: "Twerk Race 3D",                               author: "Rollic Games",     path: "https://eymc-group.github.io/WorkStudy/games/bennett/Twerk-Race-3D.html" },
-    { name: "WebFishing",                                  author: "lamedeveloper",    path: "https://eymc-group.github.io/WorkStudy/games/bennett/WebFishing.html" },
+    { name: "BLOODMONEY! (inappropriate 16+)",             author: "Unknown",          path: "../games/bennett/BLOODMONEY!.html" },
+    { name: "Bendy and the Ink Machine",                   author: "Kindly Beast",     path: "../games/bennett/Bendy-and-the-Ink-Machine.html" },
+    { name: "Bottle Jump 3D",                              author: "Unknown",          path: "../games/bennett/Bottle-Jump-3D.html" },
+    { name: "Bowmasters",                                  author: "Playgendary",      path: "../games/bennett/Bowmasters.html" },
+    { name: "Bridge Race",                                 author: "Garawell Games",   path: "../games/bennett/Bridge-Race.html" },
+    { name: "CaseOh's Basics in Eating and Fast Food",     author: "ploxfr",           path: "../games/bennett/CaseOh's-Basics-in-Eating-and-Fast-Food.html" },
+    { name: "Cool Cars Run 3D",                            author: "Unknown",          path: "../games/bennett/Cool-Cars-Run-3D.html" },
+    { name: "Count Masters Stickman Games",                author: "Unknown",          path: "../games/bennett/Count-Masters-Stickman-Games.html" },
+    { name: "Crazy Cars",                                  author: "Unknown",          path: "../games/bennett/Crazy-Cars.html" },
+    { name: "Crossy Road (Bennett)",                       author: "Hipster Whale",    path: "../games/bennett/Crossy-Road.html" },
+    { name: "Crush Cars 3D",                               author: "Unknown",          path: "../games/bennett/Crush-Cars-3D.html" },
+    { name: "Drift Boss",                                  author: "Codethislab",      path: "../games/bennett/Drift-Boss.html" },
+    { name: "Drift Hunters (Bennett)",                     author: "Studionum43",      path: "../games/bennett/Drift-Hunters.html" },
+    { name: "Flappy Bird (Bennett)",                       author: "Dong Nguyen",      path: "../games/bennett/Flappy-Bird.html" },
+    { name: "Layers Roll",                                 author: "Unknown",          path: "../games/bennett/Layers-Roll.html" },
+    { name: "Madalin Stunt Cars 2",                        author: "Madalin Stanciu",  path: "../games/bennett/Madalin-Stunt-Cars-2.html" },
+    { name: "Make a SuperBoat",                            author: "petaphaser",       path: "../games/bennett/Make-a-SuperBoat.html" },
+    { name: "Makeover Run",                                author: "Firebyte Games",   path: "../games/bennett/Makeover-Run.html" },
+    { name: "Sprunki",                                     author: "Unknown",          path: "../games/bennett/Sprunki.html" },
+    { name: "Steal A Brainrot",                            author: "bryanrhegoat99",   path: "../games/bennett/Steal-A-Brainrot.html" },
+    { name: "Steal A Brainrot Online",                     author: "Unknown",          path: "../games/bennett/Steal-Brainrot-Online.html" },
+    { name: "Stone Grass Mowing Simulator",                author: "Unknown",          path: "../games/bennett/Stone-Grass-Mowing-Simulator.html" },
+    { name: "Toy Rider",                                   author: "Unknown",          path: "../games/bennett/Toy-Rider.html" },
+    { name: "Traffic Racer",                               author: "Soner Kara",       path: "../games/bennett/Traffic-Racer.html" },
+    { name: "Twerk Race 3D",                               author: "Rollic Games",     path: "../games/bennett/Twerk-Race-3D.html" },
+    { name: "WebFishing",                                  author: "lamedeveloper",    path: "../games/bennett/WebFishing.html" },
 
     // =========================================================================
     // Imported — manually imported games
+    // Relative paths work offline via service worker cache.
     // =========================================================================
 
-    { name: "Bad Piggies",                 author: "Rovio Entertainment",      path: "https://eymc-group.github.io/WorkStudy/games/imported/Bad-Piggies.html" },
-    { name: "Bad Parenting 1",             author: "Unknown",                  path: "https://eymc-group.github.io/WorkStudy/games/imported/Bad-Parenting-1.html" },
-    { name: "Geometry Dash Web Port",      author: "Robtop Games",             path: "https://eymc-group.github.io/WorkStudy/games/imported/geometrydash.html" },
+    { name: "Bad Piggies",                 author: "Rovio Entertainment",      path: "../games/imported/Bad-Piggies.html" },
+    { name: "Bad Parenting 1",             author: "Unknown",                  path: "../games/imported/Bad-Parenting-1.html" },
+    { name: "Geometry Dash Web Port",      author: "Robtop Games",             path: "../games/imported/geometrydash.html" },
 
     // =========================================================================
     // Other — miscellaneous entries

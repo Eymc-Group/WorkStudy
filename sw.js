@@ -1,7 +1,7 @@
-// WorkStudy Service Worker — v3.2.9.51
+// WorkStudy Service Worker — v3.2.9.52
 // Offline-first: cache-then-network for all local assets, network-first for pages
 
-const CACHE_NAME   = "workstudy-v3.2.9.51";
+const CACHE_NAME   = "workstudy-v3.2.9.52";
 const OFFLINE_PAGE = "/WorkStudy/offline.html";
 const SCOPE        = "https://eymc-group.github.io/WorkStudy/";
 
@@ -54,6 +54,52 @@ const PRECACHE_URLS = [
     "/WorkStudy/pages/deviceinfo.html",
     "/WorkStudy/pages/chat/index.html",
     "/WorkStudy/widgets/data.json",
+
+    // ── Locally-hosted games (offline playable) ───────────────────────────
+    // Legacy games
+    "/WorkStudy/games/legacy-games/2040.html",
+    "/WorkStudy/games/legacy-games/badparenting.html",
+    "/WorkStudy/games/legacy-games/cookieclicker.html",
+    "/WorkStudy/games/legacy-games/fnae.html",
+    "/WorkStudy/games/legacy-games/gd.html",
+    "/WorkStudy/games/legacy-games/hollowknight.html",
+    "/WorkStudy/games/legacy-games/minecraft.html",
+    "/WorkStudy/games/legacy-games/retrobowl.html",
+    "/WorkStudy/games/legacy-games/run3.html",
+    "/WorkStudy/games/legacy-games/slope.html",
+
+    // Bennett games
+    "/WorkStudy/games/bennett/BLOODMONEY!.html",
+    "/WorkStudy/games/bennett/Bendy-and-the-Ink-Machine.html",
+    "/WorkStudy/games/bennett/Bottle-Jump-3D.html",
+    "/WorkStudy/games/bennett/Bowmasters.html",
+    "/WorkStudy/games/bennett/Bridge-Race.html",
+    "/WorkStudy/games/bennett/CaseOh's-Basics-in-Eating-and-Fast-Food.html",
+    "/WorkStudy/games/bennett/Cool-Cars-Run-3D.html",
+    "/WorkStudy/games/bennett/Count-Masters-Stickman-Games.html",
+    "/WorkStudy/games/bennett/Crazy-Cars.html",
+    "/WorkStudy/games/bennett/Crossy-Road.html",
+    "/WorkStudy/games/bennett/Crush-Cars-3D.html",
+    "/WorkStudy/games/bennett/Drift-Boss.html",
+    "/WorkStudy/games/bennett/Drift-Hunters.html",
+    "/WorkStudy/games/bennett/Flappy-Bird.html",
+    "/WorkStudy/games/bennett/Layers-Roll.html",
+    "/WorkStudy/games/bennett/Madalin-Stunt-Cars-2.html",
+    "/WorkStudy/games/bennett/Make-a-SuperBoat.html",
+    "/WorkStudy/games/bennett/Makeover-Run.html",
+    "/WorkStudy/games/bennett/Sprunki.html",
+    "/WorkStudy/games/bennett/Steal-A-Brainrot.html",
+    "/WorkStudy/games/bennett/Steal-Brainrot-Online.html",
+    "/WorkStudy/games/bennett/Stone-Grass-Mowing-Simulator.html",
+    "/WorkStudy/games/bennett/Toy-Rider.html",
+    "/WorkStudy/games/bennett/Traffic-Racer.html",
+    "/WorkStudy/games/bennett/Twerk-Race-3D.html",
+    "/WorkStudy/games/bennett/WebFishing.html",
+
+    // Imported games
+    "/WorkStudy/games/imported/Bad-Parenting-1.html",
+    "/WorkStudy/games/imported/Bad-Piggies.html",
+    "/WorkStudy/games/imported/geometrydash.html",
 ];
 
 // ── Install: precache everything ──────────────────────────────────────────
