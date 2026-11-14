@@ -41,7 +41,7 @@ const PRECACHE_URLS = [
     "/WorkStudy/pages/music.html",
     "/WorkStudy/pages/notepad.html",
     "/WorkStudy/pages/emulator.html",
-    "/WorkStudy/pages/html-runner.html",
+    "/WorkStudy/pages/file-runner.html",
     "/WorkStudy/pages/yt-emulator.html",
     "/WorkStudy/pages/coloringboard.html",
     "/WorkStudy/pages/shorts.html",

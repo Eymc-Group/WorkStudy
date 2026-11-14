@@ -844,6 +844,91 @@ body:has(#websitePanel.open) {
     }
 }
 
+/* ---- small tablet (769px – 900px) ---- */
+@media (min-width: 769px) and (max-width: 900px) {
+    body {
+        padding: 10px 12px;
+    }
+
+    h1 {
+        font-size: clamp(22px, 4vw, 34px) !important;
+    }
+
+    p {
+        font-size: clamp(11px, 1.8vw, 14px) !important;
+    }
+
+    .sidebar {
+        gap: 6px;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .sidebar button {
+        padding: 8px 12px;
+        font-size: 12px;
+        border-radius: 10px;
+    }
+
+    /* Compact the welcome section */
+    .welcome h1 {
+        font-size: clamp(20px, 3.5vw, 30px) !important;
+    }
+
+    .welcome p {
+        font-size: clamp(10px, 1.6vw, 13px) !important;
+        margin-top: 6px;
+    }
+
+    /* Homepage button row */
+    .homepage-btn-row button,
+    #updatesBtn, #leaderboardBtn, #mirrorsBtn, #supportBtn2 {
+        padding: 7px 12px;
+        font-size: 12px;
+        border-radius: 10px;
+    }
+
+    /* Status panel */
+    #statusPanel {
+        font-size: 10px;
+        padding: 4px 8px;
+        gap: 4px;
+    }
+
+    #time, #battery {
+        font-size: 11px;
+    }
+
+    /* Settings button */
+    #settingsBtn {
+        padding: 9px 14px;
+        font-size: 14px;
+        bottom: 12px;
+        right: 12px;
+    }
+
+    /* Legacy btn */
+    #legacyBtn {
+        font-size: 11px;
+        padding: 6px 10px;
+    }
+
+    /* Big search bar */
+    #bigSearchBar {
+        padding: 7px 12px;
+    }
+
+    #bigSearchInput {
+        font-size: 13px !important;
+    }
+
+    /* Version badge */
+    #versionBadge {
+        font-size: 9px;
+        bottom: 56px;
+    }
+}
+
 /* ---- md — large phones / small tablets ---- */
 @media (max-width: 768px) {
     body {

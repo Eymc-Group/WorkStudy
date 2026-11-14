@@ -77,7 +77,7 @@
 
   "file_handlers": [
     {
-      "action": "/WorkStudy/pages/html-runner.html",
+      "action": "/WorkStudy/pages/file-runner.html",
       "accept": {
         "text/html": [".html", ".htm"],
         "text/css": [".css"],

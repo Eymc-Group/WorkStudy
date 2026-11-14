@@ -289,9 +289,17 @@
     <div class="lb-tabs" id="tabsRow">
         <button class="lb-tab active" data-tab="score">🏆 Top Score</button>
         <button class="lb-tab" data-tab="time">⏱️ Site Time</button>
-        <button class="lb-tab" data-tab="gameTime">🕹️ Game Time</button>
         <button class="lb-tab" data-tab="games">🎮 Most Games</button>
         <button class="lb-tab" data-tab="visits">👁️ Most Visits</button>
+    </div>
+
+    <!-- Your local stats card -->
+    <div id="myStatsCard" style="max-width:700px;margin:12px auto 0;padding:0 16px;display:none;">
+        <div style="background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(139,92,246,0.1));border:1.5px solid rgba(99,102,241,0.3);border-radius:16px;padding:14px 18px;">
+            <div style="font-size:13px;font-weight:bold;color:var(--text,#e2e8f0);margin-bottom:10px;">📊 Your Stats (this device)</div>
+            <div id="myStatsRow" style="display:flex;flex-wrap:wrap;gap:12px;"></div>
+            <p style="font-size:10px;opacity:.4;margin:8px 0 0;">Stats sync to the leaderboard after each session on a logged-in account.</p>
+        </div>
     </div>
 
     <div class="lb-content">
@@ -325,7 +333,7 @@
 
 function sortedData(data, tab) {
         const copy = [...data];
-        const key = { score: "score", time: "minutesOnSite", gameTime: "minutesOnGames", games: "gamesPlayed", visits: "visits" }[tab];
+        const key = { score: "score", time: "statsMinutes", gameTime: "statsMinutes", games: "statsGames", visits: "statsVisits" }[tab];
         copy.sort((a, b) => (Number(b[key]) || 0) - (Number(a[key]) || 0));
         return copy;
     }
@@ -371,11 +379,11 @@ function sortedData(data, tab) {
                 ? `<a href="https://github.com/${encodeURIComponent(entry.githubUsername)}" target="_blank" rel="noopener" class="lb-gh-link" title="@${entry.githubUsername}">${GH_SVG}</a>`
                 : "";
 
-            const mins = Number(entry.minutesOnSite) || 0;
-            const gameMins = Number(entry.minutesOnGames) || 0;
-            const gamesP = Number(entry.gamesPlayed) || 0;
-            const visitsN = Number(entry.visits) || 0;
-            const scoreN = Number(entry.score) || 0;
+            const mins     = Number(entry.statsMinutes)         || 0;
+            const gameMins = Number(entry.statsMinutesOnGames || entry.statsMinutes) || 0;
+            const gamesP   = Number(entry.statsGames)           || 0;
+            const visitsN  = Number(entry.statsVisits)          || 0;
+            const scoreN   = Number(entry.score)                || 0;
 
             const hl = (tab) => currentTab === tab ? " lb-stat-highlight" : "";
 
@@ -388,8 +396,7 @@ function sortedData(data, tab) {
                         ${ghLink}
                     </div>
                     <div class="lb-stats">
-                        <div class="lb-stat${hl("time")}">⏱️ <span class="stat-val">${fmtTime(mins)}</span> <span style="font-size:10px;opacity:0.5">on site</span></div>
-                        <div class="lb-stat${hl("gameTime")}">🕹️ <span class="stat-val">${fmtTime(gameMins)}</span> <span style="font-size:10px;opacity:0.5">on games</span></div>
+                        <div class="lb-stat${hl("time")}">⏱️ <span class="stat-val">${fmtTime(gameMins)}</span> <span style="font-size:10px;opacity:0.5">on games</span></div>
                         <div class="lb-stat${hl("games")}">🎮 <span class="stat-val">${gamesP.toLocaleString()}</span> <span style="font-size:10px;opacity:0.5">played</span></div>
                         <div class="lb-stat${hl("visits")}">👁️ <span class="stat-val">${visitsN.toLocaleString()}</span> <span style="font-size:10px;opacity:0.5">visits</span></div>
                     </div>
@@ -439,6 +446,35 @@ function sortedData(data, tab) {
     document.getElementById("refreshBtn").addEventListener("click", () => fetchLeaderboard(true));
 
     fetchLeaderboard(false);
+
+    // ── Your local stats ──────────────────────────────────────────
+    (function() {
+        function fmtTime(m) {
+            if (!m) return "0m";
+            if (m < 60) return m + "m";
+            return Math.floor(m/60) + "h " + (m%60) + "m";
+        }
+        try {
+            var gamesPlayed   = parseInt(localStorage.getItem("ws-games-played")     || "0", 10);
+            var minsOnGames   = parseInt(localStorage.getItem("ws-minutes-on-games") || "0", 10);
+            var score         = parseInt(localStorage.getItem("ws-score")            || "0", 10);
+            var card = document.getElementById("myStatsCard");
+            var row  = document.getElementById("myStatsRow");
+            if (!card || !row) return;
+            var stats = [
+                { icon:"🎮", label:"Games Played", val: gamesPlayed.toLocaleString() },
+                { icon:"⏱️", label:"Time on Games", val: fmtTime(minsOnGames) },
+                { icon:"🏆", label:"Score",         val: score.toLocaleString() + " pts" }
+            ];
+            row.innerHTML = stats.map(function(s){
+                return '<div style="flex:1;min-width:100px;background:rgba(255,255,255,0.05);border-radius:10px;padding:10px 12px;text-align:center;">' +
+                    '<div style="font-size:20px;">' + s.icon + '</div>' +
+                    '<div style="font-size:15px;font-weight:bold;color:var(--text,#e2e8f0);margin:4px 0 2px;">' + s.val + '</div>' +
+                    '<div style="font-size:10px;opacity:.5;">' + s.label + '</div></div>';
+            }).join('');
+            card.style.display = "block";
+        } catch(e) {}
+    })();
     </script>
 </body>
 </html>

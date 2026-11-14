@@ -38,10 +38,27 @@
     let firstPing = true;
     let pingCount = 0;
 
+    // High-water marks: last values sent — Worker adds only the delta
+    let hwmMinutesOnSite  = 0;
+    let hwmMinutesOnGames = 0;
+    let hwmGamesPlayed    = 0;
+
     async function ping() {
         pingCount++;
         // Increment minutesOnSite every 4 pings (= every ~60s)
         if (pingCount % 4 === 0) minutesOnSite++;
+
+        // Compute deltas so each ping sends only NEW activity
+        const curMinutesOnSite  = minutesOnSite;
+        const curMinutesOnGames = getMinutesOnGames();
+        const curGamesPlayed    = getGamesPlayed();
+        const deltaMinutesOnSite  = Math.max(0, curMinutesOnSite  - hwmMinutesOnSite);
+        const deltaMinutesOnGames = Math.max(0, curMinutesOnGames - hwmMinutesOnGames);
+        const deltaGamesPlayed    = Math.max(0, curGamesPlayed    - hwmGamesPlayed);
+        hwmMinutesOnSite  = Math.max(hwmMinutesOnSite,  curMinutesOnSite);
+        hwmMinutesOnGames = Math.max(hwmMinutesOnGames, curMinutesOnGames);
+        hwmGamesPlayed    = Math.max(hwmGamesPlayed,    curGamesPlayed);
+
         const token = getToken();
         const headers = { "Content-Type": "application/json" };
         if (token) headers["Authorization"] = "Bearer " + token;
@@ -49,7 +66,12 @@
             const res = await fetch(API + "/stats/ping", {
                 method: "POST",
                 headers,
-                body: JSON.stringify({ sessionId, minutesOnSite, gamesPlayed: getGamesPlayed(), minutesOnGames: getMinutesOnGames() })
+                body: JSON.stringify({
+                    sessionId,
+                    minutesOnSite:   deltaMinutesOnSite,
+                    minutesOnGames:  deltaMinutesOnGames,
+                    gamesPlayed:     deltaGamesPlayed
+                })
             });
             if (res.ok) {
                 const data = await res.json();
