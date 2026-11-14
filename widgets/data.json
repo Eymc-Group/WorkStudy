@@ -4,7 +4,7 @@
   "links": [
     { "label": "🎮 Play Games",    "url": "/WorkStudy/games/index.html" },
     { "label": "🏆 Leaderboard",  "url": "/WorkStudy/pages/leaderboard.html" },
-    { "label": "🌐 Website Viewer","url": "/WorkStudy/pages/iframe.html" },
+    { "label": "🌐 Website Viewer","url": "/WorkStudy/pages/website.html" },
     { "label": "🔧 DevTools",     "url": "/WorkStudy/pages/devtools.html" }
   ]
 }
