@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#000000">
+  <title>Geometry Dash Webport</title>
+  <style>
+    :root {
+      --bg: #000000;
+      --panel: rgba(20, 20, 24, 0.9);
+      --text: #f2f2f2;
+      --muted: #aaaaaa;
+      --accent: #7cc4ff;
+      --danger: #ff8a8a;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(90, 110, 180, 0.18), transparent 25%),
+        #000000;
+    }
+
+    #app {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: #000;
+    }
+
+    canvas {
+      width: min(100vw, calc(100vh * 16 / 9));
+      height: min(100vh, calc(100vw * 9 / 16));
+      max-width: 100vw;
+      max-height: 100vh;
+      display: block;
+      background: #000;
+      outline: none;
+      user-select: none;
+      touch-action: none;
+    }
+
+    #loading {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      z-index: 40;
+      background: #000;
+      color: #fff;
+      font: 600 22px/1.2 system-ui, sans-serif;
+      transition: opacity 0.7s ease;
+    }
+
+    #loading.off {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #spinner {
+      width: 46px;
+      height: 46px;
+      border: 4px solid rgba(255,255,255,0.2);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    #loadingText {
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+      letter-spacing: 0.04em;
+    }
+
+    #errOverlay {
+      position: fixed;
+      left: 50%;
+      top: 12px;
+      transform: translateX(-50%);
+      z-index: 60;
+      max-width: min(92vw, 720px);
+      display: none;
+      background: rgba(38, 0, 0, 0.96);
+      border: 1px solid #a33;
+      color: #ffd7d7;
+      font-size: 12px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    #errOverlay.on {
+      display: block;
+    }
+
+    #offNotice {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%);
+      max-width: min(92vw, 720px);
+      background: rgba(22, 22, 26, 0.94);
+      border: 1px solid rgba(160, 170, 190, 0.35);
+      color: #f0f5ff;
+      font-size: 13px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      z-index: 50;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    #offNotice.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <canvas id="canvas" width="1920" height="1080"></canvas>
+  </div>
+
+  <div id="loading">
+    <div id="spinner"></div>
+    <div id="loadingText">Loading game assets…</div>
+  </div>
+
+  <div id="errOverlay" role="alert"></div>
+  <div id="offNotice">Offline mode: cached game assets will be used when available.</div>
+
+  <script>
+    (function () {
+      const CACHE_NAME = 'gdwasm-offline-v1';
+      const nativeFetch = window.fetch.bind(window);
+
+      function isAssetUrl(url) {
+        if (!url) return false;
+        return /(gd_assets\.json|gd_web\.(js|wasm|data)|ref\/|\.png|\.jpg|\.jpeg|\.gif|\.css|\.woff2|\.ico)/i.test(url);
+      }
+
+      function showOfflineNotice() {
+        const el = document.getElementById('offNotice');
+        if (el) el.classList.add('show');
+      }
+
+      function hideOfflineNotice() {
+        const el = document.getElementById('offNotice');
+        if (el) el.classList.remove('show');
+      }
+
+      // Register the service worker.
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      }
+
+      window.addEventListener('offline', function () {
+        window.__gdOfflineMode = true;
+        showOfflineNotice();
+      });
+
+      window.addEventListener('online', function () {
+        window.__gdOfflineMode = false;
+        hideOfflineNotice();
+      });
+
+      // Extra fallback: cache any game asset requests in the browser cache.
+      window.fetch = async function (input, init) {
+        let url = typeof input === 'string' ? input : (input && input.url) || '';
+
+        if (!url) {
+          return nativeFetch(input, init);
+        }
+
+        try {
+          const response = await nativeFetch(input, init);
+
+          if (response && response.ok && 'caches' in window && isAssetUrl(url)) {
+            try {
+              const cache = await caches.open(CACHE_NAME);
+              cache.put(url, response.clone()).catch(() => {});
+            } catch (_) {}
+          }
+
+          return response;
+        } catch (error) {
+          if ('caches' in window) {
+            try {
+              const cache = await caches.open(CACHE_NAME);
+              const cached = await cache.match(url, { ignoreSearch: false });
+              if (cached) return cached;
+            } catch (_) {}
+          }
+
+          throw error;
+        }
+      };
+    })();
+  </script>
+
+  <script>
+    (function () {
+      const loading = document.getElementById('loading');
+      const errOverlay = document.getElementById('errOverlay');
+
+      function setError(message) {
+        errOverlay.textContent = message;
+        errOverlay.classList.add('on');
+      }
+
+      function hideLoading() {
+        if (loading) {
+          loading.classList.add('off');
+          setTimeout(() => {
+            loading.style.display = 'none';
+          }, 700);
+        }
+      }
+
+      window.addEventListener('load', function () {
+        setTimeout(hideLoading, 300);
+      });
+
+      window.addEventListener('error', function (event) {
+        setError('A runtime error occurred: ' + (event.message || 'unknown error'));
+      });
+
+      window.addEventListener('unhandledrejection', function (event) {
+        const reason = event.reason;
+        const message = reason && reason.message ? reason.message : String(reason);
+        setError('Application error: ' + message);
+      });
+
+      if (navigator.onLine === false) {
+        const el = document.getElementById('offNotice');
+        if (el) el.classList.add('show');
+      }
+    })();
+  </script>
+
+  <script>
+    // Paste the original Geometry Dash Webport runtime here.
+    // Keep this script after the offline/caching scripts above.
+    // The fetch override above is the key piece that helps assets remain usable offline.
+  </script>
+</body>
+</html>
