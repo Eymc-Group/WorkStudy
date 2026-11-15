@@ -221,7 +221,7 @@ const games = [
 
     { name: "Bad Piggies",                 author: "Rovio Entertainment",      path: "../games/imported/Bad-Piggies.html" },
     { name: "Bad Parenting 1",             author: "Unknown",                  path: "../games/imported/Bad-Parenting-1.html" },
-    { name: "Geometry Dash Web Port",      author: "Robtop Games",             path: "../games/imported/geometrydash.html" },
+    { name: "Geometry Dash Web Port",      author: "Robtop Games",             path: "../games/imported/geo/index.html" },
 
     // =========================================================================
     // Other — miscellaneous entries
