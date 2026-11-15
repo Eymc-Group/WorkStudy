@@ -57,7 +57,7 @@
   <button class="tb-btn" onclick="document.getElementById('folderInput').click()">📁 Open Folder</button>
   <button class="tb-btn" id="homeBtn" onclick="showDrop()">🏠</button>
   <input id="fileInput" type="file" multiple
-    accept=".html,.htm,.css,.js,.ts,.tsx,.jsx,.vue,.json,.xml,.md,.txt,.zip,.svg,.png,.jpg,.jpeg,.gif,.webp,.ico,.woff,.woff2,.ttf,.otf,.csv,.yaml,.yml,.sh,.bat,.env,.toml,.ini,.conf,.mp4,.webm,.mp3,.ogg,.wav,.flac,.aac,.ogv,.m4v,.m4a,.opus,.mov,.pdf,.docx,.xlsx,.pptx,.odt,.ods,.odp,.rtf,.epub,.avi,.mkv,.wmv,.flv,.3gp,.exe,.bin,.dmg,.apk,.xapk,.apkm,.aab,.apks,.iso,.zip,.rar,.7z,.tar,.gz,.log,.rb,.py,.go,.rs,.cpp,.c,.h,.java,.swift,.kt,.php"
+    accept=".html,.htm,.xhtml,.css,.js,.ts,.tsx,.jsx,.vue,.json,.xml,.md,.markdown,.txt,.csv,.yaml,.yml,.sh,.bash,.zsh,.bat,.cmd,.ps1,.env,.toml,.ini,.conf,.cfg,.properties,.gitignore,.htaccess,.lock,.zip,.rar,.7z,.tar,.gz,.tgz,.bz2,.xz,.svg,.png,.jpg,.jpeg,.gif,.webp,.ico,.bmp,.avif,.tiff,.tif,.psd,.woff,.woff2,.ttf,.otf,.mp3,.ogg,.oga,.wav,.flac,.aac,.m4a,.opus,.mid,.midi,.mp4,.webm,.ogv,.m4v,.mov,.avi,.mkv,.wmv,.flv,.3gp,.pdf,.docx,.doc,.odt,.xlsx,.xls,.ods,.pptx,.ppt,.odp,.rtf,.epub,.apk,.xapk,.apkm,.aab,.apks,.exe,.msi,.dll,.dmg,.pkg,.deb,.rpm,.bin,.dat,.img,.iso,.elf,.sys,.drv,.log,.rb,.py,.go,.rs,.cpp,.cc,.cxx,.c,.h,.hpp,.java,.swift,.kt,.php,.lua,.r,.scala,.dart,.sql,.graphql,.proto"
     onchange="handleFiles(this.files)">
   <input id="folderInput" type="file" webkitdirectory multiple onchange="handleFiles(this.files)">
   <a class="tb-btn" href="../index.html">← Back</a>
@@ -69,12 +69,14 @@
   <p>Drag & drop, or use Open File / Open Folder above</p>
   <div>
     <span class="format-pill">HTML/ZIP</span><span class="format-pill">PDF</span>
-    <span class="format-pill">DOCX/DOC</span><span class="format-pill">XLSX/CSV</span>
-    <span class="format-pill">PPTX/ODP</span><span class="format-pill">ODT/ODS</span>
-    <span class="format-pill">MP4/WebM/AVI/MKV</span><span class="format-pill">MP3/WAV/FLAC/AAC</span>
-    <span class="format-pill">PNG/JPG/GIF/WebP/SVG</span><span class="format-pill">TXT/MD→Notepad</span>
-    <span class="format-pill">JS/TS/CSS/JSON</span><span class="format-pill">RTF/EPUB</span>
-    <span class="format-pill">APK/XAPK/APKM/AAB/APKS</span><span class="format-pill">EXE/ISO/DMG→Download</span><span class="format-pill">Fonts (TTF/WOFF)</span>
+    <span class="format-pill">DOCX/ODT</span><span class="format-pill">XLSX/CSV/ODS</span>
+    <span class="format-pill">PPTX/ODP</span><span class="format-pill">EPUB/RTF</span>
+    <span class="format-pill">MP4/WebM/AVI/MKV/MOV</span><span class="format-pill">MP3/WAV/FLAC/AAC/MIDI</span>
+    <span class="format-pill">PNG/JPG/GIF/WebP/SVG/ICO/BMP/AVIF</span><span class="format-pill">TXT/MD/LOG→Notepad</span>
+    <span class="format-pill">JS/TS/CSS/JSON/PY/GO/RS/CPP/JAVA…</span><span class="format-pill">Fonts (TTF/OTF/WOFF/WOFF2)</span>
+    <span class="format-pill">APK/XAPK/APKM/AAB/APKS→Info+Download</span>
+    <span class="format-pill">EXE/MSI/DMG/DEB/RPM/ISO/BIN/TAR/GZ→Download</span>
+    <span class="format-pill">RAR/7Z/TGZ/BZ2/XZ→Download</span><span class="format-pill">PSD/TIFF→Image</span>
   </div>
   <div id="fileList"></div>
   <button class="tb-btn" onclick="document.getElementById('fileInput').click()" style="margin-top:12px;padding:10px 24px;font-size:14px;">Choose Files</button>
@@ -140,21 +142,22 @@ var xlsxSheets = {};
 // ── Media type detection ──────────────────────────────────────────────────
 var EXT_VIDEO    = new Set(['mp4','webm','ogv','m4v','mov']);
 var EXT_VIDEO_TRY= new Set(['avi','mkv','wmv','flv','3gp']); // try native, may not work
-var EXT_AUDIO    = new Set(['mp3','ogg','wav','flac','aac','m4a','opus']);
-var EXT_IMAGE    = new Set(['png','jpg','jpeg','gif','webp','svg','ico','bmp','avif']);
-var EXT_HTML     = new Set(['html','htm']);
+var EXT_AUDIO    = new Set(['mp3','ogg','oga','wav','flac','aac','m4a','opus','mid','midi']);
+var EXT_IMAGE    = new Set(['png','jpg','jpeg','gif','webp','svg','ico','bmp','avif','tiff','tif']);
+var EXT_HTML     = new Set(['html','htm','xhtml']);
 // text→notepad redirect
-var EXT_NOTEPAD  = new Set(['txt','log','rtf']);
-var EXT_CODE     = new Set(['css','js','ts','tsx','jsx','vue','json','xml','md','csv','yaml','yml','sh','bat','env','toml','ini','conf','php','py','rb','go','rs','cpp','c','h','java','swift','kt']);
+var EXT_NOTEPAD  = new Set(['txt','log','md','markdown']);
+var EXT_CODE     = new Set(['css','js','ts','tsx','jsx','vue','json','xml','csv','yaml','yml','sh','bash','zsh','bat','cmd','ps1','env','toml','ini','conf','cfg','properties','gitignore','htaccess','lock','php','py','rb','go','rs','cpp','cc','cxx','c','h','hpp','java','swift','kt','lua','r','scala','clj','ex','exs','erl','hs','ml','fs','dart','sql','graphql','proto','tf','hcl','nix']);
 var EXT_FONT     = new Set(['woff','woff2','ttf','otf']);
 var EXT_PDF      = new Set(['pdf']);
-var EXT_DOCX     = new Set(['docx','doc']);
+var EXT_DOCX     = new Set(['docx','doc','odt']);
 var EXT_XLSX     = new Set(['xlsx','xls','ods','csv']);
 var EXT_PPTX     = new Set(['pptx','ppt','odp']);
-var EXT_ODT      = new Set(['odt']);
 var EXT_EPUB     = new Set(['epub']);
-var EXT_DOWNLOAD = new Set(['exe','bin','dmg','iso','zip','rar','7z','tar','gz','msi','deb','rpm']);
+// APK / Android packages → show info + download
 var EXT_APK      = new Set(['apk','xapk','apkm','aab','apks']);
+// Direct download (binary/archive formats that can't be previewed)
+var EXT_DOWNLOAD = new Set(['exe','msi','dll','dmg','pkg','deb','rpm','cab','bin','dat','img','iso','elf','out','run','sys','drv','zip','rar','7z','tar','gz','tgz','bz2','xz','so','o','a','lib']);
 
 function extOf(name) { return (name.split('.').pop()||'').toLowerCase(); }
 
@@ -220,8 +223,9 @@ function handleSingle(file) {
   if (EXT_DOCX.has(ext))     { showDOCX(file); return; }
   if (EXT_XLSX.has(ext))     { showXLSX(file); return; }
   if (EXT_PPTX.has(ext))     { showUnsupported(file, '📊', 'PPTX / PPT cannot be previewed', 'Download and open in LibreOffice Impress or Microsoft PowerPoint.'); return; }
-  if (EXT_ODT.has(ext))      { showDOCX(file); return; } // mammoth may handle
   if (EXT_EPUB.has(ext))     { showUnsupported(file, '📖', 'EPUB cannot be previewed here', 'Download and open in an ebook reader like Calibre or your browser.'); return; }
+  if (ext === 'rtf')          { showUnsupported(file, '📝', 'RTF cannot be previewed here', 'Download and open in Microsoft Word, LibreOffice Writer, or any word processor.'); return; }
+  if (ext === 'psd')          { showUnsupported(file, '🎨', 'PSD cannot be previewed here', 'Download and open in Photoshop, GIMP, or Affinity Photo.'); return; }
   if (EXT_CODE.has(ext))     { showCode(file); return; }
   if (EXT_FONT.has(ext))     { showFontPreview(file); return; }
   if (EXT_APK.has(ext))      { showAPKInfo(file, ext); return; }

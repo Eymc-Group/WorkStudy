@@ -63,15 +63,34 @@ var wrap = true;
 var saved = true;
 var autoSaveKey = 'ws-notepad-autosave';
 
-// Autosave restore
-var autosaved = localStorage.getItem(autoSaveKey);
-if (autosaved) {
+// ── File Runner → Notepad handoff (sessionStorage) ───────────────────────
+(function () {
   try {
-    var d = JSON.parse(autosaved);
-    document.getElementById('editor').value = d.content || '';
-    document.getElementById('fileName').value = d.name || 'untitled.txt';
-  } catch(e) {}
-}
+    var pending = sessionStorage.getItem('ws-notepad-pending');
+    if (pending) {
+      sessionStorage.removeItem('ws-notepad-pending');
+      var d = JSON.parse(pending);
+      if (d && d.content !== undefined) {
+        document.getElementById('editor').value = d.content;
+        document.getElementById('fileName').value = d.name || 'untitled.txt';
+        document.getElementById('savedIndicator').textContent = '✓ Opened';
+        document.getElementById('savedIndicator').style.color = '#4ade80';
+        updateStatus();
+        return; // skip autosave restore so we don't overwrite the opened file
+      }
+    }
+  } catch (e) {}
+
+  // Autosave restore (only if no pending file from file-runner)
+  var autosaved = localStorage.getItem(autoSaveKey);
+  if (autosaved) {
+    try {
+      var d = JSON.parse(autosaved);
+      document.getElementById('editor').value = d.content || '';
+      document.getElementById('fileName').value = d.name || 'untitled.txt';
+    } catch(e) {}
+  }
+})();
 
 function onEdit() {
   saved = false;
