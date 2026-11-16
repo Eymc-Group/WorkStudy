@@ -368,7 +368,8 @@ new experiences from one place.
         var results = document.getElementById('bigSearchResults');
         var clearBtn = document.getElementById('bigSearchClear');
         if (!input) return;
-        var searchIndex = [
+
+        var PAGES = [
             {label:'🎮 Games', url:'games/index.html'},
             {label:'🗂️ Apps', url:'pages/apps.html'},
             {label:'🎬 Movies & Shows', url:'pages/movies.html'},
@@ -389,25 +390,70 @@ new experiences from one place.
             {label:'📊 Device Info', url:'pages/deviceinfo.html'},
             {label:'📂 File Runner', url:'pages/file-runner.html'},
         ];
-        // Add games from gamelist
-        if (window.games) {
-            games.forEach(function(g) {
-                searchIndex.push({label:'🎮 '+g.name, url:'pages/game.html?name='+encodeURIComponent(g.name)});
-            });
+
+        function isUrl(str) {
+            return /^https?:\/\//i.test(str) || (/\./.test(str) && !/\s/.test(str) && str.length > 3);
         }
-        input.addEventListener('input', function() {
-            var q = this.value.trim().toLowerCase();
+
+        function getSearchUrl(q) {
+            // If it looks like a URL, go to website viewer with that URL
+            if (isUrl(q)) {
+                var fullUrl = /^https?:\/\//i.test(q) ? q : 'https://' + q;
+                return 'pages/website.html?url=' + encodeURIComponent(fullUrl);
+            }
+            // Otherwise DuckDuckGo search through website viewer
+            return 'pages/website.html?url=' + encodeURIComponent('https://duckduckgo.com/?q=' + encodeURIComponent(q) + '&ia=web');
+        }
+
+        function renderResults(q) {
             clearBtn.style.display = q ? 'block' : 'none';
             if (!q) { results.style.display='none'; results.innerHTML=''; return; }
-            var matches = searchIndex.filter(function(x){return x.label.toLowerCase().includes(q);}).slice(0,12);
-            if (!matches.length) {
-                results.innerHTML='<div style="padding:10px 14px;opacity:0.5;font-size:13px;">No results</div>';
-                results.style.display='block'; return;
+
+            var pageMatches = PAGES.filter(function(x){ return x.label.toLowerCase().includes(q); }).slice(0, 6);
+            var gameMatches = [];
+            if (window.games) {
+                gameMatches = window.games.filter(function(g){ return g.name.toLowerCase().includes(q); }).slice(0, 6).map(function(g){
+                    return {label:'🎮 '+g.name, url:'pages/game.html', game:g};
+                });
             }
-            results.innerHTML = matches.map(function(m){
-                return '<a href="'+m.url+'" style="display:flex;align-items:center;gap:10px;padding:8px 14px;text-decoration:none;color:var(--text,#e2e8f0);border-radius:8px;font-size:13px;font-family:\'Pusab\',system-ui,sans-serif;" onmouseover="this.style.background=\'rgba(255,255,255,0.08)\'" onmouseout="this.style.background=\'\'">'+m.label+'</a>';
-            }).join('');
-            results.style.display='block';
+
+            var searchUrl = getSearchUrl(q);
+            var searchLabel = isUrl(q) ? '🌐 Open "'+q+'"' : '🔍 Search "'+q+'" on DuckDuckGo';
+
+            var html = '';
+            // Web search / URL open always first
+            html += '<a href="'+searchUrl+'" style="display:flex;align-items:center;gap:10px;padding:9px 14px;text-decoration:none;color:var(--text,#e2e8f0);border-radius:8px;font-size:13px;font-family:\'Pusab\',system-ui,sans-serif;background:rgba(99,102,241,0.12);border-left:2px solid #6366f1;margin-bottom:2px;" onmouseover="this.style.background=\'rgba(99,102,241,0.22)\'" onmouseout="this.style.background=\'rgba(99,102,241,0.12)\'">'+searchLabel+'</a>';
+
+            // Page matches
+            pageMatches.forEach(function(m){
+                html += '<a href="'+m.url+'" style="display:flex;align-items:center;gap:10px;padding:8px 14px;text-decoration:none;color:var(--text,#e2e8f0);border-radius:8px;font-size:13px;font-family:\'Pusab\',system-ui,sans-serif;" onmouseover="this.style.background=\'rgba(255,255,255,0.08)\'" onmouseout="this.style.background=\'\'">'+m.label+'</a>';
+            });
+
+            // Game matches — clicking sets localStorage then goes to game.html
+            gameMatches.forEach(function(m){
+                html += '<a href="#" onclick="wsLaunchGame(\''+encodeURIComponent(JSON.stringify(m.game))+'\')" style="display:flex;align-items:center;gap:10px;padding:8px 14px;text-decoration:none;color:var(--text,#e2e8f0);border-radius:8px;font-size:13px;font-family:\'Pusab\',system-ui,sans-serif;" onmouseover="this.style.background=\'rgba(255,255,255,0.08)\'" onmouseout="this.style.background=\'\'">'+m.label+'</a>';
+            });
+
+            results.innerHTML = html;
+            results.style.display = 'block';
+        }
+
+        window.wsLaunchGame = function(encoded) {
+            try {
+                var g = JSON.parse(decodeURIComponent(encoded));
+                localStorage.setItem('gameUrl', g.path);
+                localStorage.setItem('gameName', g.name);
+                localStorage.setItem('gameAuthor', g.author || '');
+                location.href = 'pages/game.html';
+            } catch(e) {}
+        };
+
+        input.addEventListener('input', function() { renderResults(this.value.trim().toLowerCase()); });
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                var q = this.value.trim();
+                if (q) location.href = getSearchUrl(q);
+            }
         });
         document.addEventListener('click', function(e){
             if (!input.contains(e.target) && !results.contains(e.target)) {
