@@ -382,13 +382,38 @@
                 <small>https://api.allorigins.win/raw?url=URL</small>
             </button>
             <button class="proxy-preset-btn" onclick="setProxy('thingproxy')">
-                🔁 Thingproxy — another CORS proxy
+                🔁 Thingproxy — CORS proxy
                 <small>https://thingproxy.freeboard.io/fetch/URL</small>
+            </button>
+            <button class="proxy-preset-btn" onclick="setProxy('cf_worker')">
+                ⚡ CF Worker (ayushchugh) — Cloudflare-based
+                <small>https://cors.ayushchugh.workers.dev/?URL</small>
+            </button>
+            <button class="proxy-preset-btn" onclick="setProxy('codeberg')">
+                🏔️ Codeberg CORS — open source proxy
+                <small>https://corsproxy.codeberg.page/?URL</small>
+            </button>
+            <button class="proxy-preset-btn" onclick="setProxy('htmldriven')">
+                🌍 cors.eu.org — EU-based proxy
+                <small>https://cors.eu.org/URL</small>
+            </button>
+            <button class="proxy-preset-btn" onclick="setProxy('wsrv')">
+                🖼️ wsrv.nl — image &amp; media proxy
+                <small>https://wsrv.nl/?url=URL (best for images)</small>
+            </button>
+            <button class="proxy-preset-btn" onclick="setProxy('nocors')">
+                🚫 nocors.net — CORS bypass
+                <small>https://nocors.net/?url=URL</small>
+            </button>
+            <button class="proxy-preset-btn" onclick="setProxy('corsbridge')">
+                🌉 cors-bridge (Vercel) — Vercel-hosted
+                <small>https://cors-bridge.vercel.app/api/proxy?url=URL</small>
             </button>
         </div>
 
-        <p style="font-size:12px;opacity:0.5;margin:0 0 6px;">Custom proxy URL (use {url} as placeholder):</p>
+        <p style="font-size:12px;opacity:0.5;margin:0 0 6px;">Custom proxy URL (use <code>{url}</code> as placeholder, or just paste a base URL and {url} will be appended):</p>
         <input type="text" id="custom-proxy-input" placeholder="https://myproxy.example.com/?url={url}">
+        <p style="font-size:11px;opacity:0.4;margin:0 0 10px;">Example: http://192.168.1.100:8080/?url={url} — works for self-hosted proxies on your LAN</p>
 
         <div class="modal-row">
             <button class="modal-btn primary" onclick="applyCustomProxy()">Apply</button>
@@ -405,13 +430,21 @@ const PROXY_KEY     = "ws_browser_proxy";
 
 let navStack  = [];
 let navIndex  = -1;
-let proxyMode = "none"; // "none" | "corsproxy" | "allorigins" | "thingproxy" | custom URL
+let proxyMode = "none"; // "none" | a key from PROXIES | custom URL with {url}
 
 const PROXIES = {
-    none:        url => url,
-    corsproxy:   url => "https://corsproxy.io/?" + encodeURIComponent(url),
-    allorigins:  url => "https://api.allorigins.win/raw?url=" + encodeURIComponent(url),
-    thingproxy:  url => "https://thingproxy.freeboard.io/fetch/" + url,
+    none:           url => url,
+    corsproxy:      url => "https://corsproxy.io/?" + encodeURIComponent(url),
+    allorigins:     url => "https://api.allorigins.win/raw?url=" + encodeURIComponent(url),
+    thingproxy:     url => "https://thingproxy.freeboard.io/fetch/" + url,
+    // ── Additional working proxies ─────────────────────────────────────
+    cf_worker:      url => "https://cors.ayushchugh.workers.dev/?" + encodeURIComponent(url),
+    codeberg:       url => "https://corsproxy.codeberg.page/?" + encodeURIComponent(url),
+    htmldriven:     url => "https://cors.eu.org/" + url,
+    wsrv:           url => "https://wsrv.nl/?url=" + encodeURIComponent(url.replace(/^https?:\/\//,"")),
+    nocors:         url => "https://nocors.net/?url=" + encodeURIComponent(url),
+    corsbridge:     url => "https://cors-bridge.vercel.app/api/proxy?url=" + encodeURIComponent(url),
+    ghost:          url => "https://ghost-proxy.vercel.app/api/cors?url=" + encodeURIComponent(url),
 };
 
 // Restore saved proxy
@@ -682,27 +715,36 @@ function setProxy(mode) {
 }
 
 function applyCustomProxy() {
-    const val = document.getElementById("custom-proxy-input").value.trim();
+    let val = document.getElementById("custom-proxy-input").value.trim();
     if (!val) return;
+    // Auto-add {url} placeholder if missing
+    if (!val.includes("{url}")) {
+        val = val.replace(/\/?$/, "") + "?url={url}";
+    }
     setProxy(val);
 }
+
+const PROXY_LABELS = {
+    none:       "🔓 None",
+    corsproxy:  "🛡️ corsproxy.io",
+    allorigins: "🌐 AllOrigins",
+    thingproxy: "🔁 Thingproxy",
+    cf_worker:  "⚡ CF Worker",
+    codeberg:   "🏔️ Codeberg",
+    htmldriven: "🌍 cors.eu.org",
+    wsrv:       "🖼️ wsrv.nl",
+    nocors:     "🚫 nocors.net",
+    corsbridge: "🌉 cors-bridge",
+    ghost:      "👻 ghost-proxy",
+};
 
 function updateProxyBtn() {
     const btn = document.getElementById("proxy-btn");
     if (proxyMode === "none") {
         btn.textContent = "🔓 None";
         btn.classList.remove("active");
-    } else if (proxyMode === "corsproxy") {
-        btn.textContent = "🛡️ corsproxy";
-        btn.classList.add("active");
-    } else if (proxyMode === "allorigins") {
-        btn.textContent = "🌐 AllOrigins";
-        btn.classList.add("active");
-    } else if (proxyMode === "thingproxy") {
-        btn.textContent = "🔁 Thingproxy";
-        btn.classList.add("active");
     } else {
-        btn.textContent = "⚙️ Custom";
+        btn.textContent = PROXY_LABELS[proxyMode] || "⚙️ Custom";
         btn.classList.add("active");
     }
 }
