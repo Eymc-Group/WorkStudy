@@ -516,6 +516,7 @@
             localStorage.setItem("gameUrl",    game.path);
             localStorage.setItem("gameName",   game.name);
             localStorage.setItem("gameAuthor", game.author || "");
+            wsTrackRecentlyPlayed(game);
             if (game.external) window.open(game.path, "_blank");
             else location.href = "../pages/game.html";
         });
@@ -546,6 +547,104 @@
         return btn;
     }
 
+    // ── Recently Played ───────────────────────────────────────────────────
+    var WS_RP_KEY  = "ws-recently-played";
+    var WS_RP_MAX  = 10;
+    var WS_CACHE   = "workstudy-v3.2.9.52";
+
+    function wsGetRecent() {
+        try { return JSON.parse(localStorage.getItem(WS_RP_KEY) || "[]"); } catch(e) { return []; }
+    }
+
+    function wsTrackRecentlyPlayed(game) {
+        try {
+            var list = wsGetRecent();
+            // Remove existing entry for this game
+            list = list.filter(function(g) { return g.name !== game.name; });
+            // Prepend
+            list.unshift({ name: game.name, author: game.author || "", path: game.path });
+            // Keep only last MAX
+            if (list.length > WS_RP_MAX) list = list.slice(0, WS_RP_MAX);
+            localStorage.setItem(WS_RP_KEY, JSON.stringify(list));
+            // Cache the game HTML for offline play (only relative paths / same origin)
+            wsCacheGamePath(game.path);
+            // Refresh the recently played row
+            wsRenderRecentlyPlayed();
+        } catch(e) {}
+    }
+
+    function wsCacheGamePath(path) {
+        // Only cache paths that are on the same origin (relative or eymc-group.github.io)
+        if (!path) return;
+        var isSameOrigin = path.startsWith("../") ||
+                           path.startsWith("/") ||
+                           path.indexOf("eymc-group.github.io") !== -1;
+        if (!isSameOrigin) return;
+        // Resolve relative path to absolute URL
+        var url = path;
+        if (path.startsWith("../")) {
+            url = location.origin + "/WorkStudy/games/" + path.replace(/^\.\.\//,"");
+        }
+        try {
+            if ("caches" in window) {
+                caches.open(WS_CACHE).then(function(cache) {
+                    cache.add(url).catch(function() {});
+                }).catch(function() {});
+            }
+        } catch(e) {}
+    }
+
+    function wsRenderRecentlyPlayed() {
+        var list = wsGetRecent();
+        var container = document.getElementById("ws-recently-played");
+        if (!container) return;
+
+        if (!list.length) {
+            container.style.display = "none";
+            return;
+        }
+        container.style.display = "";
+
+        // Header
+        var header = container.querySelector(".ws-rp-header");
+        if (!header) {
+            header = document.createElement("div");
+            header.className = "ws-rp-header";
+            header.style.cssText = "display:flex;align-items:center;justify-content:space-between;padding:4px 12px 8px;";
+            header.innerHTML = '<span style="font-size:14px;font-weight:600;opacity:.85;">🕹️ Recently Played</span>' +
+                '<button onclick="wsRecentlyClear()" style="background:none;border:none;color:rgba(255,255,255,.35);cursor:pointer;font-size:11px;font-family:inherit;">Clear</button>';
+            container.insertBefore(header, container.firstChild);
+        }
+
+        // Grid row
+        var row = container.querySelector(".ws-rp-row");
+        if (!row) {
+            row = document.createElement("div");
+            row.className = "ws-rp-row ws-ios-grid";
+            row.style.cssText = "display:flex;flex-wrap:nowrap;overflow-x:auto;gap:16px 8px;padding:4px 12px 12px;scrollbar-width:none;-ms-overflow-style:none;";
+            row.innerHTML = "<style>.ws-rp-row::-webkit-scrollbar{display:none}</style>";
+            container.appendChild(row);
+        }
+        // Re-render cards
+        var cards = row.querySelectorAll(".ws-game-icon");
+        // Simple re-render: clear and rebuild
+        while (row.lastChild && row.lastChild.classList && row.lastChild.classList.contains("ws-game-icon")) {
+            row.removeChild(row.lastChild);
+        }
+        // Remove all ws-game-icon children
+        Array.from(row.querySelectorAll(".ws-game-icon")).forEach(function(c) { row.removeChild(c); });
+
+        list.forEach(function(g) {
+            var card = buildCard(g);
+            row.appendChild(card);
+        });
+    }
+
+    window.wsRecentlyClear = function() {
+        try { localStorage.removeItem(WS_RP_KEY); } catch(e) {}
+        wsRenderRecentlyPlayed();
+    };
+
     // ── Render ────────────────────────────────────────────────────────────
     window.addEventListener("load", function () {
         var grid = document.getElementById("gamesGrid");
@@ -553,5 +652,12 @@
         injectStyles();
         grid.classList.add("ws-ios-grid");
         games.forEach(function(game) { grid.appendChild(buildCard(game)); });
+        // Render recently played row (if container exists in HTML)
+        wsRenderRecentlyPlayed();
+        // Re-apply any active search/category filter after grid is populated
+        if (typeof window.wsRefilter === "function") window.wsRefilter();
     });
+
+    // Expose track function globally
+    window.wsTrackRecentlyPlayed = wsTrackRecentlyPlayed;
 })();
