@@ -1,179 +1,273 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
-  <title id="gameTitle"></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title id="gameTitle">Game – WorkStudy</title>
   <link rel="icon" href="../img/game.png">
+  <script src="../js/color.js"></script>
+  <script src="../js/customTab.js"></script>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 0;
+      display: flex; flex-direction: column;
+      height: 100vh; overflow: hidden;
+      background: #000;
+    }
 
-    <h1 id="gameTitle"></h1>
+    .topbar {
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 10px;
+      background: rgba(15,15,26,0.95);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      flex-shrink: 0; z-index: 10;
+      flex-wrap: wrap;
+    }
+    .topbar button {
+      padding: 6px 12px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.08);
+      color: #e2e8f0; font-size: 12px;
+      font-family: 'Pusab', system-ui, sans-serif;
+      cursor: pointer; white-space: nowrap;
+      transition: background .15s;
+    }
+    .topbar button:hover { background: rgba(255,255,255,0.15); }
+    .topbar button.saved { background: rgba(99,102,241,0.3); border-color: #6366f1; color: #a5b4fc; }
 
-    <script src="../js/color.js"> </script>
-  <script src="../js/customTab.js"> </script>
-    <link rel="stylesheet"
-        href="../css/style.css">
+    #gameLabel {
+      flex: 1; min-width: 0;
+      font-size: 13px; font-weight: 600;
+      color: #e2e8f0;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      font-family: 'Pusab', system-ui, sans-serif;
+      padding-left: 4px;
+    }
 
+    #frame-wrap {
+      flex: 1; position: relative; overflow: hidden;
+    }
+
+    #websiteFrame {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+
+    /* Toast */
+    #ws-toast {
+      position: fixed; bottom: 20px; left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: rgba(30,41,59,0.95);
+      color: #e2e8f0; border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px; padding: 8px 20px; font-size: 13px;
+      font-family: 'Pusab', system-ui, sans-serif;
+      z-index: 9999; pointer-events: none;
+      transition: transform .3s ease, opacity .3s ease;
+      opacity: 0;
+    }
+    #ws-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  </style>
 </head>
-
 <body>
 
+<div class="topbar">
+  <button onclick="location.href='../games/index.html'">← Games</button>
+  <button onclick="location.href='../index.html'">🏠 Home</button>
+  <span id="gameLabel"></span>
+  <button id="saveOfflineBtn" onclick="saveForOffline()" title="Cache this game to play without internet">📥 Save Offline</button>
+  <button onclick="toggleGameFullscreen()">⛶ Fullscreen</button>
+  <button onclick="openGameEmbed()">🗔 New Tab</button>
+</div>
+
+<div id="frame-wrap">
+  <iframe id="websiteFrame"
+    allow="fullscreen; autoplay; pointer-lock; accelerometer; gyroscope; payment; camera; microphone"
+    allowfullscreen
+    title="Game"></iframe>
+</div>
+
+<div id="ws-toast"></div>
+
 <script>
-// Track game launch: increment gamesPlayed + start timing session
-(function() {
+// ── Load game from localStorage ──────────────────────────────────────────
+(function () {
   try {
-    const played = parseInt(localStorage.getItem("ws-games-played") || "0", 10) + 1;
+    var played = parseInt(localStorage.getItem("ws-games-played") || "0", 10) + 1;
     localStorage.setItem("ws-games-played", played);
-    // Record start time for this game session
     sessionStorage.setItem("ws-game-start", Date.now().toString());
   } catch(e) {}
 })();
 
-// On page unload: add time spent to minutesOnGames
-window.addEventListener("beforeunload", function() {
+window.addEventListener("beforeunload", function () {
   try {
-    const start = parseInt(sessionStorage.getItem("ws-game-start") || "0", 10);
+    var start = parseInt(sessionStorage.getItem("ws-game-start") || "0", 10);
     if (!start) return;
-    const mins = Math.floor((Date.now() - start) / 60000);
+    var mins = Math.floor((Date.now() - start) / 60000);
     if (mins > 0) {
-      const prev = parseInt(localStorage.getItem("ws-minutes-on-games") || "0", 10);
+      var prev = parseInt(localStorage.getItem("ws-minutes-on-games") || "0", 10);
       localStorage.setItem("ws-minutes-on-games", prev + mins);
     }
   } catch(e) {}
 });
 
-document.getElementById(
-    "gameTitle"
-).textContent =
-    localStorage.getItem(
-        "gameName"
-    );
+var gameName   = localStorage.getItem("gameName")   || "Game";
+var gameUrl    = localStorage.getItem("gameUrl")    || "";
+var gameAuthor = localStorage.getItem("gameAuthor") || "";
 
-const author =
-    localStorage.getItem(
-        "gameAuthor"
-    );
+document.title = gameName + " – WorkStudy";
+document.getElementById("gameLabel").textContent = gameName + (gameAuthor && gameAuthor !== "Unknown" ? "  ·  by " + gameAuthor : "");
 
-if (author && author !== "Unknown") {
+var frame = document.getElementById("websiteFrame");
+frame.src = gameUrl;
 
-    document.getElementById(
-        "gameAuthor"
-    ).textContent =
-        "by " + author;
+// ── Check if already saved offline ───────────────────────────────────────
+(function () {
+  if (!gameUrl) return;
+  var key = "ws-offline-saved-" + btoa(gameUrl).slice(0, 20);
+  if (localStorage.getItem(key) === "1") {
+    var btn = document.getElementById("saveOfflineBtn");
+    btn.textContent = "✅ Saved Offline";
+    btn.classList.add("saved");
+  }
+})();
 
-}
-else {
+// ── Save for Offline ──────────────────────────────────────────────────────
+function saveForOffline() {
+  if (!gameUrl) { showToast("No game URL found."); return; }
 
-    document.getElementById(
-        "gameAuthor"
-    ).style.display =
-        "none";
+  // Only locally-hosted or gfiles games can be cached reliably
+  var isCacheable = gameUrl.indexOf("eymc-group.github.io") !== -1 ||
+                    gameUrl.startsWith("../") ||
+                    gameUrl.startsWith("/WorkStudy/");
 
-}
+  var btn = document.getElementById("saveOfflineBtn");
+  btn.disabled = true;
+  btn.textContent = "⏳ Saving…";
 
-document.getElementById(
-    "websiteFrame"
-).src =
-    localStorage.getItem(
-        "gameUrl"
-    );
+  var CACHE_NAME = "workstudy-v3.2.9.52";
 
-</script>
+  if (!("caches" in window)) {
+    btn.disabled = false;
+    btn.textContent = "📥 Save Offline";
+    showToast("❌ Cache API not available in this browser.");
+    return;
+  }
 
+  if (!isCacheable) {
+    // For external games: just mark as "saved" in localStorage as a bookmark
+    // We can't cache cross-origin pages, but we tell the user what happened
+    btn.disabled = false;
+    btn.textContent = "📥 Save Offline";
+    showToast("⚠️ External games can't be cached — only gfiles & local games work offline.");
+    return;
+  }
 
-<h1 id="gameTitle"></h1>
+  // Resolve relative URLs to absolute
+  var absUrl = gameUrl;
+  if (gameUrl.startsWith("../")) {
+    absUrl = location.origin + "/WorkStudy/games/" + gameUrl.replace(/^\.\.\//, "");
+  }
 
-<p id="gameAuthor"></p>
-
-<iframe id="websiteFrame"></iframe>
-
-    <div class="topbar">
-
-        <button onclick="
-location.href='../games/index.html'
-">
-    ← Back to Games
-</button>
-
-<button
-    onclick="location.href='../index.html'">
-
-    🏠 Home
-
-</button>
-
-        <button type="button" onclick="toggleGameFullscreen()">⛶ Fullscreen</button>
-
-        <button type="button" onclick="openGameEmbed()">🗔 Open In New Tab</button>
-
-    </div>
-
-    <script>
-
-        document
-            .getElementById(
-                "websiteFrame"
-            )
-            .src =
-            localStorage.getItem(
-                "gameUrl"
-            );
-
-    </script>
-
-    <script>
-      document.getElementById(
-    "gameTitle"
-).textContent =
-    localStorage.getItem(
-        "gameName"
-    );
-    </script>
-
-<script>
-async function toggleGameFullscreen() {
-    const frame = document.getElementById("websiteFrame");
+  caches.open(CACHE_NAME).then(function (cache) {
+    // For directory games (ending with /), try to cache the index
+    var urlToCache = absUrl.endsWith("/") ? absUrl + "index.html" : absUrl;
+    return cache.add(urlToCache);
+  }).then(function () {
+    var key = "ws-offline-saved-" + btoa(gameUrl).slice(0, 20);
+    localStorage.setItem(key, "1");
+    // Also record in ws-offline-games list
     try {
-        if (document.fullscreenElement) {
-            await document.exitFullscreen();
-        } else {
-            await frame.requestFullscreen();
-        }
-    } catch (e) {
-        console.error("Fullscreen failed:", e);
-    }
+      var list = JSON.parse(localStorage.getItem("ws-offline-games") || "[]");
+      if (!list.find(function(g){ return g.url === gameUrl; })) {
+        list.push({ name: gameName, url: gameUrl, author: gameAuthor, savedAt: Date.now() });
+        localStorage.setItem("ws-offline-games", JSON.stringify(list));
+      }
+    } catch(e) {}
+    btn.disabled = false;
+    btn.textContent = "✅ Saved Offline";
+    btn.classList.add("saved");
+    showToast("✅ \"" + gameName + "\" saved — playable offline!");
+  }).catch(function (err) {
+    btn.disabled = false;
+    btn.textContent = "📥 Save Offline";
+    showToast("❌ Could not cache: " + (err.message || "network error"));
+  });
 }
 
+// ── Fullscreen — tries frame, falls back to native ────────────────────────
+function toggleGameFullscreen() {
+  var frame = document.getElementById("websiteFrame");
+
+  // 1. Try postMessage so the game can handle fullscreen itself
+  try {
+    frame.contentWindow.postMessage({ type: "requestFullscreen" }, "*");
+  } catch(e) {}
+
+  // 2. Try native fullscreen on the iframe element
+  if (document.fullscreenElement) {
+    document.exitFullscreen().catch(function(){});
+    return;
+  }
+  var el = frame;
+  var req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+  if (req) {
+    req.call(el).catch(function () {
+      // If frame fullscreen fails, go full-page
+      var req2 = document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen;
+      if (req2) req2.call(document.documentElement).catch(function(){});
+    });
+  }
+}
+
+// Listen for fullscreen requests coming FROM the iframe (some games send these)
+window.addEventListener("message", function (e) {
+  if (!e.data) return;
+  var type = e.data.type || e.data;
+  if (type === "requestFullscreen" || type === "fullscreen") {
+    toggleGameFullscreen();
+  }
+});
+
+// Keyboard shortcut: F = fullscreen
+document.addEventListener("keydown", function (e) {
+  if (e.key === "F" || e.key === "f") {
+    if (document.activeElement === document.body) toggleGameFullscreen();
+  }
+});
+
+// ── Open in new tab ───────────────────────────────────────────────────────
 function openGameEmbed() {
-    const gameUrl  = localStorage.getItem("gameUrl");
-    const gameName = localStorage.getItem("gameName") || "WorkStudy Game";
+  if (!gameUrl) { showToast("No game URL."); return; }
+  var validUrl;
+  try {
+    validUrl = new URL(gameUrl, window.location.href);
+  } catch(e) { showToast("Invalid game URL."); return; }
 
-    if (!gameUrl) { alert("No game link was found."); return; }
+  var w = window.open("about:blank", "_blank");
+  if (!w) { showToast("Popup blocked — allow popups and try again."); return; }
+  w.document.title = gameName;
+  w.document.body.style.cssText = "margin:0;width:100vw;height:100vh;overflow:hidden;background:#000";
+  var f = w.document.createElement("iframe");
+  f.src = validUrl.href;
+  f.title = gameName;
+  f.style.cssText = "display:block;width:100%;height:100%;border:0";
+  f.setAttribute("allow", "fullscreen; autoplay; pointer-lock");
+  f.setAttribute("allowfullscreen", "");
+  w.document.body.appendChild(f);
+}
 
-    let validUrl;
-    try {
-        validUrl = new URL(gameUrl, window.location.href);
-        if (validUrl.protocol !== "https:" && validUrl.protocol !== "http:") throw new Error();
-    } catch (e) {
-        alert("The saved game link is invalid.");
-        return;
-    }
-
-    const w = window.open("about:blank", "_blank");
-    if (!w) { alert("The new tab was blocked. Allow popups and try again."); return; }
-
-    w.document.title = gameName;
-    w.document.body.style.cssText = "margin:0;width:100vw;height:100vh;overflow:hidden;background:#000";
-
-    const f = w.document.createElement("iframe");
-    f.src = validUrl.href;
-    f.title = gameName;
-    f.style.cssText = "display:block;width:100%;height:100%;border:0";
-    f.setAttribute("allow", "fullscreen; autoplay");
-    f.setAttribute("allowfullscreen", "");
-    w.document.body.appendChild(f);
+// ── Toast ─────────────────────────────────────────────────────────────────
+var _toastTimer;
+function showToast(msg) {
+  var t = document.getElementById("ws-toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(function () { t.classList.remove("show"); }, 3000);
 }
 </script>
-
 </body>
-
 </html>
