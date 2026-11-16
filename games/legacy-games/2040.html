@@ -33,5 +33,59 @@ src="https://schoolwork04.github.io/2048/"
 allowfullscreen>
 </iframe>
 
+
+<style>
+#ws-offline-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 9999;
+  background: #0f172a;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: system-ui, sans-serif;
+  color: #e2e8f0;
+  text-align: center;
+  padding: 24px;
+}
+#ws-offline-overlay.show { display: flex; }
+#ws-offline-overlay h2 { font-size: 28px; margin: 0 0 8px; }
+#ws-offline-overlay p { opacity: 0.6; font-size: 14px; margin: 0 0 20px; max-width: 320px; }
+#ws-offline-overlay button {
+  padding: 10px 24px; border-radius: 20px; border: none;
+  background: #6366f1; color: #fff; font-size: 14px; cursor: pointer;
+}
+</style>
+<div id="ws-offline-overlay">
+  <div style="font-size:56px;">✈️</div>
+  <h2>You're Offline</h2>
+  <p>This game needs internet to load its assets. Connect to Wi-Fi and reload, or open a game that has been saved offline.</p>
+  <button onclick="location.reload()">🔄 Retry</button>
+</div>
+<script>
+(function() {
+  function checkOffline() {
+    if (!navigator.onLine) {
+      document.getElementById('ws-offline-overlay').classList.add('show');
+    }
+  }
+  checkOffline();
+  window.addEventListener('offline', function() {
+    document.getElementById('ws-offline-overlay').classList.add('show');
+  });
+  window.addEventListener('online', function() {
+    document.getElementById('ws-offline-overlay').classList.remove('show');
+  });
+  // For iframe-based games: detect load failure
+  var frames = document.querySelectorAll('iframe[src]');
+  frames.forEach(function(f) {
+    var src = f.getAttribute('src');
+    if (!src || src.startsWith('data:')) return;
+    // If offline, show overlay immediately
+    if (!navigator.onLine) {
+      document.getElementById('ws-offline-overlay').classList.add('show');
+    }
+  });
+})();
+</script>
 </body>
 </html>

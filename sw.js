@@ -1,7 +1,7 @@
-// WorkStudy Service Worker — v3.2.9.52
+// WorkStudy Service Worker — v3.2.9.53
 // Offline-first: cache-then-network for all local assets, network-first for pages
 
-const CACHE_NAME   = "workstudy-v3.2.9.52";
+const CACHE_NAME   = "workstudy-v3.2.9.53";
 const OFFLINE_PAGE = "/WorkStudy/offline.html";
 const SCOPE        = "https://eymc-group.github.io/WorkStudy/";
 
@@ -100,6 +100,8 @@ const PRECACHE_URLS = [
     "/WorkStudy/games/imported/Bad-Parenting-1.html",
     "/WorkStudy/games/imported/Bad-Piggies.html",
     "/WorkStudy/games/imported/geometrydash.html",
+    "/WorkStudy/games/imported/geo/index.html",
+    "/WorkStudy/games/imported/geo/sw.js",
 ];
 
 // ── Install: precache everything ──────────────────────────────────────────
