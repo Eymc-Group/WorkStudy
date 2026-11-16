@@ -35,17 +35,49 @@
             var b = document.getElementById(BADGE_ID);
             if (b) b.style.opacity = "0";
         }
+        // Local (offline-playable) path patterns
+        function isLocalGame(path) {
+            return path && (
+                path.startsWith("../games/legacy-games/") ||
+                path.startsWith("../games/bennett/") ||
+                path.startsWith("../games/imported/") ||
+                path.indexOf("eymc-group.github.io/gfiles") !== -1
+            );
+        }
+
+        // Check if a game was explicitly saved for offline
+        function isSavedOffline(url) {
+            try { return localStorage.getItem("ws-offline-saved-" + btoa(url).slice(0,20)) === "1"; } catch(e){ return false; }
+        }
+
         function applyOfflineUI(offline) {
             offline ? showBadge() : hideBadge();
-            // If offline, grey out gfiles cards (online-only games)
-            document.querySelectorAll(".online-only").forEach(function (el) {
-                el.style.display = offline ? "none" : "";
+            // When offline: hide games that can't work offline
+            var cards = document.querySelectorAll("#gamesGrid .ws-game-icon, #gamesGrid .gameCard");
+            cards.forEach(function (card) {
+                if (!offline) { card.style.display = ""; return; }
+                // Get the game path from the card's data or aria-label match
+                var name = (card.getAttribute("aria-label") || "").toLowerCase();
+                // Find matching game in window.games
+                var game = window.games && window.games.find(function(g){ return g.name.toLowerCase() === name; });
+                var path = game ? game.path : "";
+                var canPlayOffline = isLocalGame(path) || isSavedOffline(path);
+                card.style.display = canPlayOffline ? "" : "none";
             });
         }
+        function updateOfflineNotice(offline) {
+            var notice = document.getElementById("ws-offline-notice");
+            if (notice) notice.style.display = offline ? "block" : "none";
+        }
         applyOfflineUI(!navigator.onLine);
-        window.addEventListener("online",  function () { applyOfflineUI(false); });
-        window.addEventListener("offline", function () { applyOfflineUI(true); });
-        document.addEventListener("DOMContentLoaded", function () { applyOfflineUI(!navigator.onLine); });
+        updateOfflineNotice(!navigator.onLine);
+        window.addEventListener("online",  function () { applyOfflineUI(false); updateOfflineNotice(false); });
+        window.addEventListener("offline", function () { applyOfflineUI(true);  updateOfflineNotice(true); });
+        document.addEventListener("DOMContentLoaded", function () {
+            var off = !navigator.onLine;
+            applyOfflineUI(off);
+            updateOfflineNotice(off);
+        });
     })();
     </script>
 
@@ -86,6 +118,14 @@
         📂 Import Game (HTML/ZIP)
       </button>
       <input id="importGameInput" type="file" accept=".html,.htm,.zip" style="display:none" onchange="importGame(this)">
+    </div>
+
+    <!-- Offline notice (shown when device has no internet) -->
+    <div id="ws-offline-notice" style="display:none;text-align:center;padding:8px 16px;
+      background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.3);
+      border-radius:12px;margin:4px 12px;font-size:12px;color:#a5b4fc;">
+      ✈️ You're offline — showing locally-hosted &amp; saved offline games only.
+      <br><span style="opacity:.6;">Open a game and tap <strong>📥 Save Offline</strong> while online to cache it.</span>
     </div>
 
     <!-- Recently Played section (populated by gamebuttons.js) -->
