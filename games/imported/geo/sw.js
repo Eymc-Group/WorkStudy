@@ -6,7 +6,9 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME).then((cache) => {
       return Promise.all([
         cache.add('./').catch(() => {}),
-        cache.add('./index.html').catch(() => {})
+        cache.add('./index.html').catch(() => {}),
+        cache.add('./manifest.webmanifest').catch(() => {}),
+        cache.add('./icon.svg').catch(() => {})
       ]);
     })
   );
@@ -38,7 +40,7 @@ self.addEventListener('fetch', (event) => {
 
   const isNavigation = request.mode === 'navigate';
   const isStaticAsset =
-    /(?:gd_assets\.json|gd_web\.(?:js|wasm|data)|\.wasm(?:\.gz)?|\.data(?:\.gz)?|\.js(?:\.gz)?|\.json|\/ref\/|\\.(?:png|jpe?g|gif|webp|svg|ico|css|woff2?|ttf|otf))/i
+    /(?:gd_assets\.json|gd_web\.(?:js|wasm|data)|manifest\.webmanifest|icon\.svg|\.wasm(?:\.gz)?|\.data(?:\.gz)?|\.js(?:\.gz)?|\.json|\/ref\/|\.(?:png|jpe?g|gif|webp|svg|ico|css|woff2?|ttf|otf))/i
       .test(url.pathname);
 
   if (!isNavigation && !isStaticAsset) return;
