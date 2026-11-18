@@ -1,7 +1,7 @@
-// WorkStudy Service Worker — v3.2.9.53
+// WorkStudy Service Worker — v3.21.83
 // Offline-first: cache-then-network for all local assets, network-first for pages
 
-const CACHE_NAME   = "workstudy-v3.2.9.53";
+const CACHE_NAME   = "workstudy-v3.21.83";
 const OFFLINE_PAGE = "/WorkStudy/offline.html";
 const SCOPE        = "https://eymc-group.github.io/WorkStudy/";
 
