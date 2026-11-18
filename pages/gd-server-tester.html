@@ -1,998 +1,1188 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>GD Proxy Tester</title>
-<script src="../js/customTab.js"></script>
+<title>GD Server Tester</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<script src="../js/customTab.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap">
 
 <style>
-  :root {
-    --bg: #080b12;
-    --surface: #0f1320;
-    --surface2: #151b2e;
-    --border: #1f2840;
-    --fg: #e8ecf5;
-    --muted: #5d6a8a;
-    --accent: #5b8eff;
-    --accent-glow: rgba(91,142,255,0.15);
-    --ok: #3ecf6a;
-    --ok-glow: rgba(62,207,106,0.14);
-    --warn: #f7c948;
-    --warn-glow: rgba(247,201,72,0.12);
-    --fail: #ff5a5a;
-    --fail-glow: rgba(255,90,90,0.14);
-    --idle: #2d3650;
-    --radius: 12px;
-    --font-body: 'Space Grotesk', system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-  }
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TOKENS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+:root {
+  --bg:       #0b0d14;
+  --surface:  #111420;
+  --card:     #161a27;
+  --border:   #1f2537;
+  --hover:    #1c2235;
+  --fg:       #ebedf5;
+  --muted:    #8892ae;
+  --dim:      #3d4561;
+  --accent:   #5b8eff;
+  --accent2:  #a78bfa;
+  --ok:       #2ecc71;
+  --fail:     #e74c3c;
+  --warn:     #f39c12;
+  --ok-bg:    rgba(46,204,113,.08);
+  --fail-bg:  rgba(231,76,60,.08);
+  --warn-bg:  rgba(243,156,18,.08);
+  color-scheme: dark;
+}
 
-  @media (prefers-color-scheme: light) {
-    :root:not([data-theme="dark"]) {
-      --bg: #eef0f8;
-      --surface: #ffffff;
-      --surface2: #f4f6fc;
-      --border: #d0d6ea;
-      --fg: #0f1320;
-      --muted: #6b7899;
-      --accent: #3a6ee8;
-      --accent-glow: rgba(58,110,232,0.1);
-      --ok: #1e9e45;
-      --ok-glow: rgba(30,158,69,0.1);
-      --warn: #b88a00;
-      --warn-glow: rgba(184,138,0,0.1);
-      --fail: #cc2929;
-      --fail-glow: rgba(204,41,41,0.1);
-      --idle: #c0cadf;
-      color-scheme: light;
-    }
-  }
-  :root[data-theme="light"] {
-    --bg: #eef0f8; --surface: #ffffff; --surface2: #f4f6fc; --border: #d0d6ea;
-    --fg: #0f1320; --muted: #6b7899; --accent: #3a6ee8; --accent-glow: rgba(58,110,232,0.1);
-    --ok: #1e9e45; --ok-glow: rgba(30,158,69,0.1); --warn: #b88a00; --warn-glow: rgba(184,138,0,0.1);
-    --fail: #cc2929; --fail-glow: rgba(204,41,41,0.1); --idle: #c0cadf; color-scheme: light;
-  }
-  :root[data-theme="dark"] { color-scheme: dark; }
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESET + BASE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100%;
+  padding-block: 48px 64px;
+  padding-left:  max(16px, env(safe-area-inset-left,  0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
 
-  body {
-    background: var(--bg);
-    color: var(--fg);
-    font-family: var(--font-body);
-    min-height: 100%;
-    padding-block: 36px;
-    padding-left: max(16px, env(safe-area-inset-left, 0px));
-    padding-right: max(16px, env(safe-area-inset-right, 0px));
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-  }
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   LAYOUT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.wrap {
+  width: 100%;
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
 
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(var(--border) 1px, transparent 1px),
-      linear-gradient(90deg, var(--border) 1px, transparent 1px);
-    background-size: 44px 44px;
-    opacity: 0.25;
-    pointer-events: none;
-    z-index: 0;
-  }
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   HEADER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
 
-  .page-wrap {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 580px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
+.header-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(91,142,255,.1);
+  border: 1px solid rgba(91,142,255,.2);
+  border-radius: 20px;
+  padding: 4px 12px;
+}
 
-  /* ── Header ── */
-  .header { text-align: center; }
-  .header-eyebrow {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 8px;
-  }
-  .header h1 {
-    font-size: clamp(20px, 5vw, 28px);
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    text-wrap: balance;
-  }
-  .header p {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 5px;
-    text-wrap: balance;
-  }
+.title {
+  font-size: clamp(36px, 9vw, 52px);
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1;
+}
 
-  /* ── Card ── */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
+.title-gd {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
-  .card-title {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1.8px;
-    text-transform: uppercase;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .card-title-badge {
-    font-size: 10px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 1px 8px;
-    color: var(--muted);
-    font-weight: 600;
-    letter-spacing: 0;
-    text-transform: none;
-    font-family: var(--font-mono);
-  }
+.header-sub {
+  font-size: 13px;
+  color: var(--muted);
+  max-width: 340px;
+}
 
-  /* ── Tabs ── */
-  .tabs {
-    display: flex;
-    gap: 4px;
-    background: var(--surface2);
-    border-radius: 10px;
-    padding: 4px;
-    border: 1px solid var(--border);
-  }
-  .tab-btn {
-    flex: 1;
-    background: none;
-    border: none;
-    border-radius: 7px;
-    padding: 8px 10px;
-    font-family: var(--font-body);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--muted);
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-    white-space: nowrap;
-  }
-  .tab-btn.active {
-    background: var(--surface);
-    color: var(--fg);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
-  }
-  .tab-btn:hover:not(.active) { color: var(--fg); }
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   NAV TABS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.nav {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
 
-  .tab-panel { display: none; }
-  .tab-panel.active { display: flex; flex-direction: column; gap: 14px; }
+.nav-btn {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 10px 16px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  transition: border-color .15s, background .15s;
+  position: relative;
+  overflow: hidden;
+}
 
-  /* ── Form fields ── */
-  .fields { display: flex; flex-direction: column; gap: 12px; }
-  .field { display: flex; flex-direction: column; gap: 5px; }
-  .field label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.8px;
-    color: var(--muted);
-    text-transform: uppercase;
-  }
-  .field input {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 13px;
-    font-family: var(--font-body);
-    font-size: 14px;
-    color: var(--fg);
-    outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-  }
-  .field input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-glow);
-  }
-  .field input::placeholder { color: var(--idle); }
+.nav-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  opacity: 0;
+  transition: opacity .15s;
+}
 
-  /* ── Buttons ── */
-  .btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 11px 20px;
-    font-family: var(--font-body);
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.15s, transform 0.1s;
-    width: 100%;
-  }
-  .btn:hover:not(:disabled) { opacity: 0.88; }
-  .btn:active:not(:disabled) { transform: scale(0.98); }
-  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
-  .btn-spin {
-    width: 14px; height: 14px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    display: none;
-  }
-  .btn.loading .btn-spin { display: block; }
-  .btn.loading .btn-label { display: none; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+.nav-btn.active::before { opacity: .07; }
+.nav-btn.active { border-color: var(--accent); }
+.nav-btn:hover:not(.active) { border-color: var(--dim); background: var(--hover); }
 
-  /* ── Proxy row ── */
-  .proxy-list { display: flex; flex-direction: column; gap: 8px; }
-  .proxy-row {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 14px;
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  .proxy-row.ok  { border-color: var(--ok);   box-shadow: 0 0 0 1px var(--ok),   inset 0 0 18px var(--ok-glow); }
-  .proxy-row.fail{ border-color: var(--fail);  box-shadow: 0 0 0 1px var(--fail), inset 0 0 18px var(--fail-glow); }
-  .proxy-row.testing { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), inset 0 0 18px var(--accent-glow); }
+.nav-icon { font-size: 26px; line-height: 1; position: relative; }
 
-  .proxy-dot {
-    width: 9px; height: 9px;
-    border-radius: 50%;
-    background: var(--idle);
-    flex-shrink: 0;
-    transition: background 0.2s;
-  }
-  .proxy-row.ok .proxy-dot  { background: var(--ok);   box-shadow: 0 0 5px var(--ok); }
-  .proxy-row.fail .proxy-dot{ background: var(--fail); box-shadow: 0 0 5px var(--fail); }
-  .proxy-row.testing .proxy-dot {
-    background: var(--accent);
-    box-shadow: 0 0 5px var(--accent);
-    animation: pulse 1s ease-in-out infinite;
-  }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+.nav-label {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--fg);
+  position: relative;
+}
+.nav-btn.active .nav-label { color: var(--accent); }
 
-  .proxy-info { flex: 1; min-width: 0; }
-  .proxy-name {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--fg);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .proxy-host {
-    font-size: 10px;
-    color: var(--muted);
-    margin-top: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .proxy-right { text-align: right; flex-shrink: 0; }
-  .proxy-status {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 700;
-  }
-  .proxy-row.ok .proxy-status   { color: var(--ok); }
-  .proxy-row.fail .proxy-status { color: var(--fail); }
-  .proxy-row.testing .proxy-status { color: var(--accent); }
-  .status-idle { color: var(--idle); }
-  .proxy-ms {
-    font-size: 10px;
-    color: var(--muted);
-    font-family: var(--font-mono);
-    margin-top: 2px;
-  }
+.nav-count {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  position: relative;
+}
 
-  /* ── Result banner ── */
-  .result-banner {
-    border-radius: 9px;
-    padding: 12px 14px;
-    font-size: 13px;
-    font-weight: 600;
-    display: none;
-    gap: 10px;
-    align-items: flex-start;
-  }
-  .result-banner.show { display: flex; }
-  .result-banner.ok   { background: var(--ok-glow);   border: 1px solid var(--ok);   color: var(--ok); }
-  .result-banner.fail { background: var(--fail-glow); border: 1px solid var(--fail); color: var(--fail); }
-  .result-banner.warn { background: var(--warn-glow); border: 1px solid var(--warn); color: var(--warn); }
-  .result-icon  { font-size: 16px; flex-shrink: 0; line-height: 1.3; }
-  .result-text  { flex: 1; min-width: 0; }
-  .result-detail {
-    font-weight: 400;
-    font-size: 11px;
-    opacity: 0.85;
-    margin-top: 3px;
-    font-family: var(--font-mono);
-    word-break: break-all;
-  }
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   PANELS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.panel { display: none; flex-direction: column; gap: 14px; }
+.panel.active { display: flex; }
 
-  /* ── Summary strip ── */
-  .summary {
-    display: flex;
-    gap: 14px;
-    font-size: 11px;
-    font-family: var(--font-mono);
-    color: var(--muted);
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .summary span { display: flex; align-items: center; gap: 5px; }
-  .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
-  .dot.ok   { background: var(--ok); }
-  .dot.fail { background: var(--fail); }
-  .dot.idle { background: var(--idle); }
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   INFO CALLOUT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.info-box {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
-  .divider { border: none; border-top: 1px solid var(--border); }
+.info-box-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 
-  /* ── Info note ── */
-  .info-note {
-    font-size: 11px;
-    color: var(--muted);
-    text-align: center;
-    line-height: 1.65;
-  }
-  .info-note code {
-    font-family: var(--font-mono);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 1px 5px;
-    border-radius: 4px;
-    font-size: 10px;
-    color: var(--accent);
-  }
+.info-box-body {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.65;
+}
 
-  /* ── Direct connection ── */
-  .direct-row {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  .direct-row.ok   { border-color: var(--ok);   box-shadow: 0 0 0 1px var(--ok),   inset 0 0 18px var(--ok-glow); }
-  .direct-row.fail { border-color: var(--fail);  box-shadow: 0 0 0 1px var(--fail), inset 0 0 18px var(--fail-glow); }
-  .direct-row.testing { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), inset 0 0 18px var(--accent-glow); }
-  .direct-row .proxy-dot { background: var(--idle); }
-  .direct-row.ok .proxy-dot   { background: var(--ok);   box-shadow: 0 0 5px var(--ok); }
-  .direct-row.fail .proxy-dot { background: var(--fail); box-shadow: 0 0 5px var(--fail); }
-  .direct-row.testing .proxy-dot {
-    background: var(--accent);
-    box-shadow: 0 0 5px var(--accent);
-    animation: pulse 1s ease-in-out infinite;
-  }
-  .direct-row.ok .proxy-status   { color: var(--ok); }
-  .direct-row.fail .proxy-status { color: var(--fail); }
-  .direct-row.testing .proxy-status { color: var(--accent); }
+.info-box-body code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  background: rgba(255,255,255,.06);
+  border-radius: 4px;
+  padding: 1px 5px;
+  color: var(--fg);
+}
 
-  /* ── Global test strip ── */
-  .global-bar {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  .global-bar .btn { flex: 1; min-width: 140px; }
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CARD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 18px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
-  /* ── Run all button variant ── */
-  .btn.secondary {
-    background: var(--surface2);
-    color: var(--fg);
-    border: 1px solid var(--border);
-  }
-  .btn.secondary:hover:not(:disabled) { background: var(--border); opacity: 1; }
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.card-title { font-size: 14px; font-weight: 700; }
+
+.chip {
+  font-size: 10px;
+  font-weight: 500;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--muted);
+  background: var(--hover);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   INNER TABS (Primary / Fallback)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.itabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 11px;
+  padding: 4px;
+}
+
+.itab {
+  all: unset;
+  cursor: pointer;
+  flex: 1;
+  text-align: center;
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  border-radius: 8px;
+  transition: background .12s, color .12s;
+}
+.itab.active { background: var(--card); color: var(--fg); }
+.itab:hover:not(.active) { color: var(--fg); }
+
+.itab-panel { display: none; flex-direction: column; gap: 14px; }
+.itab-panel.active { display: flex; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   FORM FIELDS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.fields { display: flex; flex-direction: column; gap: 10px; }
+
+.field { display: flex; flex-direction: column; gap: 5px; }
+
+.field label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--fg);
+  outline: none;
+  transition: border-color .12s;
+  width: 100%;
+}
+.field input:focus { border-color: var(--accent); }
+.field input::placeholder { color: var(--dim); }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   BUTTONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.btn {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 11px;
+  padding: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  width: 100%;
+  transition: opacity .12s, transform .08s;
+}
+.btn:hover:not(:disabled) { opacity: .86; }
+.btn:active:not(:disabled) { transform: scale(.98); }
+.btn:disabled { opacity: .35; cursor: not-allowed; }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), #4a7aff);
+  color: #fff;
+}
+.btn-ghost {
+  background: var(--hover);
+  color: var(--fg);
+  border: 1.5px solid var(--border);
+}
+.btn-ghost:hover:not(:disabled) { border-color: var(--accent); opacity: 1; }
+
+/* spinner */
+.spin {
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,.25);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .65s linear infinite;
+  display: none;
+  flex-shrink: 0;
+}
+.btn.loading .spin { display: block; }
+.btn.loading .btn-lbl { display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   PROXY ROWS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.rows { display: flex; flex-direction: column; gap: 7px; }
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 11px;
+  padding: 12px 15px;
+  transition: border-color .2s, background .2s;
+}
+.row.ok   { border-color: var(--ok);   background: var(--ok-bg); }
+.row.fail { border-color: var(--fail); background: var(--fail-bg); }
+.row.busy { border-color: var(--accent); background: rgba(91,142,255,.06); }
+
+/* status dot */
+.dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--dim);
+  flex-shrink: 0;
+  transition: background .2s, box-shadow .2s;
+}
+.row.ok   .dot { background: var(--ok);   box-shadow: 0 0 7px var(--ok); }
+.row.fail .dot { background: var(--fail); box-shadow: 0 0 7px var(--fail); }
+.row.busy .dot { background: var(--accent); animation: blink 1s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+.row-info { flex: 1; min-width: 0; }
+
+.row-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--fg);
+}
+
+.row-desc {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 1px;
+}
+
+.row-right { text-align: right; flex-shrink: 0; }
+
+.row-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.row.ok   .row-status { color: var(--ok); }
+.row.fail .row-status { color: var(--fail); }
+.row.busy .row-status { color: var(--accent); }
+
+.row-ms {
+  font-size: 10px;
+  color: var(--dim);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 1px;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESULT BANNER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.banner {
+  display: none;
+  align-items: flex-start;
+  gap: 12px;
+  border-radius: 11px;
+  padding: 14px 16px;
+}
+.banner.show { display: flex; }
+.banner.ok   { background: var(--ok-bg);   border: 1.5px solid rgba(46,204,113,.3); }
+.banner.fail { background: var(--fail-bg); border: 1.5px solid rgba(231,76,60,.3); }
+.banner.warn { background: var(--warn-bg); border: 1.5px solid rgba(243,156,18,.3); }
+
+.banner-icon { font-size: 18px; line-height: 1.4; flex-shrink: 0; }
+
+.banner-body { flex: 1; min-width: 0; }
+
+.banner-title { font-size: 13px; font-weight: 700; }
+.banner.ok   .banner-title { color: var(--ok); }
+.banner.fail .banner-title { color: var(--fail); }
+.banner.warn .banner-title { color: var(--warn); }
+
+.banner-detail {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  word-break: break-all;
+  line-height: 1.5;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TALLY BAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.tally {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.tally-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--muted);
+}
+
+.tdot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.tdot.ok   { background: var(--ok);   box-shadow: 0 0 5px var(--ok); }
+.tdot.fail { background: var(--fail); box-shadow: 0 0 5px var(--fail); }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   DIVIDER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.divider {
+  height: 1px;
+  background: var(--border);
+  border: none;
+  margin: 2px 0;
+}
 </style>
 
-<div class="page-wrap">
+<div class="wrap">
 
+  <!-- ══════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════ -->
   <div class="header">
-    <div class="header-eyebrow">Geometry Dash Webport</div>
-    <h1>Proxy Tester</h1>
-    <p>Test account proxies, game proxies, and direct connection</p>
+    <div class="header-tag">⚡ Geometry Dash Webport</div>
+    <div class="title"><span class="title-gd">GD</span> Server Tester</div>
+    <div class="header-sub">Check which proxies and servers are reachable from your browser.</div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════
-       SECTION 1 — ACCOUNT PROXIES (login test)
-  ═══════════════════════════════════════════════ -->
-  <div class="card">
-    <div class="card-title">
-      Account Proxies
-      <span class="card-title-badge">3 workers · login test</span>
-    </div>
-
-    <div class="fields">
-      <div class="field">
-        <label for="username">Username</label>
-        <input type="text" id="username" autocomplete="username" placeholder="Your GD username" spellcheck="false">
-      </div>
-      <div class="field">
-        <label for="password">Password</label>
-        <input type="password" id="password" autocomplete="current-password" placeholder="Your GD password">
-      </div>
-    </div>
-
-    <button class="btn" id="accountBtn" type="button">
-      <span class="btn-label">Test Account Proxies</span>
-      <span class="btn-spin"></span>
+  <!-- ══════════════════════════════════════
+       NAV
+  ══════════════════════════════════════ -->
+  <div class="nav">
+    <button class="nav-btn active" data-panel="p-acc" type="button">
+      <div class="nav-icon">🔑</div>
+      <div class="nav-label">Acc</div>
+      <div class="nav-count">3 workers</div>
     </button>
-
-    <div class="proxy-list">
-      <div class="proxy-row" id="ap-0">
-        <div class="proxy-dot"></div>
-        <div class="proxy-info">
-          <div class="proxy-name">ale7208.workers.dev</div>
-          <div class="proxy-host">Primary account proxy</div>
-        </div>
-        <div class="proxy-right">
-          <div class="proxy-status status-idle" id="ap-status-0">IDLE</div>
-          <div class="proxy-ms" id="ap-ms-0"></div>
-        </div>
-      </div>
-      <div class="proxy-row" id="ap-1">
-        <div class="proxy-dot"></div>
-        <div class="proxy-info">
-          <div class="proxy-name">ale728.workers.dev</div>
-          <div class="proxy-host">Secondary account proxy</div>
-        </div>
-        <div class="proxy-right">
-          <div class="proxy-status status-idle" id="ap-status-1">IDLE</div>
-          <div class="proxy-ms" id="ap-ms-1"></div>
-        </div>
-      </div>
-      <div class="proxy-row" id="ap-2">
-        <div class="proxy-dot"></div>
-        <div class="proxy-info">
-          <div class="proxy-name">ale720.workers.dev</div>
-          <div class="proxy-host">Tertiary account proxy</div>
-        </div>
-        <div class="proxy-right">
-          <div class="proxy-status status-idle" id="ap-status-2">IDLE</div>
-          <div class="proxy-ms" id="ap-ms-2"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="result-banner" id="accountResult">
-      <div class="result-icon" id="accountResultIcon"></div>
-      <div class="result-text">
-        <div id="accountResultTitle"></div>
-        <div class="result-detail" id="accountResultDetail"></div>
-      </div>
-    </div>
-
-    <div class="summary" id="accountSummary" hidden>
-      <span><span class="dot ok"></span><span id="ap-ok">0</span> online</span>
-      <span><span class="dot fail"></span><span id="ap-fail">0</span> offline</span>
-    </div>
-
-    <div class="info-note">
-      Sends a real login to <code>loginGJAccount19.php</code>.<br>
-      Response <code>-1</code> = wrong credentials but proxy is working.
-    </div>
-  </div>
-
-
-  <!-- ═══════════════════════════════════════════════
-       SECTION 2 — GAME PROXIES (connectivity)
-  ═══════════════════════════════════════════════ -->
-  <div class="card">
-    <div class="card-title">
-      Game Proxies
-      <span class="card-title-badge">7 workers · connectivity</span>
-    </div>
-
-    <div class="tabs" role="tablist">
-      <button class="tab-btn active" role="tab" data-tab="primary-tab" id="tab-primary">Primary (3)</button>
-      <button class="tab-btn" role="tab" data-tab="fallback-tab" id="tab-fallback">Fallback (4)</button>
-    </div>
-
-    <div class="tab-panel active" id="primary-tab">
-      <button class="btn secondary" id="primaryBtn" type="button">
-        <span class="btn-label">Test Primary Workers</span>
-        <span class="btn-spin"></span>
-      </button>
-      <div class="proxy-list">
-        <div class="proxy-row" id="gp-0">
-          <div class="proxy-dot"></div>
-          <div class="proxy-info">
-            <div class="proxy-name">ale7208.workers.dev</div>
-            <div class="proxy-host">boomlings.ale7208.workers.dev</div>
-          </div>
-          <div class="proxy-right">
-            <div class="proxy-status status-idle" id="gp-status-0">IDLE</div>
-            <div class="proxy-ms" id="gp-ms-0"></div>
-          </div>
-        </div>
-        <div class="proxy-row" id="gp-1">
-          <div class="proxy-dot"></div>
-          <div class="proxy-info">
-            <div class="proxy-name">ale728.workers.dev</div>
-            <div class="proxy-host">boomlings.ale728.workers.dev</div>
-          </div>
-          <div class="proxy-right">
-            <div class="proxy-status status-idle" id="gp-status-1">IDLE</div>
-            <div class="proxy-ms" id="gp-ms-1"></div>
-          </div>
-        </div>
-        <div class="proxy-row" id="gp-2">
-          <div class="proxy-dot"></div>
-          <div class="proxy-info">
-            <div class="proxy-name">ale720.workers.dev</div>
-            <div class="proxy-host">boomlings.ale720.workers.dev</div>
-          </div>
-          <div class="proxy-right">
-            <div class="proxy-status status-idle" id="gp-status-2">IDLE</div>
-            <div class="proxy-ms" id="gp-ms-2"></div>
-          </div>
-        </div>
-      </div>
-      <div class="summary" id="primarySummary" hidden>
-        <span><span class="dot ok"></span><span id="gpp-ok">0</span> online</span>
-        <span><span class="dot fail"></span><span id="gpp-fail">0</span> offline</span>
-      </div>
-    </div>
-
-    <div class="tab-panel" id="fallback-tab">
-      <button class="btn secondary" id="fallbackBtn" type="button">
-        <span class="btn-label">Test Fallback Workers</span>
-        <span class="btn-spin"></span>
-      </button>
-      <div class="proxy-list">
-        <div class="proxy-row" id="fb-0">
-          <div class="proxy-dot"></div>
-          <div class="proxy-info">
-            <div class="proxy-name">gdwasmproxy · sutinognic</div>
-            <div class="proxy-host">gdwasmproxy.sutinognic.workers.dev</div>
-          </div>
-          <div class="proxy-right">
-            <div class="proxy-status status-idle" id="fb-status-0">IDLE</div>
-            <div class="proxy-ms" id="fb-ms-0"></div>
-          </div>
-        </div>
-        <div class="proxy-row" id="fb-1">
-          <div class="proxy-dot"></div>
-          <div class="proxy-info">
-            <div class="proxy-name">1783206-8bb.workers.dev</div>
-            <div class="proxy-host">boomlings.1783206-8bb.workers.dev</div>
-          </div>
-          <div class="proxy-right">
-            <div class="proxy-status status-idle" id="fb-status-1">IDLE</div>
-            <div class="proxy-ms" id="fb-ms-1"></div>
-          </div>
-        </div>
-        <div class="proxy-row" id="fb-2">
-          <div class="proxy-dot"></div>
-          <div class="proxy-info">
-            <div class="proxy-name">ivan-makarov12341</div>
-            <div class="proxy-host">boomlings.ivan-makarov12341.workers.dev</div>
-          </div>
-          <div class="proxy-right">
-            <div class="proxy-status status-idle" id="fb-status-2">IDLE</div>
-            <div class="proxy-ms" id="fb-ms-2"></div>
-          </div>
-        </div>
-        <div class="proxy-row" id="fb-3">
-          <div class="proxy-dot"></div>
-          <div class="proxy-info">
-            <div class="proxy-name">c22622395.workers.dev</div>
-            <div class="proxy-host">boomlings.c22622395.workers.dev</div>
-          </div>
-          <div class="proxy-right">
-            <div class="proxy-status status-idle" id="fb-status-3">IDLE</div>
-            <div class="proxy-ms" id="fb-ms-3"></div>
-          </div>
-        </div>
-      </div>
-      <div class="summary" id="fallbackSummary" hidden>
-        <span><span class="dot ok"></span><span id="fb-ok">0</span> online</span>
-        <span><span class="dot fail"></span><span id="fb-fail">0</span> offline</span>
-      </div>
-    </div>
-
-    <div class="info-note">
-      Pings <code>getGJLevels21.php</code> (a lightweight search) through each worker.<br>
-      Any valid GD server response = online. No login required.
-    </div>
-  </div>
-
-
-  <!-- ═══════════════════════════════════════════════
-       SECTION 3 — DIRECT CONNECTION
-  ═══════════════════════════════════════════════ -->
-  <div class="card">
-    <div class="card-title">
-      Direct Connection
-      <span class="card-title-badge">no proxy</span>
-    </div>
-
-    <button class="btn secondary" id="directBtn" type="button">
-      <span class="btn-label">Test Direct to Boomlings</span>
-      <span class="btn-spin"></span>
+    <button class="nav-btn" data-panel="p-game" type="button">
+      <div class="nav-icon">🎮</div>
+      <div class="nav-label">Main</div>
+      <div class="nav-count">7 workers</div>
     </button>
+    <button class="nav-btn" data-panel="p-direct" type="button">
+      <div class="nav-icon">🌐</div>
+      <div class="nav-label">Boomlings</div>
+      <div class="nav-count">direct</div>
+    </button>
+  </div>
 
-    <div class="direct-row" id="direct-row">
-      <div class="proxy-dot"></div>
-      <div class="proxy-info">
-        <div class="proxy-name">www.boomlings.com</div>
-        <div class="proxy-host">Direct · no proxy · CORS expected to block</div>
-      </div>
-      <div class="proxy-right">
-        <div class="proxy-status status-idle" id="direct-status">IDLE</div>
-        <div class="proxy-ms" id="direct-ms"></div>
+  <!-- ══════════════════════════════════════
+       PANEL: ACCOUNT PROXIES
+  ══════════════════════════════════════ -->
+  <div class="panel active" id="p-acc">
+
+    <!-- How it works -->
+    <div class="info-box">
+      <div class="info-box-title">ℹ️ How Account Proxies Work</div>
+      <div class="info-box-body">
+        When you log in to GD Webport, your password is hashed with SHA-1 and sent as a <code>gjp2</code> parameter to <code>boomlings.com/database/accounts/loginGJAccount19.php</code>.
+        Because browsers block direct cross-origin requests, the login goes through a Cloudflare Worker that relays it.
+        A response of <code>-1</code> means the proxy is alive but the credentials were wrong. A positive number means you're logged in.
       </div>
     </div>
 
-    <div class="result-banner" id="directResult">
-      <div class="result-icon" id="directResultIcon"></div>
-      <div class="result-text">
-        <div id="directResultTitle"></div>
-        <div class="result-detail" id="directResultDetail"></div>
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">Login Test</div>
+        <span class="chip">loginGJAccount19.php</span>
       </div>
-    </div>
 
-    <div class="info-note">
-      Browsers block direct requests to boomlings.com (CORS policy).<br>
-      A <code>CORS block</code> result means the server is reachable — just blocked by browser rules.<br>
-      A <code>TIMEOUT / OFFLINE</code> means the GD servers may actually be down.
+      <div class="fields">
+        <div class="field">
+          <label for="username">Username</label>
+          <input type="text" id="username" autocomplete="username" placeholder="Your GD username" spellcheck="false">
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" autocomplete="current-password" placeholder="Your GD password">
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="accountBtn" type="button">
+        <span class="btn-lbl">Test Account Proxies</span>
+        <span class="spin"></span>
+      </button>
+
+      <hr class="divider">
+
+      <div class="rows">
+        <div class="row" id="ap-row-0">
+          <div class="dot"></div>
+          <div class="row-info">
+            <div class="row-name">ale7208.workers.dev</div>
+            <div class="row-desc">Primary — login data routed here first</div>
+          </div>
+          <div class="row-right">
+            <div class="row-status" id="ap-status-0">IDLE</div>
+            <div class="row-ms" id="ap-ms-0"></div>
+          </div>
+        </div>
+        <div class="row" id="ap-row-1">
+          <div class="dot"></div>
+          <div class="row-info">
+            <div class="row-name">ale728.workers.dev</div>
+            <div class="row-desc">Backup #1</div>
+          </div>
+          <div class="row-right">
+            <div class="row-status" id="ap-status-1">IDLE</div>
+            <div class="row-ms" id="ap-ms-1"></div>
+          </div>
+        </div>
+        <div class="row" id="ap-row-2">
+          <div class="dot"></div>
+          <div class="row-info">
+            <div class="row-name">ale720.workers.dev</div>
+            <div class="row-desc">Backup #2</div>
+          </div>
+          <div class="row-right">
+            <div class="row-status" id="ap-status-2">IDLE</div>
+            <div class="row-ms" id="ap-ms-2"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="banner" id="acc-banner">
+        <div class="banner-icon" id="acc-banner-icon"></div>
+        <div class="banner-body">
+          <div class="banner-title" id="acc-banner-title"></div>
+          <div class="banner-detail" id="acc-banner-detail"></div>
+        </div>
+      </div>
+
+      <div class="tally" id="acc-tally" hidden>
+        <span class="tally-item"><span class="tdot ok"></span><span id="acc-ok">0</span> online</span>
+        <span class="tally-item"><span class="tdot fail"></span><span id="acc-fail">0</span> offline</span>
+      </div>
     </div>
   </div>
 
-</div><!-- /page-wrap -->
+  <!-- ══════════════════════════════════════
+       PANEL: GAME PROXIES
+  ══════════════════════════════════════ -->
+  <div class="panel" id="p-game">
+
+    <!-- How it works -->
+    <div class="info-box">
+      <div class="info-box-title">ℹ️ How Game Proxies Work</div>
+      <div class="info-box-body">
+        Every game request (loading levels, scores, etc.) also goes through a Cloudflare Worker, because <code>boomlings.com</code> doesn't allow requests from browsers.
+        The Worker receives the request, forwards it to <code>boomlings.com</code>, and returns the response.
+        <strong style="color:var(--fg)">Primary</strong> workers are the same ones used for login. <strong style="color:var(--fg)">Fallback</strong> workers are community-hosted and kick in if the primaries are down.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">Connectivity Ping</div>
+        <span class="chip">getGJLevels21.php</span>
+      </div>
+
+      <div class="itabs">
+        <button class="itab active" data-itab="it-primary" type="button">Primary (3)</button>
+        <button class="itab" data-itab="it-fallback" type="button">Fallback (4)</button>
+      </div>
+
+      <!-- Primary workers -->
+      <div class="itab-panel active" id="it-primary">
+        <button class="btn btn-ghost" id="primaryBtn" type="button">
+          <span class="btn-lbl">Test Primary Workers</span>
+          <span class="spin"></span>
+        </button>
+        <div class="rows">
+          <div class="row" id="gp-row-0">
+            <div class="dot"></div>
+            <div class="row-info">
+              <div class="row-name">ale7208.workers.dev</div>
+              <div class="row-desc">Primary #1 — also handles login</div>
+            </div>
+            <div class="row-right">
+              <div class="row-status" id="gp-status-0">IDLE</div>
+              <div class="row-ms" id="gp-ms-0"></div>
+            </div>
+          </div>
+          <div class="row" id="gp-row-1">
+            <div class="dot"></div>
+            <div class="row-info">
+              <div class="row-name">ale728.workers.dev</div>
+              <div class="row-desc">Primary #2</div>
+            </div>
+            <div class="row-right">
+              <div class="row-status" id="gp-status-1">IDLE</div>
+              <div class="row-ms" id="gp-ms-1"></div>
+            </div>
+          </div>
+          <div class="row" id="gp-row-2">
+            <div class="dot"></div>
+            <div class="row-info">
+              <div class="row-name">ale720.workers.dev</div>
+              <div class="row-desc">Primary #3</div>
+            </div>
+            <div class="row-right">
+              <div class="row-status" id="gp-status-2">IDLE</div>
+              <div class="row-ms" id="gp-ms-2"></div>
+            </div>
+          </div>
+        </div>
+        <div class="tally" id="primary-tally" hidden>
+          <span class="tally-item"><span class="tdot ok"></span><span id="gp-ok">0</span> online</span>
+          <span class="tally-item"><span class="tdot fail"></span><span id="gp-fail">0</span> offline</span>
+        </div>
+      </div>
+
+      <!-- Fallback workers -->
+      <div class="itab-panel" id="it-fallback">
+        <button class="btn btn-ghost" id="fallbackBtn" type="button">
+          <span class="btn-lbl">Test Fallback Workers</span>
+          <span class="spin"></span>
+        </button>
+        <div class="rows">
+          <div class="row" id="fb-row-0">
+            <div class="dot"></div>
+            <div class="row-info">
+              <div class="row-name">gdwasmproxy.sutinognic</div>
+              <div class="row-desc">Community — different URL format</div>
+            </div>
+            <div class="row-right">
+              <div class="row-status" id="fb-status-0">IDLE</div>
+              <div class="row-ms" id="fb-ms-0"></div>
+            </div>
+          </div>
+          <div class="row" id="fb-row-1">
+            <div class="dot"></div>
+            <div class="row-info">
+              <div class="row-name">1783206-8bb.workers.dev</div>
+              <div class="row-desc">Community #2</div>
+            </div>
+            <div class="row-right">
+              <div class="row-status" id="fb-status-1">IDLE</div>
+              <div class="row-ms" id="fb-ms-1"></div>
+            </div>
+          </div>
+          <div class="row" id="fb-row-2">
+            <div class="dot"></div>
+            <div class="row-info">
+              <div class="row-name">ivan-makarov12341</div>
+              <div class="row-desc">Community #3</div>
+            </div>
+            <div class="row-right">
+              <div class="row-status" id="fb-status-2">IDLE</div>
+              <div class="row-ms" id="fb-ms-2"></div>
+            </div>
+          </div>
+          <div class="row" id="fb-row-3">
+            <div class="dot"></div>
+            <div class="row-info">
+              <div class="row-name">c22622395.workers.dev</div>
+              <div class="row-desc">Community #4</div>
+            </div>
+            <div class="row-right">
+              <div class="row-status" id="fb-status-3">IDLE</div>
+              <div class="row-ms" id="fb-ms-3"></div>
+            </div>
+          </div>
+        </div>
+        <div class="tally" id="fallback-tally" hidden>
+          <span class="tally-item"><span class="tdot ok"></span><span id="fb-ok">0</span> online</span>
+          <span class="tally-item"><span class="tdot fail"></span><span id="fb-fail">0</span> offline</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PANEL: DIRECT CONNECTION
+  ══════════════════════════════════════ -->
+  <div class="panel" id="p-direct">
+
+    <!-- How it works -->
+    <div class="info-box">
+      <div class="info-box-title">ℹ️ How Direct Connection Works</div>
+      <div class="info-box-body">
+        This tests if <code>boomlings.com</code> itself is reachable — without any proxy.
+        Browsers always block this request with a CORS error, so a fast failure (<strong style="color:var(--ok)">CORS</strong>) actually means the server <em>is online</em>.
+        A <strong style="color:var(--fail)">timeout</strong> means boomlings.com is unreachable or completely down.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title">Direct to Boomlings</div>
+        <span class="chip">no proxy</span>
+      </div>
+
+      <button class="btn btn-ghost" id="directBtn" type="button">
+        <span class="btn-lbl">Test Direct Connection</span>
+        <span class="spin"></span>
+      </button>
+
+      <div class="row" id="direct-row">
+        <div class="dot"></div>
+        <div class="row-info">
+          <div class="row-name">www.boomlings.com</div>
+          <div class="row-desc">CORS block = server is online &nbsp;·&nbsp; timeout = server is down</div>
+        </div>
+        <div class="row-right">
+          <div class="row-status" id="direct-status">IDLE</div>
+          <div class="row-ms" id="direct-ms"></div>
+        </div>
+      </div>
+
+      <div class="banner" id="direct-banner">
+        <div class="banner-icon" id="direct-banner-icon"></div>
+        <div class="banner-body">
+          <div class="banner-title" id="direct-banner-title"></div>
+          <div class="banner-detail" id="direct-banner-detail"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
 
 <script>
+/* ══════════════════════════════════════════════════════════════
+   GD SERVER TESTER — JavaScript
+   Sections:
+     1. Config
+     2. Helpers
+     3. UI helpers
+     4. Core fetch
+     5. Account proxy tests
+     6. Game proxy tests
+     7. Direct connection test
+     8. Nav & tab switching
+══════════════════════════════════════════════════════════════ */
+
 (function () {
-  'use strict';
+'use strict';
 
-  /* ── Proxy lists ── */
-  var ACCOUNT_PROXIES = [
+/* ─────────────────────────────────────────
+   1. CONFIG
+───────────────────────────────────────── */
+var CFG = {
+  account_proxies: [
     'https://boomlings.ale7208.workers.dev/?url=',
     'https://boomlings.ale728.workers.dev/?url=',
     'https://boomlings.ale720.workers.dev/?url='
-  ];
-
-  var PRIMARY_PROXIES = [
+  ],
+  primary_proxies: [
     'https://boomlings.ale7208.workers.dev/?url=',
     'https://boomlings.ale728.workers.dev/?url=',
     'https://boomlings.ale720.workers.dev/?url='
-  ];
-
-  var FALLBACK_PROXIES = [
+  ],
+  fallback_proxies: [
     'https://gdwasmproxy.sutinognic.workers.dev/proxy.php?url=',
     'https://boomlings.1783206-8bb.workers.dev/?url=',
     'https://boomlings.ivan-makarov12341.workers.dev/?url=',
     'https://boomlings.c22622395.workers.dev/?url='
-  ];
+  ],
+  login_target:  'https://www.boomlings.com/database/accounts/loginGJAccount19.php',
+  levels_target: 'https://www.boomlings.com/database/getGJLevels21.php',
+  timeout_ms: 10000,
+  auto_username: 'Test',
+  auto_password: 'a1b2c3d4e5f6g7h8i9'
+};
 
-  var LOGIN_TARGET  = 'https://www.boomlings.com/database/accounts/loginGJAccount19.php';
-  var LEVELS_TARGET = 'https://www.boomlings.com/database/getGJLevels21.php';
-  var DIRECT_TARGET = 'https://www.boomlings.com/database/getGJLevels21.php';
+/* ─────────────────────────────────────────
+   2. HELPERS
+───────────────────────────────────────── */
 
-  /* ── Generic helpers ── */
-  function proxyUrl(base, target) {
-    if (base.indexOf('corsfix') >= 0) return base + target;
-    return base + encodeURIComponent(target);
+/** Build a proxied URL: base + encoded target */
+function proxyURL(base, target) {
+  return base + encodeURIComponent(target);
+}
+
+/** Hash a string with SHA-1 and return a hex string */
+async function sha1hex(str) {
+  var buf  = new TextEncoder().encode(str);
+  var hash = await crypto.subtle.digest('SHA-1', buf);
+  return Array.from(new Uint8Array(hash))
+    .map(function (b) { return b.toString(16).padStart(2, '0'); })
+    .join('');
+}
+
+/**
+ * Fetch with an abort timeout.
+ * Uses AbortSignal.timeout when available, falls back to AbortController.
+ */
+function timedFetch(url, opts, ms) {
+  ms = ms || CFG.timeout_ms;
+  if (typeof AbortSignal !== 'undefined' && AbortSignal.timeout) {
+    opts.signal = AbortSignal.timeout(ms);
+    return fetch(url, opts);
   }
+  var ctrl  = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, ms) : null;
+  if (ctrl) opts.signal = ctrl.signal;
+  return fetch(url, opts).then(
+    function (r) { clearTimeout(timer); return r; },
+    function (e) { clearTimeout(timer); throw e; }
+  );
+}
 
-  function $id(id) { return document.getElementById(id); }
+/**
+ * Decide if a GD server responded with real data.
+ * Any numeric string (even -1) = proxy alive.
+ * Pipe / tilde / colon delimited = GD data.
+ */
+function gdAlive(text, status) {
+  if (status >= 500) return false;
+  var t = text.trim();
+  if (!t) return false;
+  if (/^-?\d+$/.test(t)) return true;
+  if (t.indexOf('~') >= 0 || t.indexOf('|') >= 0 || t.indexOf(':') >= 0) return true;
+  return status >= 200 && status < 400;
+}
 
-  function resetRow(prefix, idx) {
-    var row    = $id(prefix + idx);
-    var status = $id(prefix + 'status-' + idx);
-    var ms     = $id(prefix + 'ms-' + idx);
-    if (!row) return;
-    row.className = row.className.split(' ')[0]; // keep base class
-    status.className = 'proxy-status status-idle';
-    status.textContent = 'IDLE';
-    ms.textContent = '';
-  }
+/** Build URLSearchParams for the levels ping */
+function levelBody() {
+  return new URLSearchParams({
+    secret: 'Wmfd2893gb7', gameVersion: '22', binaryVersion: '42',
+    type: '0', str: 'test', page: '0'
+  });
+}
 
-  function setRow(prefix, idx, state, text, elapsed) {
-    var row    = $id(prefix + idx);
-    var status = $id(prefix + 'status-' + idx);
-    var ms     = $id(prefix + 'ms-' + idx);
-    if (!row) return;
-    var base = row.className.split(' ')[0];
-    row.className = base + ' ' + state;
-    status.className = 'proxy-status';
-    status.textContent = text;
-    ms.textContent = elapsed !== undefined ? elapsed + ' ms' : '';
-  }
+/** Build URLSearchParams for the login request */
+function loginBody(username, gjp2) {
+  return new URLSearchParams({
+    userName: username, gjp2: gjp2, udid: 'gdproxy-tester',
+    uuid: '0', secret: 'Wmfd2893gb7', gameVersion: '22', binaryVersion: '42'
+  });
+}
 
-  function showBanner(bannerId, iconId, titleId, detailId, type, icon, title, detail) {
-    var b = $id(bannerId);
-    b.className = 'result-banner show ' + type;
-    $id(iconId).textContent = icon;
-    $id(titleId).textContent = title;
-    $id(detailId).textContent = detail;
-  }
+/* ─────────────────────────────────────────
+   3. UI HELPERS
+───────────────────────────────────────── */
 
-  function hideBanner(bannerId) {
-    $id(bannerId).className = 'result-banner';
-  }
+function $id(id) { return document.getElementById(id); }
 
-  function btnLoad(btn) { btn.disabled = true; btn.classList.add('loading'); }
-  function btnDone(btn) { btn.disabled = false; btn.classList.remove('loading'); }
+/** Set a row's visual state */
+function rowState(rowId, state, statusText, ms) {
+  var row = $id(rowId);
+  if (!row) return;
+  row.className = 'row' + (state ? ' ' + state : '');
+  $id(rowId.replace('row', 'status')).textContent = statusText;
+  var msEl = $id(rowId.replace('row', 'ms'));
+  if (msEl) msEl.textContent = ms !== undefined ? ms + ' ms' : '';
+}
 
-  /* ── SHA-1 for gjp2 ── */
-  async function sha1hex(str) {
-    var buf  = new TextEncoder().encode(str);
-    var hash = await crypto.subtle.digest('SHA-1', buf);
-    return Array.from(new Uint8Array(hash))
-      .map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
-  }
+/** Reset a row to idle */
+function rowReset(rowId) { rowState(rowId, '', 'IDLE'); }
 
-  /* ── Fetch with timeout ── */
-  function timedFetch(url, opts, ms) {
-    ms = ms || 10000;
-    if (typeof AbortSignal !== 'undefined' && AbortSignal.timeout) {
-      opts.signal = AbortSignal.timeout(ms);
-      return fetch(url, opts);
-    }
-    var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
-    if (ctrl) opts.signal = ctrl.signal;
-    var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, ms) : null;
-    return fetch(url, opts).then(function (r) {
-      clearTimeout(timer); return r;
-    }, function (e) {
-      clearTimeout(timer); throw e;
+/** Show a result banner */
+function bannerShow(bannerId, type, icon, title, detail) {
+  var b = $id(bannerId);
+  b.className = 'banner show ' + type;
+  $id(bannerId + '-icon').textContent  = icon;
+  $id(bannerId + '-title').textContent = title;
+  $id(bannerId + '-detail').textContent = detail;
+}
+
+/** Hide a banner */
+function bannerHide(bannerId) { $id(bannerId).className = 'banner'; }
+
+/** Set button to loading state */
+function btnLoading(btn) { btn.disabled = true;  btn.classList.add('loading'); }
+/** Restore button */
+function btnDone(btn)    { btn.disabled = false; btn.classList.remove('loading'); }
+
+/** Update a tally strip and show it */
+function tallyShow(tallyId, okId, failId, okCount, total) {
+  $id(okId).textContent   = okCount;
+  $id(failId).textContent = total - okCount;
+  $id(tallyId).hidden = false;
+}
+
+/* ─────────────────────────────────────────
+   4. CORE FETCH
+───────────────────────────────────────── */
+
+/**
+ * Ping a single proxy with the levels endpoint.
+ * Returns { alive: bool, elapsed: ms }
+ */
+async function pingProxy(proxyBase, target) {
+  var url   = proxyURL(proxyBase, target);
+  var body  = levelBody();
+  var t0    = Date.now();
+  try {
+    var resp = await timedFetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString()
     });
+    var elapsed = Date.now() - t0;
+    var text    = await resp.text();
+    return { alive: gdAlive(text, resp.status), elapsed: elapsed };
+  } catch (e) {
+    return { alive: false, elapsed: Date.now() - t0, timedOut: e && e.name === 'TimeoutError' };
   }
+}
 
-  /* ── isAlive: any numeric GD response = alive ── */
-  function gdAlive(text, status) {
-    if (status >= 500) return false;
-    var t = text.trim();
-    if (!t) return false;
-    // GD servers return numeric codes or pipe-delimited data
-    if (/^-?\d+$/.test(t)) return true;
-    if (t.indexOf('~') >= 0 || t.indexOf('|') >= 0 || t.indexOf(':') >= 0) return true;
-    return status >= 200 && status < 400;
-  }
-
-  /* ══════════════════════════════════════════════
-     SECTION 1 — ACCOUNT PROXY TEST
-  ══════════════════════════════════════════════ */
-  async function testAccountProxy(idx, username, gjp2) {
-    setRow('ap-', idx, 'testing', 'TESTING…');
-    var url  = proxyUrl(ACCOUNT_PROXIES[idx], LOGIN_TARGET);
-    var body = new URLSearchParams({
-      userName: username, gjp2: gjp2,
-      udid: 'gdproxy-tester', uuid: '0',
-      secret: 'Wmfd2893gb7', gameVersion: '22', binaryVersion: '42'
+/**
+ * Login through a single account proxy.
+ * Returns { alive: bool, loggedIn: bool, elapsed: ms }
+ */
+async function loginProxy(proxyBase, username, gjp2) {
+  var url  = proxyURL(proxyBase, CFG.login_target);
+  var body = loginBody(username, gjp2);
+  var t0   = Date.now();
+  try {
+    var resp = await timedFetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString()
     });
-    var t0 = Date.now();
-    try {
-      var resp    = await timedFetch(url, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString() });
-      var elapsed = Date.now() - t0;
-      var text    = await resp.text();
-      var t       = text.trim();
-      if (gdAlive(text, resp.status)) {
-        setRow('ap-', idx, 'ok', 'ONLINE ✓', elapsed);
-        return { alive: true, loggedIn: parseInt(t) > 0, elapsed: elapsed, raw: t };
-      } else {
-        setRow('ap-', idx, 'fail', 'NO DATA', elapsed);
-        return { alive: false, elapsed: elapsed };
-      }
-    } catch (e) {
-      var e2 = Date.now() - t0;
-      setRow('ap-', idx, 'fail', e && e.name === 'TimeoutError' ? 'TIMEOUT' : 'OFFLINE', e2);
-      return { alive: false, elapsed: e2 };
-    }
+    var elapsed  = Date.now() - t0;
+    var text     = await resp.text();
+    var alive    = gdAlive(text, resp.status);
+    var loggedIn = alive && parseInt(text.trim(), 10) > 0;
+    return { alive: alive, loggedIn: loggedIn, elapsed: elapsed };
+  } catch (e) {
+    return { alive: false, loggedIn: false, elapsed: Date.now() - t0 };
+  }
+}
+
+/* ─────────────────────────────────────────
+   5. ACCOUNT PROXY TESTS
+───────────────────────────────────────── */
+
+$id('accountBtn').addEventListener('click', async function () {
+  /* Auto-fill empty fields */
+  var uEl = $id('username'), pEl = $id('password');
+  if (!uEl.value.trim()) uEl.value = CFG.auto_username;
+  if (!pEl.value)        pEl.value = CFG.auto_password;
+
+  var username = uEl.value.trim();
+  var password = pEl.value;
+  var btn      = $id('accountBtn');
+
+  btnLoading(btn);
+  bannerHide('acc-banner');
+  $id('acc-tally').hidden = true;
+
+  /* Reset rows */
+  for (var i = 0; i < 3; i++) rowReset('ap-row-' + i);
+
+  /* Hash password */
+  var gjp2 = await sha1hex(password + 'mI29fmAnxgTs');
+
+  /* Test all proxies in parallel */
+  var results = await Promise.all(
+    CFG.account_proxies.map(function (base, i) {
+      rowState('ap-row-' + i, 'busy', 'TESTING…');
+      return loginProxy(base, username, gjp2).then(function (r) {
+        var status = r.alive
+          ? (r.loggedIn ? 'LOGGED IN' : 'ALIVE')
+          : (r.timedOut ? 'TIMEOUT' : 'OFFLINE');
+        rowState('ap-row-' + i, r.alive ? 'ok' : 'fail', status, r.elapsed);
+        return r;
+      });
+    })
+  );
+
+  /* Summary */
+  var alive    = results.filter(function (r) { return r.alive; }).length;
+  var loggedIn = results.some(function (r) { return r.loggedIn; });
+
+  tallyShow('acc-tally', 'acc-ok', 'acc-fail', alive, 3);
+
+  if (loggedIn) {
+    bannerShow('acc-banner', 'ok', '✅', 'Login successful!',
+      alive + '/3 proxies online — credentials verified.');
+  } else if (alive > 0) {
+    bannerShow('acc-banner', 'warn', '🔑',
+      alive + '/3 proxies online',
+      'Proxies are reachable but returned -1 (wrong credentials or test account).');
+  } else {
+    bannerShow('acc-banner', 'fail', '❌', 'All proxies offline',
+      'No proxy responded. Check your internet connection.');
   }
 
-  $id('accountBtn').addEventListener('click', async function () {
-    var username = $id('username').value.trim();
-    var password = $id('password').value;
-    if (!username || !password) {
-      showBanner('accountResult','accountResultIcon','accountResultTitle','accountResultDetail',
-        'warn','⚠️','Fill in username and password','Both fields are required.');
-      return;
-    }
-    var btn = $id('accountBtn');
-    btnLoad(btn);
-    hideBanner('accountResult');
-    $id('accountSummary').hidden = true;
-    for (var i = 0; i < 3; i++) resetRow('ap-', i);
+  btnDone(btn);
+});
 
-    var gjp2    = await sha1hex(password + 'mI29fmAnxgTs');
-    var results = await Promise.all([0,1,2].map(function (i) { return testAccountProxy(i, username, gjp2); }));
+/* Enter key submits */
+['username', 'password'].forEach(function (id) {
+  $id(id).addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') $id('accountBtn').click();
+  });
+});
 
-    var alive    = results.filter(function (r) { return r.alive; }).length;
-    var loggedIn = results.some(function (r) { return r.loggedIn; });
+/* ─────────────────────────────────────────
+   6. GAME PROXY TESTS
+───────────────────────────────────────── */
 
-    $id('ap-ok').textContent   = alive;
-    $id('ap-fail').textContent = 3 - alive;
-    $id('accountSummary').hidden = false;
+/** Generic: test a list of proxies and update a set of rows */
+async function runProxyGroup(proxies, rowPrefix, btn) {
+  btnLoading(btn);
 
-    if (loggedIn) {
-      showBanner('accountResult','accountResultIcon','accountResultTitle','accountResultDetail',
-        'ok','✅','Login successful!', alive + '/3 account proxies are online and credentials are valid.');
-    } else if (alive > 0) {
-      showBanner('accountResult','accountResultIcon','accountResultTitle','accountResultDetail',
-        'warn','🔑', alive + '/3 proxies online — login failed',
-        'Proxies are reachable but credentials returned -1 (wrong username/password).');
+  for (var i = 0; i < proxies.length; i++) {
+    rowReset(rowPrefix + i);
+  }
+
+  var results = await Promise.all(
+    proxies.map(function (base, i) {
+      rowState(rowPrefix + i, 'busy', 'TESTING…');
+      return pingProxy(base, CFG.levels_target).then(function (r) {
+        rowState(rowPrefix + i, r.alive ? 'ok' : 'fail',
+          r.alive ? 'ONLINE' : (r.timedOut ? 'TIMEOUT' : 'OFFLINE'), r.elapsed);
+        return r.alive;
+      });
+    })
+  );
+
+  btnDone(btn);
+  return results.filter(Boolean).length;
+}
+
+$id('primaryBtn').addEventListener('click', async function () {
+  var alive = await runProxyGroup(CFG.primary_proxies, 'gp-row-', $id('primaryBtn'));
+  tallyShow('primary-tally', 'gp-ok', 'gp-fail', alive, 3);
+});
+
+$id('fallbackBtn').addEventListener('click', async function () {
+  var alive = await runProxyGroup(CFG.fallback_proxies, 'fb-row-', $id('fallbackBtn'));
+  tallyShow('fallback-tally', 'fb-ok', 'fb-fail', alive, 4);
+});
+
+/* ─────────────────────────────────────────
+   7. DIRECT CONNECTION TEST
+───────────────────────────────────────── */
+
+$id('directBtn').addEventListener('click', async function () {
+  var btn = $id('directBtn');
+  btnLoading(btn);
+  bannerHide('direct-banner');
+  rowState('direct-row', 'busy', 'TESTING…');
+
+  var body = levelBody();
+  var t0   = Date.now();
+
+  try {
+    var resp    = await timedFetch(CFG.levels_target, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString()
+    });
+    var elapsed = Date.now() - t0;
+    var text    = await resp.text();
+
+    if (gdAlive(text, resp.status)) {
+      rowState('direct-row', 'ok', 'ONLINE', elapsed);
+      bannerShow('direct-banner', 'ok', '✅', 'Direct connection works!',
+        'boomlings.com responded in ' + elapsed + ' ms without a proxy.');
     } else {
-      showBanner('accountResult','accountResultIcon','accountResultTitle','accountResultDetail',
-        'fail','❌','All account proxies offline','No proxy responded. Check your network.');
+      rowState('direct-row', 'fail', 'NO DATA', elapsed);
+      bannerShow('direct-banner', 'warn', '⚠️', 'Server reachable but no data',
+        'HTTP ' + resp.status + ' — empty or unexpected response body.');
     }
-    btnDone(btn);
-  });
+  } catch (e) {
+    var elapsed2  = Date.now() - t0;
+    var isTimeout = e && (e.name === 'TimeoutError' || e.name === 'AbortError');
 
-  ['username','password'].forEach(function (id) {
-    $id(id).addEventListener('keydown', function (e) { if (e.key === 'Enter') $id('accountBtn').click(); });
-  });
-
-  /* ══════════════════════════════════════════════
-     SECTION 2 — GAME PROXY CONNECTIVITY TEST
-  ══════════════════════════════════════════════ */
-  async function testGameProxy(prefix, proxyBase, idx) {
-    setRow(prefix, idx, 'testing', 'TESTING…');
-    var url  = proxyUrl(proxyBase, LEVELS_TARGET);
-    var body = new URLSearchParams({
-      secret: 'Wmfd2893gb7', gameVersion: '22', binaryVersion: '42',
-      type: '0', str: 'gdproxytestping', page: '0'
-    });
-    var t0 = Date.now();
-    try {
-      var resp    = await timedFetch(url, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString() });
-      var elapsed = Date.now() - t0;
-      var text    = await resp.text();
-      if (gdAlive(text, resp.status)) {
-        setRow(prefix, idx, 'ok', 'ONLINE ✓', elapsed);
-        return true;
-      } else {
-        setRow(prefix, idx, 'fail', 'NO DATA', elapsed);
-        return false;
-      }
-    } catch (e) {
-      var e2 = Date.now() - t0;
-      setRow(prefix, idx, 'fail', e && e.name === 'TimeoutError' ? 'TIMEOUT' : 'OFFLINE', e2);
-      return false;
+    if (!isTimeout && elapsed2 < 1500) {
+      /* Fast failure = CORS error = server IS reachable */
+      rowState('direct-row', 'ok', 'CORS', elapsed2);
+      bannerShow('direct-banner', 'warn', '🛡️',
+        'CORS blocked — server is online',
+        'Your browser blocked the request (expected). boomlings.com is reachable. Use the proxies above.');
+    } else if (isTimeout) {
+      rowState('direct-row', 'fail', 'TIMEOUT', elapsed2);
+      bannerShow('direct-banner', 'fail', '❌', 'Connection timed out',
+        'boomlings.com did not respond in 10 s. GD servers may be down.');
+    } else {
+      rowState('direct-row', 'fail', 'OFFLINE', elapsed2);
+      bannerShow('direct-banner', 'fail', '❌', 'Could not reach boomlings.com',
+        e && e.message ? e.message.slice(0, 140) : 'Network error');
     }
   }
 
-  $id('primaryBtn').addEventListener('click', async function () {
-    var btn = $id('primaryBtn');
-    btnLoad(btn);
-    $id('primarySummary').hidden = true;
-    for (var i = 0; i < 3; i++) resetRow('gp-', i);
-    var results = await Promise.all([0,1,2].map(function (i) { return testGameProxy('gp-', PRIMARY_PROXIES[i], i); }));
-    var alive = results.filter(Boolean).length;
-    $id('gpp-ok').textContent   = alive;
-    $id('gpp-fail').textContent = 3 - alive;
-    $id('primarySummary').hidden = false;
-    btnDone(btn);
+  btnDone(btn);
+});
+
+/* ─────────────────────────────────────────
+   8. NAV & TAB SWITCHING
+───────────────────────────────────────── */
+
+/* Outer nav — switches main panels */
+document.querySelectorAll('.nav-btn').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var target = btn.getAttribute('data-panel');
+    document.querySelectorAll('.nav-btn').forEach(function (b) { b.classList.remove('active'); });
+    document.querySelectorAll('.panel').forEach(function (p) { p.classList.remove('active'); });
+    btn.classList.add('active');
+    $id(target).classList.add('active');
   });
+});
 
-  $id('fallbackBtn').addEventListener('click', async function () {
-    var btn = $id('fallbackBtn');
-    btnLoad(btn);
-    $id('fallbackSummary').hidden = true;
-    for (var i = 0; i < 4; i++) resetRow('fb-', i);
-    var results = await Promise.all([0,1,2,3].map(function (i) { return testGameProxy('fb-', FALLBACK_PROXIES[i], i); }));
-    var alive = results.filter(Boolean).length;
-    $id('fb-ok').textContent   = alive;
-    $id('fb-fail').textContent = 4 - alive;
-    $id('fallbackSummary').hidden = false;
-    btnDone(btn);
+/* Inner tabs — Primary / Fallback inside Main panel */
+document.querySelectorAll('.itab').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var target = btn.getAttribute('data-itab');
+    document.querySelectorAll('.itab').forEach(function (b) { b.classList.remove('active'); });
+    document.querySelectorAll('.itab-panel').forEach(function (p) { p.classList.remove('active'); });
+    btn.classList.add('active');
+    $id(target).classList.add('active');
   });
+});
 
-  /* ══════════════════════════════════════════════
-     SECTION 3 — DIRECT CONNECTION
-  ══════════════════════════════════════════════ */
-  $id('directBtn').addEventListener('click', async function () {
-    var btn = $id('directBtn');
-    btnLoad(btn);
-    hideBanner('directResult');
-
-    var row    = $id('direct-row');
-    var status = $id('direct-status');
-    var ms     = $id('direct-ms');
-
-    row.className = 'direct-row testing';
-    status.className = 'proxy-status';
-    status.textContent = 'TESTING…';
-    ms.textContent = '';
-
-    var body = new URLSearchParams({
-      secret: 'Wmfd2893gb7', gameVersion: '22', binaryVersion: '42',
-      type: '0', str: 'gdproxytestping', page: '0'
-    });
-
-    var t0 = Date.now();
-    try {
-      var resp    = await timedFetch(DIRECT_TARGET, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString() });
-      var elapsed = Date.now() - t0;
-      var text    = await resp.text();
-      if (gdAlive(text, resp.status)) {
-        row.className = 'direct-row ok';
-        status.className = 'proxy-status';
-        status.textContent = 'ONLINE ✓';
-        ms.textContent = elapsed + ' ms';
-        showBanner('directResult','directResultIcon','directResultTitle','directResultDetail',
-          'ok','✅','Direct connection works!',
-          'boomlings.com responded in ' + elapsed + ' ms without a proxy. CORS was not enforced.');
-      } else {
-        row.className = 'direct-row fail';
-        status.className = 'proxy-status';
-        status.textContent = 'NO DATA';
-        ms.textContent = elapsed + ' ms';
-        showBanner('directResult','directResultIcon','directResultTitle','directResultDetail',
-          'warn','⚠️','Server reachable but no data',
-          'Got HTTP ' + resp.status + ' with empty body. Server may be down or returning errors.');
-      }
-    } catch (e) {
-      var elapsed2 = Date.now() - t0;
-      row.className = 'direct-row fail';
-      status.className = 'proxy-status';
-      ms.textContent = elapsed2 + ' ms';
-      var isCors    = e && (e.message || '').toLowerCase().indexOf('cors') >= 0;
-      var isTimeout = e && e.name === 'TimeoutError';
-      var isAbort   = e && e.name === 'AbortError';
-      if (isCors || (!isTimeout && !isAbort && elapsed2 < 500)) {
-        // Fast failure = CORS block = server IS reachable
-        status.textContent = 'CORS BLOCK';
-        showBanner('directResult','directResultIcon','directResultTitle','directResultDetail',
-          'warn','🛡️','Blocked by CORS — server IS reachable',
-          'The browser blocked the direct request (expected). This means boomlings.com is online. Use the proxies above to connect.');
-      } else if (isTimeout || isAbort) {
-        status.textContent = 'TIMEOUT';
-        showBanner('directResult','directResultIcon','directResultTitle','directResultDetail',
-          'fail','❌','Connection timed out',
-          'boomlings.com did not respond within 10 s. The GD servers may be down or unreachable from your location.');
-      } else {
-        status.textContent = 'OFFLINE';
-        showBanner('directResult','directResultIcon','directResultTitle','directResultDetail',
-          'fail','❌','Could not reach boomlings.com',
-          (e && e.message ? e.message.slice(0, 120) : 'Network error'));
-      }
-    }
-    btnDone(btn);
-  });
-
-  /* ── Tab switcher ── */
-  document.querySelectorAll('.tab-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var targetId = btn.getAttribute('data-tab');
-      document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
-      document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.remove('active'); });
-      btn.classList.add('active');
-      $id(targetId).classList.add('active');
-    });
-  });
-
-})();
+})(); /* end IIFE */
 </script>
 
 </body></html>
