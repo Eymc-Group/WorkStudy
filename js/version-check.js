@@ -13,7 +13,7 @@
     "use strict";
 
     // ── Bundled version (update this when packaging a new offline zip) ──────
-    const BUNDLED_VERSION = "3.2.9.51";
+    const BUNDLED_VERSION = "3.21.83";
 
     // Only run when offline (file://) or on a custom non-GitHub domain
     const host = location.hostname;
