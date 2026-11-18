@@ -1,6 +1,6 @@
 {
-  "version": "3.2.9.52",
-  "releasedAt": "2026-11-14",
-  "changelog": "v3.2.9.52: Offline game support (legacy/bennett/imported games cached by SW), relative paths for all local games, auto offline mode detection, offline status badge, APK/XAPK/APKM/AAB/APKS support in File Runner, search bar fix, 60+ new game icons, small-tablet responsive layout, leaderboard stats fix.",
+  "version": "3.21.83",
+  "releasedAt": "2026-11-18",
+  "changelog": "v3.21.83: Music Player + Shorts in sidebar, YT emulator now direct youtube.com iframe, home searchbar redirects to DuckDuckGo or website viewer, 11 proxy options + custom proxy IP, offline overlays on all 38 local games, service worker updated.",
   "downloadUrl": "https://github.com/Eymc-Group/WorkStudy/archive/refs/heads/root.zip"
 }
