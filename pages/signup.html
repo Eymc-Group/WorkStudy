@@ -325,7 +325,7 @@
 
             } catch (err) {
                 console.error("Signup error:", err);
-                setStatus(err.message || "Connection failed.", "error");
+                setStatus("Could not reach the server. Check your connection and try again.", "error");
                 signupBtn.disabled = false;
                 if (window.turnstile) window.turnstile.reset();
             }

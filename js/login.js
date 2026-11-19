@@ -2,7 +2,7 @@
     "use strict";
 
     const API_URL =
-        "https://workstudy-api.354271744.workers.dev/login";
+        "https://workstudy-api.354271744.workers.dev/auth/login";
 
     function initializeLogin() {
         const loginInput =
@@ -176,8 +176,7 @@
                 );
 
                 setStatus(
-                    error.message ||
-                    "Connection failed."
+                    "Could not reach the server. Check your connection and try again."
                 );
 
             } finally {
