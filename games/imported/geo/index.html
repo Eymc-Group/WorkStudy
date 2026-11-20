@@ -1963,8 +1963,13 @@ setProgress(92);
 if (r && typeof r.then === 'function') {
 r.then(function () { say('gd_boot resolved'); setProgress(100); })
 .catch(function (e) {
-if (String(e).indexOf('Aborted(native code called abort())') !== -1) {
+var isNativeAbort = String(e).indexOf('Aborted(native code called abort())') !== -1
+  || String(e).indexOf('Aborted()') !== -1
+  || String(e).indexOf('abort()') !== -1;
+if (isNativeAbort) {
 try { gdPersist(); } catch (e2) {}
+say('gd_boot aborted (native abort — suppressed overlay): ' + e);
+return;
 }
 try {
 var ov = document.getElementById('errOverlay');
